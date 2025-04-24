@@ -9,6 +9,7 @@ import { RandomProjectButton } from '../components/RandomProjectButton';
 import { ProjectTag } from '../types';
 import { projects } from '../data/projects';
 import { Navbar } from '../components/Navbar';
+import TerminalText from '../components/TerminalText';
 
 export default function Home() {
 	const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -32,23 +33,31 @@ export default function Home() {
 	}, [selectedTags]);
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen relative overflow-hidden">
 			<Navbar />
 
-			<main className="flex-grow pt-8 pb-16 px-4">
+			<main className="flex-grow pt-10 pb-20 px-4 relative z-10">
 				<div className="max-w-7xl mx-auto">
-					<div className="mb-12">
-						<h1 className="text-4xl font-bold mb-4 text-center">
-							<span role="img" aria-label="Lab" className="mr-3">🧪</span>
-							Max&apos;s Lab
+					<div className="mb-12 relative">
+						{/* Lab decoration elements */}
+						<div className="absolute -top-5 left-1/4 w-1 h-20 bg-lab-cyan/20 rounded-full"></div>
+						<div className="absolute -top-2 right-1/4 w-1 h-10 bg-lab-purple/20 rounded-full"></div>
+
+						<h1 className="text-4xl md:text-5xl font-mono font-bold mb-4 text-center text-white">
+							<span role="img" aria-label="Lab" className="mr-3 animate-pulse">🧪</span>
+							Max&apos;s <span className="text-lab-cyan neon-text">Lab</span>
 						</h1>
-						<p className="text-lg text-center text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-							A digital laboratory showcasing my projects, experiments, and client work — from silly side projects to full-scale apps.
+						<p className="text-lg text-center text-lab-text max-w-2xl mx-auto font-mono">
+							Digital experiments, half-finished ideas, and surprisingly working tools.
 						</p>
+
+						<div className="text-center">
+							<TerminalText />
+						</div>
 					</div>
 
 					<div className="mb-10 flex flex-col md:flex-row justify-between gap-6">
-						<div className="order-2 md:order-1">
+						<div className="order-2 md:order-1 bg-lab-dark/50 p-4 rounded-xl border border-lab-cyan/20">
 							<TagFilter
 								tags={allTags}
 								selectedTags={selectedTags}
@@ -61,13 +70,13 @@ export default function Home() {
 					</div>
 
 					{filteredProjects.length === 0 ? (
-						<div className="text-center py-12 bg-white dark:bg-gray-800/30 rounded-xl shadow-sm">
-							<p className="text-xl">No projects found with the selected tags.</p>
+						<div className="text-center py-12 bg-lab-medium/50 rounded-xl border border-lab-cyan/20">
+							<p className="text-xl font-mono text-lab-cyan">No experiments found with the selected reagents.</p>
 							<button
 								onClick={() => setSelectedTags([])}
-								className="mt-4 px-4 py-2 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+								className="mt-4 px-4 py-2 bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 rounded-lg hover:bg-lab-cyan/20 transition-colors font-mono"
 							>
-								Clear filters
+								RESET_FILTERS
 							</button>
 						</div>
 					) : (
@@ -84,29 +93,34 @@ export default function Home() {
 				</div>
 			</main>
 
-			<footer className="bg-white dark:bg-gray-900/50 backdrop-blur-sm py-8 border-t border-gray-200 dark:border-gray-800">
+			<footer className="bg-lab-darker/80 backdrop-blur-sm py-8 border-t border-lab-cyan/20 relative z-10">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex flex-col items-center">
-						<p className="text-center text-gray-500 dark:text-gray-400">
-							© {new Date().getFullYear()} Max Basev
+						<p className="text-center text-lab-muted font-mono">
+							Powered by sleepless nights and way too much coffee.
 						</p>
 						<div className="flex gap-4 mt-3">
 							<a
 								href="https://github.com/MaxBasev"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
+								className="text-lab-muted hover:text-lab-cyan transition-all duration-300 transform hover:scale-110 relative beaker"
 								aria-label="GitHub"
 							>
-								<span role="img" aria-hidden="true" className="text-xl">💻</span>
+								<span role="img" aria-hidden="true" className="text-xl">🧪</span>
+								<span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-lab-cyan hover:w-full transition-all duration-300"></span>
 							</a>
 							<a
 								href="mailto:contact@maxbasev.com"
-								className="text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
+								className="text-lab-muted hover:text-lab-cyan transition-all duration-300 transform hover:scale-110 relative beaker"
 								aria-label="Email"
 							>
-								<span role="img" aria-hidden="true" className="text-xl">📧</span>
+								<span role="img" aria-hidden="true" className="text-xl">⚗️</span>
+								<span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-lab-cyan hover:w-full transition-all duration-300"></span>
 							</a>
+						</div>
+						<div className="mt-3 text-xs text-lab-muted/50 font-mono">
+							© {new Date().getFullYear()} Max Basev Labs
 						</div>
 					</div>
 				</div>

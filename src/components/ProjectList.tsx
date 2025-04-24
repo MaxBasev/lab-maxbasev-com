@@ -22,19 +22,24 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
 	const isDeadProject = project.tags.includes('Dead Project');
 
 	return (
-		<div className="flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700">
+		<div className="flex items-center gap-4 p-5 bg-lab-medium/90 rounded-xl shadow-md hover:shadow-neon-cyan transition-all duration-300 border border-lab-cyan/20 group relative overflow-hidden">
+			{/* Lab test tube decorations */}
+			<div className="absolute -bottom-3 right-6 w-1 h-10 bg-lab-cyan/20 rounded-full"></div>
+			<div className="absolute top-0 left-6 w-1 h-6 bg-lab-cyan/20 rounded-full"></div>
+
 			{project.image ? (
-				<div className="w-16 h-16 relative shrink-0 rounded-xl overflow-hidden">
+				<div className="w-16 h-16 relative shrink-0 rounded-xl overflow-hidden border border-lab-cyan/20">
+					<div className="absolute inset-0 bg-lab-dark/40 z-10 group-hover:bg-lab-dark/20 transition-all duration-300"></div>
 					<Image
 						src={project.image}
 						alt={project.title}
 						fill
-						className="object-cover"
+						className="object-cover transition-transform duration-700 group-hover:scale-110"
 					/>
 				</div>
 			) : (
 				<div
-					className="text-4xl bg-gray-100 dark:bg-gray-700 w-12 h-12 flex items-center justify-center rounded-xl shrink-0"
+					className="text-4xl bg-lab-dark w-16 h-16 flex items-center justify-center rounded-xl border border-lab-cyan/20 shrink-0"
 					aria-hidden="true"
 				>
 					{project.icon}
@@ -42,11 +47,17 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
 			)}
 
 			<div className="flex-1 min-w-0">
-				<h2 className={`text-lg font-bold tracking-tight ${isDeadProject ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-white'}`}>
+				<h2 className={`text-lg font-mono font-bold tracking-tight ${isDeadProject ? 'line-through text-lab-muted' : 'text-white group-hover:text-lab-cyan group-hover:neon-text transition-all duration-300'}`}>
 					{project.title}
 				</h2>
-				<p className="text-gray-600 dark:text-gray-300 text-sm">
+				<p className="text-lab-text text-sm">
 					{project.description}
+				</p>
+
+				<p className="text-lab-muted text-xs italic mt-1 mb-2 font-mono">
+					{project.id === 'ugh-okay'
+						? '> Built to save my own sanity from endless scrolling.'
+						: '> Another experiment from the lab.'}
 				</p>
 
 				<div className="flex flex-wrap gap-2 mt-2">

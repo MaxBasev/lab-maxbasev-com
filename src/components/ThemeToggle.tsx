@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export const ThemeToggle = () => {
-	const [darkMode, setDarkMode] = useState<boolean>(false);
+	const [darkMode, setDarkMode] = useState<boolean>(true);
 
 	useEffect(() => {
 		// Check if user has a preference stored
@@ -28,13 +28,13 @@ export const ThemeToggle = () => {
 	return (
 		<button
 			onClick={toggleDarkMode}
-			className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110"
+			className="p-2 rounded-full bg-lab-medium border border-lab-cyan/30 hover:bg-lab-cyan/10 transition-all duration-200 hover:scale-110"
 			aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
 		>
 			{darkMode ? (
-				<span role="img" aria-hidden="true" className="text-xl text-yellow-500">☀️</span>
+				<span role="img" aria-hidden="true" className="text-xl text-lab-yellow">🧪</span>
 			) : (
-				<span role="img" aria-hidden="true" className="text-xl text-indigo-500">🌙</span>
+				<span role="img" aria-hidden="true" className="text-xl text-lab-yellow">⚗️</span>
 			)}
 		</button>
 	);

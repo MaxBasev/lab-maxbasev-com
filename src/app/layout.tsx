@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,9 +8,15 @@ const inter = Inter({
 	variable: "--font-inter",
 });
 
+const jetBrainsMono = JetBrains_Mono({
+	subsets: ["latin"],
+	weight: ['400', '500', '700'],
+	variable: "--font-jetbrains-mono",
+});
+
 export const metadata: Metadata = {
-	title: "Max's Lab – Side Projects, Apps, and Client Work",
-	description: "A digital lab of projects by Max Basev. From silly side experiments to full-scale apps — this is where ideas get shipped.",
+	title: "Max's Lab – Digital Experiments & Projects",
+	description: "Digital experiments, half-finished ideas, and surprisingly working tools.",
 	icons: {
 		icon: '/favicon.ico',
 	},
@@ -24,11 +30,12 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth">
 			<body
-				className={`${inter.variable} font-sans antialiased min-h-screen
-					bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-indigo-950 dark:to-gray-900
-					text-gray-900 dark:text-gray-100
+				className={`${inter.variable} ${jetBrainsMono.variable} font-sans antialiased min-h-screen
+					bg-lab-dark text-lab-text
 				`}
 			>
+				<div className="absolute inset-0 bg-lab-grid opacity-10 pointer-events-none z-0"></div>
+				<div className="absolute inset-0 bg-lab-noise opacity-30 pointer-events-none mix-blend-soft-light z-0"></div>
 				{children}
 			</body>
 		</html>
