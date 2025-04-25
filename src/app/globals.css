@@ -12,7 +12,7 @@
   .portfolio-mode, .portfolio {
     --background: #F9FAFB;
     --foreground: #1F2937;
-    --accent: #10B981;
+    --accent: #1fbd89;
   }
 }
 
@@ -61,6 +61,27 @@ h1, h2, h3, h4, h5, h6 {
   color: #0f172a;
 }
 
+/* Neon text effect for headings */
+.neon-text {
+  position: relative;
+  color: #00ffe0;
+  text-shadow: 0 0 5px #00ffe0, 0 0 20px #00ffe0, 0 0 60px #00ffe0;
+  z-index: 1;
+}
+
+/* Portfolio style for neon text */
+.portfolio .neon-text,
+.portfolio-mode .neon-text {
+  color: #1fbd89;
+  text-shadow: none;
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #1fbd89;
+  text-underline-offset: 4px;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -88,13 +109,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .portfolio-mode ::-webkit-scrollbar-thumb,
 .portfolio ::-webkit-scrollbar-thumb {
-  background: rgba(79, 70, 229, 0.4);
+  background: rgba(31, 189, 137, 0.4);
   border-radius: 4px;
 }
 
 .portfolio-mode ::-webkit-scrollbar-thumb:hover,
 .portfolio ::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 70, 229, 0.6);
+  background: rgba(31, 189, 137, 0.6);
 }
 
 /* Angled container */
@@ -143,7 +164,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Portfolio-mode typing text */
 .portfolio-mode .terminal-text,
 .portfolio .terminal-text {
-  border-right: 2px solid #10B981;
+  border-right: 2px solid #1fbd89;
+  animation: typing 3.5s steps(40, end), blink-caret-portfolio 0.75s step-end infinite;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #1fbd89;
 }
 
 /* Portfolio Mode removes all neon effects */
@@ -229,8 +254,8 @@ h1, h2, h3, h4, h5, h6 {
 .portfolio .tag-filter button,
 .portfolio-mode .tag-filter button {
   background: transparent;
-  border: 1px solid #10B981;
-  color: #10B981;
+  border: 1px solid #1fbd89;
+  color: #1fbd89;
   border-radius: 10px;
   padding: 10px 18px;
   font-size: 0.95rem;
@@ -242,16 +267,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .portfolio .tag-filter button:hover,
 .portfolio-mode .tag-filter button:hover {
-  background: #10B981;
-  border-color: #10B981;
+  background: #1fbd89;
+  border-color: #1fbd89;
   color: #FFFFFF;
 }
 
 .portfolio .tag-filter button.active,
 .portfolio-mode .tag-filter button.active {
-  background-color: #10B981;
+  background-color: #1fbd89;
   color: white;
-  border-color: #10B981;
+  border-color: #1fbd89;
 }
 
 /* Portfolio footer */
@@ -312,8 +337,8 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
   padding: 12px 24px;
   background-color: transparent;
-  color: #10B981;
-  border: 1px solid #10B981;
+  color: #1fbd89;
+  border: 1px solid #1fbd89;
   border-radius: 10px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -322,7 +347,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .portfolio .view-project-btn:hover,
 .portfolio-mode .view-project-btn:hover {
-  background-color: #10B981;
+  background-color: #1fbd89;
   color: white;
   transform: translateY(-2px);
 }
@@ -331,8 +356,8 @@ h1, h2, h3, h4, h5, h6 {
 .portfolio .random-project-btn,
 .portfolio-mode .random-project-btn {
   background-color: transparent;
-  color: #10B981;
-  border: 1px solid #10B981;
+  color: #1fbd89;
+  border: 1px solid #1fbd89;
   padding: 14px 28px;
   font-weight: 600;
   border-radius: 12px;
@@ -344,7 +369,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .portfolio .random-project-btn:hover,
 .portfolio-mode .random-project-btn:hover {
-  background-color: #10B981;
+  background-color: #1fbd89;
   color: white;
   transform: translateY(-2px);
 }
@@ -403,4 +428,44 @@ body[class~='portfolio']  {
 
 footer {
   @apply opacity-80 mt-12 py-6 text-sm text-portfolio-text;
+}
+
+/* Keyframes for caret blinking */
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #00ffe0; }
+}
+
+/* Keyframes for portfolio caret blinking */
+@keyframes blink-caret-portfolio {
+  from, to { border-color: transparent; }
+  50% { border-color: #1fbd89; }
+}
+
+/* Keyframes for glow effect */
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(0, 255, 224, 0.5), 0 0 10px rgba(0, 255, 224, 0.2); }
+  100% { box-shadow: 0 0 10px rgba(0, 255, 224, 0.8), 0 0 20px rgba(0, 255, 224, 0.4); }
+}
+
+/* Portfolio keyframes for glow effect */
+.portfolio-mode .glow-effect,
+.portfolio .glow-effect {
+  animation: glow-portfolio 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow-portfolio {
+  0% { box-shadow: 0 0 5px rgba(31, 189, 137, 0.5), 0 0 10px rgba(31, 189, 137, 0.2); }
+  100% { box-shadow: 0 0 10px rgba(31, 189, 137, 0.8), 0 0 20px rgba(31, 189, 137, 0.4); }
+}
+
+/* Box shadow for neon elements */
+.shadow-neon-cyan {
+  box-shadow: 0 0 5px rgba(0, 255, 224, 0.5), 0 0 10px rgba(0, 255, 224, 0.3);
+}
+
+/* Box shadow for portfolio neon elements */
+.portfolio-mode .shadow-neon-cyan,
+.portfolio .shadow-neon-cyan {
+  box-shadow: 0 0 5px rgba(31, 189, 137, 0.5), 0 0 10px rgba(31, 189, 137, 0.3);
 }

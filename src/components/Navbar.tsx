@@ -21,13 +21,13 @@ export const Navbar = () => {
 					<div className="flex items-center space-x-5">
 						<Link
 							href="/"
-							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-cyan hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-indigo-900 portfolio:hover:bg-indigo-50 portfolio:rounded-md"
+							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-cyan hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-portfolio-accent portfolio:hover:bg-indigo-50 portfolio:rounded-md"
 						>
 							Home
 						</Link>
 						<Link
 							href="https://maxbasev.com/blog"
-							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-purple hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-indigo-900 portfolio:hover:bg-indigo-50 portfolio:rounded-md"
+							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-purple hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-portfolio-accent portfolio:hover:bg-indigo-50 portfolio:rounded-md"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -35,7 +35,7 @@ export const Navbar = () => {
 						</Link>
 						<Link
 							href="/"
-							className="px-4 py-2 rounded-md text-sm font-mono font-medium bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 portfolio:font-sans portfolio:bg-indigo-600 portfolio:text-white portfolio:border-0 portfolio:rounded-xl portfolio:hover:bg-indigo-700 portfolio:shadow-sm portfolio:hover:shadow-md transition-all duration-200"
+							className="px-4 py-2 rounded-md text-sm font-mono font-medium bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 portfolio:font-sans portfolio:bg-portfolio-accent portfolio:text-white portfolio:border-0 portfolio:rounded-xl portfolio:hover:bg-portfolio-accent/90 portfolio:shadow-sm portfolio:hover:shadow-md transition-all duration-200"
 						>
 							<span className="portfolio:hidden">Lab_</span>
 							<span className="hidden portfolio:inline">Contact</span>

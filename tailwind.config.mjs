@@ -22,7 +22,7 @@ export default {
 				portfolio: {
 					light: '#FFFFFF',
 					surface: '#F9FAFB',
-					accent: '#10B981',
+					accent: '#1fbd89',
 					secondary: '#a855f7',
 					text: '#1F2937',
 					muted: '#1F2937',

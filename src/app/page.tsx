@@ -42,7 +42,7 @@ export default function Home() {
 
 						<h1 className="text-4xl md:text-5xl font-mono font-bold mb-4 text-center text-white portfolio:text-indigo-900">
 							<span role="img" aria-label="Lab" className="mr-3 animate-pulse">🧪</span>
-							Max&apos;s <span className="text-lab-cyan neon-text portfolio:text-indigo-600 portfolio:no-underline">Lab</span>
+							Max&apos;s <span className="text-lab-cyan portfolio:text-[#1fbd89] neon-text portfolio:no-underline">Lab</span>
 						</h1>
 						<p className="text-lg text-center text-lab-text max-w-2xl mx-auto font-mono portfolio:text-indigo-700 portfolio:font-sans">
 							Digital experiments, half-finished ideas, and surprisingly working tools.
@@ -68,7 +68,7 @@ export default function Home() {
 
 					{filteredProjects.length === 0 ? (
 						<div className="text-center py-12 bg-lab-medium/50 rounded-xl border border-lab-cyan/20 portfolio:bg-white portfolio:border-indigo-100">
-							<p className="text-xl font-mono text-lab-cyan portfolio:text-indigo-700 portfolio:font-sans">No experiments found with the selected reagents.</p>
+							<p className="text-xl font-mono text-lab-cyan portfolio:text-portfolio-accent portfolio:font-sans">No experiments found with the selected reagents.</p>
 							<button
 								onClick={() => setSelectedTags([])}
 								className="mt-4 px-4 py-2 bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 rounded-lg hover:bg-lab-cyan/20 transition-colors font-mono portfolio:bg-transparent portfolio:text-portfolio-accent portfolio:border-portfolio-accent portfolio:hover:bg-portfolio-accent portfolio:hover:text-white portfolio:font-sans"

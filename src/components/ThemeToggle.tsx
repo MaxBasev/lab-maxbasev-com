@@ -49,7 +49,7 @@ export default function ThemeToggle() {
 			{isPortfolioMode ? (
 				<FiMoon className="w-4 h-4 text-portfolio-accent" />
 			) : (
-				<FiSun className="w-4 h-4 text-lab-yellow" />
+				<FiSun className="w-4 h-4 text-lab-cyan" />
 			)}
 		</button>
 	);

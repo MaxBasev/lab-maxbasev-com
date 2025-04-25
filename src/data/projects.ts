@@ -2,6 +2,17 @@ import { Project } from '../types';
 
 export const projects: Project[] = [
 	{
+		id: 'zentava',
+		title: 'Zentava',
+		description: 'An AI-powered mental health assistant. Still in beta, still figuring things out — just like you. Available 24/7, judgment-free.',
+		icon: '🧠',
+		image: '/images/projects/zentava-life-logo-transp.png',
+		tags: ['SaaS', 'Web App', 'Beta'],
+		links: {
+			website: 'https://zentava.life'
+		}
+	},
+	{
 		id: 'ugh-okay',
 		title: 'Ugh Okay',
 		description: 'A tiny offline app to help you stop doomscrolling.',
