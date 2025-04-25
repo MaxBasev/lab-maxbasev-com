@@ -14,12 +14,35 @@ export const projects: Project[] = [
 		}
 	},
 	{
+		id: 'tagoshi',
+		title: 'Tagoshi',
+		description: 'Convert prices on Amazon, eBay, and AliExpress into crypto using live Binance rates. BTC, ETH, SOL, BNB, XRP — right where you shop.',
+		icon: '💰',
+		image: '/images/projects/Tagoshi_Promo.png',
+		tags: ['Chrome Extension', 'Tool', 'Pet Project', 'Crypto'],
+		links: {
+			website: 'https://skazoff.ru',
+			blog: 'https://chrome.google.com/webstore'
+		}
+	},
+	{
+		id: 'crypto-news-bot',
+		title: 'Crypto News Bot',
+		description: 'AI-powered Telegram bot that aggregates and translates crypto news. Built with GPT, MongoDB, and a custom dashboard.',
+		icon: '🛰️',
+		image: '/images/projects/TGBot.png',
+		tags: ['Freelance Work', 'AI-powered'],
+		links: {
+			blog: 'NDA'
+		}
+	},
+	{
 		id: 'zentava',
 		title: 'Zentava',
 		description: 'An AI-powered mental health assistant. Still in beta, still figuring things out — just like you. Available 24/7, judgment-free.',
 		icon: '🧠',
 		image: '/images/projects/zentava-life-logo-transp.png',
-		tags: ['SaaS', 'Web App', 'Beta'],
+		tags: ['SaaS', 'Web App', 'Beta', 'AI-powered'],
 		links: {
 			website: 'https://zentava.life'
 		}

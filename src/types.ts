@@ -7,7 +7,9 @@ export type ProjectTag =
 	| 'Freelance Work'
 	| 'Dead Project'
 	| 'Web App'
-	| 'Beta';
+	| 'Beta'
+	| 'AI-powered'
+	| 'Crypto';
 
 export type ProjectLinks = {
 	github?: string;
@@ -39,6 +41,8 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'Dead Project': { bg: 'bg-gray-800/30', text: 'text-gray-400' },
 		'Web App': { bg: 'bg-blue-900/30', text: 'text-blue-200' },
 		'Beta': { bg: 'bg-indigo-900/30', text: 'text-indigo-200' },
+		'AI-powered': { bg: 'bg-violet-900/30', text: 'text-violet-200' },
+		'Crypto': { bg: 'bg-amber-900/30', text: 'text-amber-200' },
 	};
 
 	// Portfolio mode tags use colors that correspond to the tag type with better contrast
@@ -52,6 +56,8 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'Dead Project': { bg: 'portfolio:bg-gray-200', text: 'portfolio:text-gray-700' },
 		'Web App': { bg: 'portfolio:bg-blue-100', text: 'portfolio:text-blue-800' },
 		'Beta': { bg: 'portfolio:bg-indigo-100', text: 'portfolio:text-indigo-800' },
+		'AI-powered': { bg: 'portfolio:bg-violet-100', text: 'portfolio:text-violet-800' },
+		'Crypto': { bg: 'portfolio:bg-amber-100', text: 'portfolio:text-amber-800' },
 	};
 
 	const labColors = labModeColors[tag];

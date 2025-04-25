@@ -8,7 +8,7 @@ type ProjectLinksProps = {
 export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 	return (
 		<div className="flex gap-3 mt-2 border-t border-lab-cyan/20 pt-3 portfolio:border-gray-200 portfolio:pt-4">
-			{links.website && (
+			{links.website && links.website !== 'NDA' && (
 				<a
 					href={links.website}
 					target="_blank"
@@ -24,7 +24,7 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 				</a>
 			)}
 
-			{links.github && (
+			{links.github && links.github !== 'NDA' && (
 				<a
 					href={links.github}
 					target="_blank"
@@ -40,7 +40,7 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 				</a>
 			)}
 
-			{links.appStore && (
+			{links.appStore && links.appStore !== 'NDA' && (
 				<a
 					href={links.appStore}
 					target="_blank"
@@ -56,7 +56,7 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 				</a>
 			)}
 
-			{links.googlePlay && (
+			{links.googlePlay && links.googlePlay !== 'NDA' && (
 				<a
 					href={links.googlePlay}
 					target="_blank"
@@ -72,7 +72,7 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 				</a>
 			)}
 
-			{links.blog && (
+			{links.blog && links.blog !== 'NDA' && (
 				<a
 					href={links.blog}
 					target="_blank"
@@ -86,6 +86,13 @@ export const ProjectLinks: React.FC<ProjectLinksProps> = ({ links }) => {
 						<span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-lab-purple group-hover:w-full transition-all duration-300 portfolio:bg-indigo-600"></span>
 					</span>
 				</a>
+			)}
+
+			{/* NDA text for confidential projects */}
+			{(links.website === 'NDA' || links.github === 'NDA' || links.appStore === 'NDA' || links.googlePlay === 'NDA' || links.blog === 'NDA') && (
+				<span className="text-lab-muted text-sm font-mono italic portfolio:text-gray-500 portfolio:font-sans">
+					[NDA]
+				</span>
 			)}
 		</div>
 	);
