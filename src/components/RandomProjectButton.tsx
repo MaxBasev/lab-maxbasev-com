@@ -1,51 +1,55 @@
-import React, { useState } from 'react';
+"use client";
+
+import { useState } from 'react';
 import { Project } from '../types';
-import { ProjectCard } from './ProjectCard';
 
 type RandomProjectButtonProps = {
 	projects: Project[];
 };
 
-export const RandomProjectButton: React.FC<RandomProjectButtonProps> = ({ projects }) => {
-	const [randomProject, setRandomProject] = useState<Project | null>(null);
-	const [isGlitching, setIsGlitching] = useState(false);
+export const RandomProjectButton = ({ projects }: RandomProjectButtonProps) => {
+	const [isAnimating, setIsAnimating] = useState(false);
 
-	const getRandomProject = () => {
-		setIsGlitching(true);
-		
-		// Add laboratory flash effect to the whole page
-		document.body.classList.add('flash-effect');
-		
-		setTimeout(() => {
-			const randomIndex = Math.floor(Math.random() * projects.length);
-			setRandomProject(projects[randomIndex]);
-			setIsGlitching(false);
-			document.body.classList.remove('flash-effect');
-		}, 500);
+	const handleClick = () => {
+		setIsAnimating(true);
+
+		// Get a random project
+		const randomProject = projects[Math.floor(Math.random() * projects.length)];
+
+		// Navigate to project URL or a special page for it if available
+		if (randomProject.links.website) {
+			// Use setTimeout to allow animation to play
+			setTimeout(() => {
+				window.open(randomProject.links.website, '_blank');
+				setIsAnimating(false);
+			}, 500);
+		} else if (randomProject.links.github) {
+			setTimeout(() => {
+				window.open(randomProject.links.github, '_blank');
+				setIsAnimating(false);
+			}, 500);
+		} else {
+			setIsAnimating(false);
+		}
 	};
 
 	return (
-		<div className="mt-16 mb-8">
+		<div className="mt-16 text-center">
 			<button
-				onClick={getRandomProject}
-				className="flex items-center justify-center gap-2 mx-auto px-8 py-3 text-white bg-gradient-to-r from-lab-purple to-lab-cyan rounded-full hover:from-lab-cyan hover:to-lab-purple transition-all duration-500 hover:scale-105 shadow-neon-cyan font-mono"
+				onClick={handleClick}
+				disabled={isAnimating}
+				className={`
+					px-6 py-3 bg-lab-cyan/10 border border-lab-cyan text-lab-cyan 
+					font-mono font-medium rounded-md shadow-neon-cyan
+					hover:bg-lab-cyan/20 hover:shadow-neon-cyan transition-all duration-300
+					portfolio:bg-transparent portfolio:text-portfolio-accent portfolio:font-sans 
+					portfolio:border-portfolio-accent portfolio:rounded-xl portfolio:text-[0.95rem] portfolio:shadow-none
+					portfolio:hover:bg-portfolio-accent portfolio:hover:text-white
+					${isAnimating ? 'animate-pulse' : ''}
+				`}
 			>
-				<span role="img" aria-hidden="true" className="text-2xl animate-pulse">⚗️</span>
-				run_random_test.exe
+				{isAnimating ? 'Loading...' : 'Show Me Something Cool'}
 			</button>
-
-			{randomProject && (
-				<div className={`mt-12 max-w-xl mx-auto ${isGlitching ? 'animate-glitch' : 'animate-fade-in'}`}>
-					<div className="bg-lab-darker/50 rounded-xl p-6 border border-lab-cyan/20">
-						<h3 className="text-xl font-mono font-bold text-center mb-6 flex items-center justify-center gap-2">
-							<span role="img" aria-hidden="true" className="text-lab-yellow text-2xl">✨</span> 
-							<span className="text-lab-cyan neon-text glitch" data-text="Here's what escaped the test tube...">Here&apos;s what escaped the test tube...</span>
-							<span role="img" aria-hidden="true" className="text-lab-yellow text-2xl">✨</span>
-						</h3>
-						<ProjectCard project={randomProject} />
-					</div>
-				</div>
-			)}
 		</div>
 	);
 }; 

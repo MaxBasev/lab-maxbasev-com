@@ -1,4 +1,7 @@
+"use client";
+
 import React from 'react';
+import { FiGrid, FiList } from 'react-icons/fi';
 
 export type ViewMode = 'grid' | 'list';
 
@@ -9,29 +12,26 @@ type ViewToggleProps = {
 
 export const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onChange }) => {
 	return (
-		<div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 shadow-inner">
+		<div className="flex items-center rounded-lg p-0.5 border border-white/5 portfolio:bg-white portfolio:border-portfolio-accent/20 portfolio:shadow-none">
 			<button
-				type="button"
-				className={`py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${viewMode === 'grid'
-						? 'bg-white dark:bg-gray-700 shadow-sm text-indigo-600 dark:text-indigo-400'
-						: 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
-					}`}
 				onClick={() => onChange('grid')}
-			>
-				<span className="mr-2" role="img" aria-hidden="true">📱</span>
-				Cards
-			</button>
-
-			<button
-				type="button"
-				className={`py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${viewMode === 'list'
-						? 'bg-white dark:bg-gray-700 shadow-sm text-indigo-600 dark:text-indigo-400'
-						: 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
+				className={`px-2 py-1 rounded flex items-center transition-all ${viewMode === 'grid'
+					? 'bg-white/10 shadow text-white portfolio:bg-portfolio-accent/10 portfolio:text-portfolio-accent'
+					: 'text-gray-400 hover:text-gray-300 portfolio:text-portfolio-accent/50 portfolio:hover:text-portfolio-accent'
 					}`}
-				onClick={() => onChange('list')}
+				aria-label="Grid view"
 			>
-				<span className="mr-2" role="img" aria-hidden="true">📋</span>
-				List
+				<FiGrid className="h-5 w-5" />
+			</button>
+			<button
+				onClick={() => onChange('list')}
+				className={`px-2 py-1 rounded flex items-center transition-all ${viewMode === 'list'
+					? 'bg-white/10 shadow text-white portfolio:bg-portfolio-accent/10 portfolio:text-portfolio-accent'
+					: 'text-gray-400 hover:text-gray-300 portfolio:text-portfolio-accent/50 portfolio:hover:text-portfolio-accent'
+					}`}
+				aria-label="List view"
+			>
+				<FiList className="h-5 w-5" />
 			</button>
 		</div>
 	);

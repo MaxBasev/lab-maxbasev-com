@@ -1,24 +1,49 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "../components/Navbar";
 
 const inter = Inter({
 	subsets: ["latin"],
-	weight: ['400', '500', '600', '700'],
+	display: "swap",
 	variable: "--font-inter",
 });
 
 const jetBrainsMono = JetBrains_Mono({
 	subsets: ["latin"],
-	weight: ['400', '500', '700'],
+	display: "swap",
 	variable: "--font-jetbrains-mono",
 });
 
 export const metadata: Metadata = {
-	title: "Max's Lab – Digital Experiments & Projects",
-	description: "Digital experiments, half-finished ideas, and surprisingly working tools.",
-	icons: {
-		icon: '/favicon.ico',
+	title: "Max's Lab",
+	description:
+		"A digital playground of experimental projects by Max Basev. Discover web tools, applications, and experiments from the lab.",
+	keywords: [
+		"Max Basev",
+		"digital lab",
+		"experiments",
+		"web development",
+		"projects",
+		"creative coding",
+		"portfolio",
+		"developer",
+	],
+	openGraph: {
+		title: "Max's Lab",
+		description: "A digital playground of experimental projects by Max Basev",
+		url: "https://lab.maxbasev.com",
+		siteName: "Max's Lab",
+		locale: "en_US",
+		type: "website",
+		images: [
+			{
+				url: "/images/og-image.png",
+				width: 1200,
+				height: 630,
+				alt: "Max's Lab",
+			},
+		],
 	},
 };
 
@@ -31,12 +56,37 @@ export default function RootLayout({
 		<html lang="en" className="scroll-smooth">
 			<body
 				className={`${inter.variable} ${jetBrainsMono.variable} font-sans antialiased min-h-screen
-					bg-lab-dark text-lab-text
 				`}
 			>
-				<div className="absolute inset-0 bg-lab-grid opacity-10 pointer-events-none z-0"></div>
-				<div className="absolute inset-0 bg-lab-noise opacity-30 pointer-events-none mix-blend-soft-light z-0"></div>
-				{children}
+				{/* Lab Mode Background Elements */}
+				<div className="absolute inset-0 bg-lab-grid opacity-10 pointer-events-none z-0 portfolio:hidden"></div>
+				<div className="absolute inset-0 bg-lab-noise opacity-30 pointer-events-none mix-blend-soft-light z-0 portfolio:hidden"></div>
+
+				{/* Portfolio Mode Background Elements */}
+				<div className="absolute inset-0 bg-portfolio-dots opacity-10 pointer-events-none z-0 hidden portfolio:block"></div>
+
+				<Navbar />
+
+				{/* Portfolio Mode Hero Section */}
+				<div className="hidden portfolio:block">
+					<div className="hero">
+						<div className="container mx-auto">
+							<h1>Max&apos;s Portfolio</h1>
+							<p>Pet projects, experiments, and apps I&apos;ve built.</p>
+						</div>
+					</div>
+				</div>
+
+				<div className="container mx-auto">
+					{children}
+				</div>
+
+				{/* Portfolio Mode Footer */}
+				<footer className="hidden portfolio:block">
+					<div className="container mx-auto text-center">
+						<p className="text-portfolio-accent/80">Built by Max Basev · No frameworks were harmed.</p>
+					</div>
+				</footer>
 			</body>
 		</html>
 	);

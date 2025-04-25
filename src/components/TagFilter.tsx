@@ -1,5 +1,7 @@
+"use client";
+
 import React from 'react';
-import { ProjectTag, getTagColor } from '../types';
+import { ProjectTag } from '../types';
 
 type TagFilterProps = {
 	tags: ProjectTag[];
@@ -8,7 +10,7 @@ type TagFilterProps = {
 };
 
 export const TagFilter: React.FC<TagFilterProps> = ({ tags, selectedTags, onChange }) => {
-	const handleTagClick = (tag: ProjectTag) => {
+	const toggleTag = (tag: ProjectTag) => {
 		if (selectedTags.includes(tag)) {
 			onChange(selectedTags.filter((t) => t !== tag));
 		} else {
@@ -16,37 +18,49 @@ export const TagFilter: React.FC<TagFilterProps> = ({ tags, selectedTags, onChan
 		}
 	};
 
-	return (
-		<div className="flex flex-wrap gap-2">
-			{tags.map((tag) => {
-				const isSelected = selectedTags.includes(tag);
-				const { bg, text } = getTagColor(tag);
+	const clearFilters = () => {
+		onChange([]);
+	};
 
-				return (
+	return (
+		<div className="flex flex-col">
+			<div className="flex items-center justify-between mb-3">
+				<h3 className="text-lab-cyan text-sm font-mono portfolio:text-indigo-800 portfolio:font-sans portfolio:font-medium">
+					Filter by reagent type:
+				</h3>
+				{selectedTags.length > 0 && (
+					<button
+						onClick={clearFilters}
+						className="text-xs text-lab-text hover:text-lab-cyan portfolio:text-indigo-600 portfolio:hover:text-indigo-900"
+					>
+						Clear filters
+					</button>
+				)}
+			</div>
+			<div className="flex flex-wrap gap-2 tag-filter">
+				{tags.map((tag) => (
 					<button
 						key={tag}
-						onClick={() => handleTagClick(tag)}
+						onClick={() => toggleTag(tag)}
 						className={`
-							py-1.5 px-4 rounded-lg text-sm font-medium transition-all duration-200
-							${isSelected
-								? `${bg} ${text} shadow-md`
-								: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}
+							text-xs px-2 py-0.5 rounded font-mono 
+							${selectedTags.includes(tag)
+								? 'bg-lab-cyan/20 text-white border border-lab-cyan/50'
+								: 'bg-lab-medium/80 text-lab-text border border-lab-cyan/10 hover:border-lab-cyan/30'
+							} 
+							transition-all duration-200
+							portfolio:font-sans portfolio:text-sm 
+                            ${selectedTags.includes(tag)
+								? 'portfolio:bg-indigo-600 portfolio:text-white portfolio:border-0'
+								: 'portfolio:bg-white portfolio:text-indigo-700 portfolio:border portfolio:border-indigo-200 portfolio:hover:border-indigo-400'
+							}
+                            portfolio:px-3 portfolio:py-1 portfolio:rounded-md portfolio:shadow-sm
 						`}
 					>
 						{tag}
 					</button>
-				);
-			})}
-
-			{selectedTags.length > 0 && (
-				<button
-					onClick={() => onChange([])}
-					className="py-1.5 px-4 rounded-lg text-sm font-medium bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition-all duration-200 flex items-center gap-1"
-				>
-					<span>Clear</span>
-					<span className="font-bold">×</span>
-				</button>
-			)}
+				))}
+			</div>
 		</div>
 	);
 }; 

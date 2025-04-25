@@ -1,41 +1,56 @@
-import { useEffect, useState } from 'react';
+"use client";
 
-export const ThemeToggle = () => {
-	const [darkMode, setDarkMode] = useState<boolean>(true);
+import { useState, useEffect } from 'react';
+import { FiSun, FiMoon } from 'react-icons/fi';
 
+export default function ThemeToggle() {
+	const [isPortfolioMode, setIsPortfolioMode] = useState(false);
+
+	// Initialize theme state from localStorage on component mount
 	useEffect(() => {
-		// Check if user has a preference stored
-		const isDark = localStorage.getItem('darkMode') === 'true';
-		setDarkMode(isDark);
+		const savedPortfolioMode = localStorage.getItem('portfolioMode') === 'true';
+		setIsPortfolioMode(savedPortfolioMode);
 
-		// Or check system preference
-		if (localStorage.getItem('darkMode') === null) {
-			const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			setDarkMode(systemPrefersDark);
+		// Apply the saved theme
+		applyThemeClasses(savedPortfolioMode);
+	}, []);
+
+	// Apply theme classes to document
+	const applyThemeClasses = (isPortfolio: boolean) => {
+		const doc = document.documentElement;
+
+		if (isPortfolio) {
+			// Portfolio mode (светлая тема)
+			doc.classList.add('portfolio-mode');
+			doc.classList.add('portfolio');
+			doc.classList.remove('dark');
+		} else {
+			// Lab mode (темная тема)
+			doc.classList.add('dark');
+			doc.classList.remove('portfolio-mode');
+			doc.classList.remove('portfolio');
 		}
+	};
 
-		// Apply theme
-		document.documentElement.classList.toggle('dark', darkMode);
-	}, [darkMode]);
-
-	const toggleDarkMode = () => {
-		const newDarkMode = !darkMode;
-		setDarkMode(newDarkMode);
-		localStorage.setItem('darkMode', newDarkMode.toString());
-		document.documentElement.classList.toggle('dark', newDarkMode);
+	// Toggle between Lab mode (dark) and Portfolio mode (light)
+	const toggleMode = () => {
+		const newMode = !isPortfolioMode;
+		setIsPortfolioMode(newMode);
+		localStorage.setItem('portfolioMode', newMode ? 'true' : 'false');
+		applyThemeClasses(newMode);
 	};
 
 	return (
 		<button
-			onClick={toggleDarkMode}
-			className="p-2 rounded-full bg-lab-medium border border-lab-cyan/30 hover:bg-lab-cyan/10 transition-all duration-200 hover:scale-110"
-			aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+			onClick={toggleMode}
+			className="p-2 rounded-full bg-lab-medium border border-lab-cyan/30 hover:bg-lab-cyan/10 transition-all duration-200 hover:scale-110 portfolio:bg-gray-50 portfolio:border-gray-200 portfolio:hover:bg-gray-100"
+			aria-label="Toggle theme mode"
 		>
-			{darkMode ? (
-				<span role="img" aria-hidden="true" className="text-xl text-lab-yellow">🧪</span>
+			{isPortfolioMode ? (
+				<FiMoon className="w-4 h-4 text-portfolio-accent" />
 			) : (
-				<span role="img" aria-hidden="true" className="text-xl text-lab-yellow">⚗️</span>
+				<FiSun className="w-4 h-4 text-lab-yellow" />
 			)}
 		</button>
 	);
-}; 
+} 

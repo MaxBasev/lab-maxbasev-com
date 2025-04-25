@@ -1,51 +1,43 @@
+"use client";
+
 import React from 'react';
-import { ProjectTag, getTagColor } from '../types';
+import { ProjectTag } from '../types';
 
 type TagBadgeProps = {
 	tag: ProjectTag;
 };
 
-// Emoji mapping for each tag
-const tagEmojis: Record<ProjectTag, string> = {
-	'Mobile App': '📱',
-	'SaaS': '💊',
-	'Pet Project': '🧸',
-	'Chrome Extension': '🧩',
-	'Tool': '🧩',
-	'Freelance Work': '👔',
-	'Dead Project': '👾'
-};
-
-// Chemical formula mapping for each tag
-const chemicalFormulas: Record<ProjectTag, string> = {
-	'Mobile App': 'Mb-Ap₂',
-	'SaaS': 'SaS₃',
-	'Pet Project': 'Pt₃',
-	'Chrome Extension': 'CrEx',
-	'Tool': 'To₂',
-	'Freelance Work': 'Fr₄',
-	'Dead Project': 'De₂d'
-};
-
 export const TagBadge: React.FC<TagBadgeProps> = ({ tag }) => {
-	const { bg, text } = getTagColor(tag);
+	// Convert tag to a color based on its string
+	let badgeClass = '';
 
-	const isDeadProject = tag === 'Dead Project';
-	const emoji = tagEmojis[tag];
-	const formula = chemicalFormulas[tag];
+	// Lab mode - different colors for different tags
+	if (tag === 'Mobile App') {
+		badgeClass = 'bg-purple-900/30 text-purple-300 border-purple-700/30 portfolio:bg-portfolio-tag-purple-bg portfolio:text-portfolio-tag-purple-text';
+	} else if (tag === 'SaaS') {
+		badgeClass = 'bg-blue-900/30 text-blue-300 border-blue-700/30 portfolio:bg-portfolio-tag-blue-bg portfolio:text-portfolio-tag-blue-text';
+	} else if (tag === 'Tool') {
+		badgeClass = 'bg-green-900/30 text-green-300 border-green-700/30 portfolio:bg-portfolio-tag-green-bg portfolio:text-portfolio-tag-green-text';
+	} else if (tag === 'Chrome Extension') {
+		badgeClass = 'bg-red-900/30 text-red-300 border-red-700/30 portfolio:bg-portfolio-tag-pink-bg portfolio:text-portfolio-tag-pink-text';
+	} else if (tag === 'Pet Project') {
+		badgeClass = 'bg-yellow-900/30 text-yellow-300 border-yellow-700/30 portfolio:bg-portfolio-tag-yellow-bg portfolio:text-portfolio-tag-yellow-text';
+	} else if (tag === 'Freelance Work') {
+		badgeClass = 'bg-purple-900/30 text-purple-300 border-purple-700/30 portfolio:bg-portfolio-tag-purple-bg portfolio:text-portfolio-tag-purple-text';
+	} else if (tag === 'Dead Project') {
+		badgeClass = 'bg-gray-900/30 text-gray-400 border-gray-700/30 portfolio:bg-portfolio-tag-gray-bg portfolio:text-portfolio-tag-gray-text';
+	} else {
+		// Default color
+		badgeClass = 'bg-lab-surface text-lab-text border-white/10 portfolio:bg-portfolio-tag-gray-bg portfolio:text-portfolio-tag-gray-text';
+	}
 
 	return (
-		<span
-			className={`
-				text-xs font-mono font-medium px-2.5 py-1 rounded-md
-				${bg} ${text} 
-				${isDeadProject ? 'line-through' : ''}
-				inline-flex items-center border border-opacity-30 shadow-sm
-				hover:shadow-neon-cyan transition-all duration-300
-			`}
-		>
-			<span className="mr-1">{emoji}</span>
-			{formula}
+		<span className={`
+			inline-block px-2 py-1 text-xs font-mono rounded-md border 
+			${badgeClass}
+			portfolio:font-sans portfolio:text-xs portfolio:rounded-md portfolio:border-0 portfolio:tag-badge
+		`}>
+			{tag}
 		</span>
 	);
 }; 

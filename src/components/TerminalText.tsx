@@ -20,7 +20,7 @@ const TerminalText: React.FC = () => {
 	}, []);
 
 	return (
-		<div className="font-mono text-xs sm:text-sm text-lab-cyan opacity-70 mt-2 h-5">
+		<div className="font-mono text-xs sm:text-sm text-lab-cyan opacity-70 mt-2 h-5 portfolio:text-indigo-700 portfolio:font-sans portfolio:opacity-100">
 			<div className="terminal-text inline-block" style={{ width: 'fit-content' }}>
 				{experiments[currentExperiment]}
 			</div>
