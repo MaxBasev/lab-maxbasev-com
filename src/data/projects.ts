@@ -37,6 +37,29 @@ export const projects: Project[] = [
 		}
 	},
 	{
+		id: 'santa-maria-dashboard',
+		title: 'Santa Maria Health Dashboard',
+		description: 'A full-scale web system for clinics: patient bookings, scheduling, invoices, medical records, and admin management — all in one place.',
+		icon: '🏥',
+		image: '/images/projects/Santa_Maria_logo.png',
+		tags: ['Web App', 'Freelance Work'],
+		links: {
+			website: 'https://sybillehealth.com/booking',
+			blog: 'https://gitbook.com/project-overview'
+		}
+	},
+	{
+		id: 'santa-maria-ios',
+		title: 'Santa Maria – iOS Client App',
+		description: 'A mobile companion app for clinic patients: view bookings, treatment schedules, and upcoming procedures — right from your iPhone.',
+		icon: '📱',
+		image: '/images/projects/Santa_Maria_logo.png',
+		tags: ['iOS App', 'Freelance Work', 'Healthcare'],
+		links: {
+			appStore: 'https://apps.apple.com'
+		}
+	},
+	{
 		id: 'zentava',
 		title: 'Zentava',
 		description: 'An AI-powered mental health assistant. Still in beta, still figuring things out — just like you. Available 24/7, judgment-free.',
