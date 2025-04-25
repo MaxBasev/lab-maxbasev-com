@@ -2,6 +2,18 @@ import { Project } from '../types';
 
 export const projects: Project[] = [
 	{
+		id: 'bare-minimum-hero',
+		title: 'Bare Minimum Hero',
+		description: 'A Chrome extension that rewards you for doing the absolute bare minimum. Because consistency > crushing it.',
+		icon: '🦸‍♂️',
+		image: '/images/projects/BMH_promo.png',
+		tags: ['Chrome Extension', 'Pet Project', 'Tool'],
+		links: {
+			website: 'https://bareminimumhero.com',
+			blog: 'https://chrome.google.com/webstore'
+		}
+	},
+	{
 		id: 'zentava',
 		title: 'Zentava',
 		description: 'An AI-powered mental health assistant. Still in beta, still figuring things out — just like you. Available 24/7, judgment-free.',
@@ -13,9 +25,31 @@ export const projects: Project[] = [
 		}
 	},
 	{
+		id: 'cheqly-life',
+		title: 'Cheqly Life',
+		description: 'Track your goals efficiently. Build habits that stick. Cheqly helps you stay consistent and motivated with simple daily check-ins and visual feedback. No endless forms. No distractions. Just a clean interface focused on momentum.',
+		icon: '📈',
+		image: '/images/projects/Cheqly_Promo.png',
+		tags: ['SaaS', 'Web App', 'Beta'],
+		links: {
+			website: 'https://cheqly.life'
+		}
+	},
+	{
+		id: 'extenswitch',
+		title: 'ExtenSwitch',
+		description: 'Quickly toggle Chrome extensions with a single click. Perfect for crypto wallet wranglers, devs, or anyone who forgot why they installed 14 extensions in the first place.',
+		icon: '🧩',
+		image: '/images/projects/ExtenSwitch.png',
+		tags: ['Chrome Extension', 'Tool', 'Pet Project'],
+		links: {
+			website: 'https://chrome.google.com/webstore'
+		}
+	},
+	{
 		id: 'ugh-okay',
 		title: 'Ugh Okay',
-		description: 'A tiny offline app to help you stop doomscrolling.',
+		description: 'A tiny offline app that helps you fight indecision and doomscrolling. Add things you actually want to do - then tap the button when your brain freezes. It picks one for you. That\'s it. No sync, no pressure, no pushy owl.',
 		icon: '🧠',
 		image: '/images/projects/UghOkay.png',
 		tags: ['Mobile App', 'Pet Project'],
