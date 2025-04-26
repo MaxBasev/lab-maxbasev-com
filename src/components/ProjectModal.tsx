@@ -1,27 +1,40 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ProjectContent from './ProjectContent';
 
 interface ProjectModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	title: string;
 	content: string;
+	projectId?: string;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, content }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, content, projectId }) => {
 	const modalRef = useRef<HTMLDivElement>(null);
+	// Состояние для анимации затемнения фона
+	const [fadeIn, setFadeIn] = useState(false);
 
-	// Блокируем скролл страницы когда модальное окно открыто
+	// Управляем анимацией при открытии/закрытии
 	useEffect(() => {
 		if (isOpen) {
-			document.body.style.overflow = 'hidden';
+			// При открытии модального окна, сначала показываем фон (с нулевой прозрачностью)
+			setFadeIn(true);
+			// Затем через небольшую задержку делаем его непрозрачным
+			const timer = setTimeout(() => {
+				document.body.style.overflow = 'hidden';
+			}, 50);
+			return () => clearTimeout(timer);
 		} else {
+			// При закрытии сначала делаем фон прозрачным
 			document.body.style.overflow = 'auto';
+			// Затем удаляем элемент из DOM
+			const timer = setTimeout(() => {
+				setFadeIn(false);
+			}, 300); // Должно соответствовать длительности анимации в CSS
+			return () => clearTimeout(timer);
 		}
-		return () => {
-			document.body.style.overflow = 'auto';
-		};
 	}, [isOpen]);
 
 	// Закрытие по клику вне модального окна
@@ -56,8 +69,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 		};
 	}, [isOpen, onClose]);
 
-	if (!isOpen) return null;
+	// Если модальное окно закрыто и анимация завершена, не рендерим ничего
+	if (!isOpen && !fadeIn) return null;
 
+	// Для обратной совместимости - если передан projectId, используем компонент ProjectContent
+	// иначе форматируем контент как раньше
 	const formatContent = (text: string) => {
 		// Разбиваем текст на строки
 		const lines = text.split('\n');
@@ -85,10 +101,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 	};
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-lab-dark/80 backdrop-blur-sm transition-opacity duration-300 portfolio:bg-black/60">
+		<div
+			className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0'
+				} bg-lab-dark/80 backdrop-blur-sm portfolio:bg-black/60`}
+		>
 			<div
 				ref={modalRef}
-				className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-lab-medium/90 rounded-xl border border-lab-cyan/30 shadow-xl p-6 m-4 animate-fadeIn portfolio:bg-white portfolio:border-indigo-100"
+				className={`w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-lab-medium/90 rounded-xl border border-lab-cyan/30 shadow-xl p-6 m-4 transition-transform duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+					} portfolio:bg-white portfolio:border-indigo-100`}
 			>
 				<div className="flex justify-between items-start mb-4">
 					<h2 className="text-2xl font-mono font-bold text-lab-cyan portfolio:text-indigo-900 portfolio:font-sans">
@@ -107,7 +127,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 				</div>
 
 				<div className="text-lab-text font-mono leading-relaxed portfolio:text-indigo-700 portfolio:font-sans">
-					{formatContent(content)}
+					{projectId ? (
+						<ProjectContent projectId={projectId} isModal={true} />
+					) : (
+						formatContent(content)
+					)}
 				</div>
 
 				<div className="mt-8 flex justify-end">
