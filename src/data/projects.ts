@@ -111,6 +111,7 @@ export const projects: Project[] = [
 		title: 'Focus Buddy',
 		description: 'Chrome extension that blocks distracting websites and helps you stay focused.',
 		icon: '🎯',
+		image: '/images/projects/Focus_Buddy_promo.png',
 		tags: ['Chrome Extension', 'Tool'],
 		links: {
 			website: 'https://focusbuddy.maxbasev.com',
