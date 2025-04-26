@@ -35,8 +35,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
 	const handleCloseModal = () => {
 		setModalOpen(false);
-		// Возвращаемся на страницу /cases при закрытии модального окна через history API
-		window.history.pushState({}, '', '/cases');
+		// Возвращаемся на главную страницу при закрытии модального окна через history API
+		window.history.pushState({}, '', '/');
 	};
 
 	// Получаем контент для проекта
