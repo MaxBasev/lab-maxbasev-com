@@ -1,9 +1,12 @@
 "use client";
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
 export const Navbar = () => {
+	const pathname = usePathname();
+
 	return (
 		<nav className="sticky top-0 z-10 backdrop-blur-md bg-opacity-40 bg-lab-dark border-b border-lab-cyan/20 portfolio:bg-white portfolio:border-b portfolio:border-indigo-100 portfolio:shadow-sm">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +24,11 @@ export const Navbar = () => {
 					<div className="flex items-center space-x-5">
 						<Link
 							href="/"
-							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-cyan hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-portfolio-accent portfolio:hover:bg-indigo-50 portfolio:rounded-md"
+							className={`px-3 py-2 rounded-md text-sm font-mono font-medium transition-colors portfolio:font-sans portfolio:hover:text-portfolio-accent portfolio:hover:bg-indigo-50 portfolio:rounded-md
+								${pathname === '/'
+									? 'text-lab-cyan bg-lab-medium/50 portfolio:text-portfolio-accent portfolio:bg-indigo-50'
+									: 'text-lab-text hover:text-lab-cyan hover:bg-lab-medium/50 portfolio:text-indigo-700'
+								}`}
 						>
 							Home
 						</Link>
@@ -33,14 +40,35 @@ export const Navbar = () => {
 						>
 							Blog
 						</Link>
-						<Link
-							href="/"
-							className="px-4 py-2 rounded-md text-sm font-mono font-medium bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 portfolio:font-sans portfolio:bg-portfolio-accent portfolio:text-white portfolio:border-0 portfolio:rounded-xl portfolio:hover:bg-portfolio-accent/90 portfolio:shadow-sm portfolio:hover:shadow-md transition-all duration-200"
-						>
-							<span className="portfolio:hidden">Lab_</span>
-							<span className="hidden portfolio:inline">Contact</span>
-						</Link>
-						<ThemeToggle />
+
+						<div className="flex -space-x-[1px]">
+							<Link
+								href="/"
+								className={`px-4 py-2 rounded-l-md text-sm font-mono font-medium transition-all duration-200
+									${pathname === '/' || pathname === '/lab'
+										? 'bg-lab-cyan/20 text-lab-cyan border border-lab-cyan/40 portfolio:bg-portfolio-accent portfolio:text-white portfolio:border portfolio:border-portfolio-accent portfolio:shadow-md z-10'
+										: 'bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 portfolio:bg-portfolio-accent/90 portfolio:text-white portfolio:border portfolio:border-portfolio-accent portfolio:shadow-sm hover:z-10'
+									}`}
+							>
+								<span className="portfolio:hidden">Lab_</span>
+								<span className="hidden portfolio:inline">Lab</span>
+							</Link>
+							<Link
+								href="/ideas"
+								className={`px-4 py-2 rounded-r-md text-sm font-mono font-medium transition-all duration-200
+									${pathname === '/ideas'
+										? 'bg-lab-purple/20 text-lab-purple border border-lab-purple/40 portfolio:bg-portfolio-accent portfolio:text-white portfolio:border portfolio:border-portfolio-accent portfolio:shadow-md z-10'
+										: 'bg-lab-purple/10 text-lab-purple border border-lab-purple/30 portfolio:bg-portfolio-accent/90 portfolio:text-white portfolio:border portfolio:border-portfolio-accent portfolio:shadow-sm hover:z-10'
+									}`}
+							>
+								<span className="portfolio:hidden">Ideas_</span>
+								<span className="hidden portfolio:inline">Ideas</span>
+							</Link>
+						</div>
+
+						<div className="hidden">
+							<ThemeToggle />
+						</div>
 					</div>
 				</div>
 			</div>
