@@ -4,12 +4,49 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 type IdeaId = 'ai-writing' | 'task-manager' | 'snippet-manager';
+type IdeaStatus = 'Draft' | 'Early Research' | 'Prototype' | 'On Hold';
+type IdeaDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Nightmare fuel';
+
 type IdeaRating = {
 	likes: number;
 	dislikes: number;
 	userChoice: 'like' | 'dislike' | null;
 };
+
+type IdeaInfo = {
+	title: string;
+	description: string;
+	tags: string[];
+	status: IdeaStatus;
+	difficulty: IdeaDifficulty;
+};
+
 type IdeasRatings = Record<IdeaId, IdeaRating>;
+type IdeasData = Record<IdeaId, IdeaInfo>;
+
+const initialIdeasData: IdeasData = {
+	'ai-writing': {
+		title: 'AI Writing Assistant',
+		description: 'A browser extension that helps with writing clearer, more concise text. Uses AI to suggest improvements without changing your voice.',
+		tags: ['Chrome Extension', 'AI-powered', 'Early Design'],
+		status: 'Early Research',
+		difficulty: 'Medium'
+	},
+	'task-manager': {
+		title: 'Minimal Task Manager',
+		description: 'Ultra-lightweight task manager with focus on simplicity and keyboard shortcuts. No accounts, no cloud sync, just local tasks.',
+		tags: ['Web App', 'Tool', 'In Development'],
+		status: 'Prototype',
+		difficulty: 'Easy'
+	},
+	'snippet-manager': {
+		title: 'Code Snippet Manager',
+		description: 'VS Code extension for saving, organizing and reusing code snippets with smart context detection.',
+		tags: ['VS Code Extension', 'Tool', 'Concept'],
+		status: 'Draft',
+		difficulty: 'Nightmare fuel'
+	}
+};
 
 const initialRatings: IdeasRatings = {
 	'ai-writing': { likes: 14, dislikes: 3, userChoice: null },
@@ -17,8 +54,59 @@ const initialRatings: IdeasRatings = {
 	'snippet-manager': { likes: 9, dislikes: 2, userChoice: null }
 };
 
+// Компонент для отображения статуса идеи
+const StatusBadge = ({ status }: { status: IdeaStatus }) => {
+	const getStatusStyles = () => {
+		switch (status) {
+			case 'Draft':
+				return 'bg-gray-800/40 text-gray-300 border-gray-600 portfolio:bg-gray-100 portfolio:text-gray-700 portfolio:border-gray-300';
+			case 'Early Research':
+				return 'bg-indigo-900/40 text-indigo-300 border-indigo-700 portfolio:bg-indigo-100 portfolio:text-indigo-700 portfolio:border-indigo-300';
+			case 'Prototype':
+				return 'bg-green-900/40 text-green-300 border-green-700 portfolio:bg-green-100 portfolio:text-green-700 portfolio:border-green-300';
+			case 'On Hold':
+				return 'bg-amber-900/40 text-amber-300 border-amber-700 portfolio:bg-amber-100 portfolio:text-amber-700 portfolio:border-amber-300';
+			default:
+				return 'bg-gray-800/40 text-gray-300 border-gray-600 portfolio:bg-gray-100 portfolio:text-gray-700 portfolio:border-gray-300';
+		}
+	};
+
+	return (
+		<div className={`text-xs px-2 py-1 rounded-full border ${getStatusStyles()} font-mono portfolio:font-sans inline-flex items-center`}>
+			<span className="w-1.5 h-1.5 rounded-full mr-1 bg-current"></span>
+			{status}
+		</div>
+	);
+};
+
+// Компонент для отображения сложности идеи
+const DifficultyBadge = ({ difficulty }: { difficulty: IdeaDifficulty }) => {
+	const getDifficultyStyles = () => {
+		switch (difficulty) {
+			case 'Easy':
+				return 'bg-emerald-900/30 text-emerald-300 portfolio:bg-emerald-100 portfolio:text-emerald-700';
+			case 'Medium':
+				return 'bg-blue-900/30 text-blue-300 portfolio:bg-blue-100 portfolio:text-blue-700';
+			case 'Hard':
+				return 'bg-orange-900/30 text-orange-300 portfolio:bg-orange-100 portfolio:text-orange-700';
+			case 'Nightmare fuel':
+				return 'bg-red-900/30 text-red-300 portfolio:bg-red-100 portfolio:text-red-700';
+			default:
+				return 'bg-gray-800/30 text-gray-300 portfolio:bg-gray-100 portfolio:text-gray-700';
+		}
+	};
+
+	return (
+		<div className={`text-xs px-2 py-1 rounded-full ${getDifficultyStyles()} font-mono portfolio:font-sans`}>
+			{difficulty === 'Nightmare fuel' ? '🔥 ' : ''}
+			{difficulty}
+		</div>
+	);
+};
+
 export default function Ideas() {
 	const [ratings, setRatings] = useState<IdeasRatings>(initialRatings);
+	const [ideasData] = useState<IdeasData>(initialIdeasData);
 
 	// Загрузка данных из localStorage при инициализации
 	useEffect(() => {
@@ -103,119 +191,55 @@ export default function Ideas() {
 							</div>
 						</div>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans space-y-6">
-							<div className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
-								<div className="flex justify-between items-start">
-									<h3 className="text-xl font-bold text-lab-purple portfolio:text-portfolio-accent mb-2">AI Writing Assistant</h3>
-									<div className="flex items-center space-x-4">
-										<button
-											onClick={() => handleVote('ai-writing', 'like')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['ai-writing'].userChoice === 'like'
+							{Object.entries(ideasData).map(([id, idea]) => (
+								<div key={id} className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
+									<div className="flex justify-between items-start">
+										<div>
+											<h3 className="text-xl font-bold text-lab-purple portfolio:text-portfolio-accent mb-2">
+												{idea.title}
+											</h3>
+											<div className="flex flex-wrap gap-2 mb-3">
+												<StatusBadge status={idea.status} />
+												<DifficultyBadge difficulty={idea.difficulty} />
+											</div>
+										</div>
+										<div className="flex items-center space-x-4 ml-4">
+											<button
+												onClick={() => handleVote(id as IdeaId, 'like')}
+												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings[id as IdeaId].userChoice === 'like'
 													? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
 													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50'
-												}`}
-											aria-label="Like this idea"
-										>
-											<span role="img" aria-hidden="true">👍</span>
-											<span>{ratings['ai-writing'].likes}</span>
-										</button>
-										<button
-											onClick={() => handleVote('ai-writing', 'dislike')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['ai-writing'].userChoice === 'dislike'
+													}`}
+												aria-label="Like this idea"
+											>
+												<span role="img" aria-hidden="true">👍</span>
+												<span>{ratings[id as IdeaId].likes}</span>
+											</button>
+											<button
+												onClick={() => handleVote(id as IdeaId, 'dislike')}
+												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings[id as IdeaId].userChoice === 'dislike'
 													? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
 													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50'
-												}`}
-											aria-label="Dislike this idea"
-										>
-											<span role="img" aria-hidden="true">👎</span>
-											<span>{ratings['ai-writing'].dislikes}</span>
-										</button>
+													}`}
+												aria-label="Dislike this idea"
+											>
+												<span role="img" aria-hidden="true">👎</span>
+												<span>{ratings[id as IdeaId].dislikes}</span>
+											</button>
+										</div>
+									</div>
+									<p className="mb-3">
+										{idea.description}
+									</p>
+									<div className="flex flex-wrap gap-2 mt-3">
+										{idea.tags.map((tag, index) => (
+											<span key={index} className="px-2 py-1 bg-purple-900/30 text-purple-200 rounded-md text-xs portfolio:bg-purple-100 portfolio:text-purple-800">
+												{tag}
+											</span>
+										))}
 									</div>
 								</div>
-								<p className="mb-2">
-									A browser extension that helps with writing clearer, more concise text. Uses AI to suggest improvements without changing your voice.
-								</p>
-								<div className="flex flex-wrap gap-2 mt-3">
-									<span className="px-2 py-1 bg-purple-900/30 text-purple-200 rounded-md text-xs portfolio:bg-purple-100 portfolio:text-purple-800">Chrome Extension</span>
-									<span className="px-2 py-1 bg-violet-900/30 text-violet-200 rounded-md text-xs portfolio:bg-violet-100 portfolio:text-violet-800">AI-powered</span>
-									<span className="px-2 py-1 bg-amber-900/30 text-amber-200 rounded-md text-xs portfolio:bg-amber-100 portfolio:text-amber-800">Early Design</span>
-								</div>
-							</div>
-
-							<div className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
-								<div className="flex justify-between items-start">
-									<h3 className="text-xl font-bold text-lab-purple portfolio:text-portfolio-accent mb-2">Minimal Task Manager</h3>
-									<div className="flex items-center space-x-4">
-										<button
-											onClick={() => handleVote('task-manager', 'like')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['task-manager'].userChoice === 'like'
-													? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
-													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50'
-												}`}
-											aria-label="Like this idea"
-										>
-											<span role="img" aria-hidden="true">👍</span>
-											<span>{ratings['task-manager'].likes}</span>
-										</button>
-										<button
-											onClick={() => handleVote('task-manager', 'dislike')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['task-manager'].userChoice === 'dislike'
-													? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
-													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50'
-												}`}
-											aria-label="Dislike this idea"
-										>
-											<span role="img" aria-hidden="true">👎</span>
-											<span>{ratings['task-manager'].dislikes}</span>
-										</button>
-									</div>
-								</div>
-								<p className="mb-2">
-									Ultra-lightweight task manager with focus on simplicity and keyboard shortcuts. No accounts, no cloud sync, just local tasks.
-								</p>
-								<div className="flex flex-wrap gap-2 mt-3">
-									<span className="px-2 py-1 bg-blue-900/30 text-blue-200 rounded-md text-xs portfolio:bg-blue-100 portfolio:text-blue-800">Web App</span>
-									<span className="px-2 py-1 bg-red-900/30 text-red-200 rounded-md text-xs portfolio:bg-red-100 portfolio:text-red-800">Tool</span>
-									<span className="px-2 py-1 bg-green-900/30 text-green-200 rounded-md text-xs portfolio:bg-green-100 portfolio:text-green-800">In Development</span>
-								</div>
-							</div>
-
-							<div className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
-								<div className="flex justify-between items-start">
-									<h3 className="text-xl font-bold text-lab-purple portfolio:text-portfolio-accent mb-2">Code Snippet Manager</h3>
-									<div className="flex items-center space-x-4">
-										<button
-											onClick={() => handleVote('snippet-manager', 'like')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['snippet-manager'].userChoice === 'like'
-													? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
-													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50'
-												}`}
-											aria-label="Like this idea"
-										>
-											<span role="img" aria-hidden="true">👍</span>
-											<span>{ratings['snippet-manager'].likes}</span>
-										</button>
-										<button
-											onClick={() => handleVote('snippet-manager', 'dislike')}
-											className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings['snippet-manager'].userChoice === 'dislike'
-													? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
-													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50'
-												}`}
-											aria-label="Dislike this idea"
-										>
-											<span role="img" aria-hidden="true">👎</span>
-											<span>{ratings['snippet-manager'].dislikes}</span>
-										</button>
-									</div>
-								</div>
-								<p className="mb-2">
-									VS Code extension for saving, organizing and reusing code snippets with smart context detection.
-								</p>
-								<div className="flex flex-wrap gap-2 mt-3">
-									<span className="px-2 py-1 bg-yellow-900/30 text-yellow-200 rounded-md text-xs portfolio:bg-yellow-100 portfolio:text-yellow-800">VS Code Extension</span>
-									<span className="px-2 py-1 bg-red-900/30 text-red-200 rounded-md text-xs portfolio:bg-red-100 portfolio:text-red-800">Tool</span>
-									<span className="px-2 py-1 bg-indigo-900/30 text-indigo-200 rounded-md text-xs portfolio:bg-indigo-100 portfolio:text-indigo-800">Concept</span>
-								</div>
-							</div>
+							))}
 						</div>
 					</div>
 
@@ -228,21 +252,33 @@ export default function Ideas() {
 								<li className="flex items-start gap-3">
 									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">⏱️</span>
 									<div>
-										<h3 className="font-bold">Deep Work Timer</h3>
+										<div className="flex items-center gap-2 mb-1">
+											<h3 className="font-bold">Deep Work Timer</h3>
+											<StatusBadge status="Draft" />
+											<DifficultyBadge difficulty="Medium" />
+										</div>
 										<p>A timer application that enforces focus sessions using psychological techniques and gentle accountability.</p>
 									</div>
 								</li>
 								<li className="flex items-start gap-3">
 									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">📚</span>
 									<div>
-										<h3 className="font-bold">Reading List Tracker</h3>
+										<div className="flex items-center gap-2 mb-1">
+											<h3 className="font-bold">Reading List Tracker</h3>
+											<StatusBadge status="On Hold" />
+											<DifficultyBadge difficulty="Hard" />
+										</div>
 										<p>Browser extension that helps organize articles, blogs and papers to read later, with built-in comprehension scoring.</p>
 									</div>
 								</li>
 								<li className="flex items-start gap-3">
 									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">🤖</span>
 									<div>
-										<h3 className="font-bold">Personal AI Assistant</h3>
+										<div className="flex items-center gap-2 mb-1">
+											<h3 className="font-bold">Personal AI Assistant</h3>
+											<StatusBadge status="Early Research" />
+											<DifficultyBadge difficulty="Nightmare fuel" />
+										</div>
 										<p>Privacy-focused assistant for personal knowledge management and retrieval.</p>
 									</div>
 								</li>
