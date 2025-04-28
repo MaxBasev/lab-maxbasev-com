@@ -1,17 +1,27 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// Используем CommonJS синтаксис, который надежнее работает в Netlify Functions
+const fs = require('fs');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const handler = async function () {
+exports.handler = async function () {
 	try {
-		// Путь к файлу JSON с данными
-		const dataPath = path.join(__dirname, '../data/votes.json');
+		// В Netlify функции, пути относительны к корню функции
+		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
+
+		// Проверяем, существует ли файл
+		if (!fs.existsSync(dataPath)) {
+			console.log('File not found:', dataPath);
+			return {
+				statusCode: 404,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*'
+				},
+				body: JSON.stringify({ error: 'Votes data file not found', path: dataPath })
+			};
+		}
 
 		// Чтение файла
-		const rawData = fs.readFileSync(dataPath);
+		const rawData = fs.readFileSync(dataPath, 'utf8');
 		const votes = JSON.parse(rawData);
 
 		return {
@@ -23,14 +33,18 @@ export const handler = async function () {
 			body: JSON.stringify(votes)
 		};
 	} catch (error) {
-		console.error('Error reading votes:', error);
+		console.error('Error reading votes:', error.message, error.stack);
 		return {
 			statusCode: 500,
 			headers: {
 				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': '*'
 			},
-			body: JSON.stringify({ error: 'Не удалось получить данные о голосах' })
+			body: JSON.stringify({
+				error: 'Не удалось получить данные о голосах',
+				details: error.message,
+				stack: error.stack
+			})
 		};
 	}
 }; 

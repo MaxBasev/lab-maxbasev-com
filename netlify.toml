@@ -5,7 +5,10 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["fs", "path"]
+  external_node_modules = ["fs-extra", "path"]
+
+[build.environment]
+  NODE_VERSION = "18"
 
 [[redirects]]
   from = "/api/*"
