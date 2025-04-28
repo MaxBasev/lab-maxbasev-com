@@ -195,6 +195,20 @@ const saveVotesToNetlify = async (votes) => {
 			throw new Error(`Ошибка сохранения в Netlify API: ${response.status}`);
 		}
 
+		// Проверяем ответ от API
+		try {
+			const responseData = await response.json();
+			console.log('Ответ от API после сохранения:', JSON.stringify(responseData));
+		} catch (parseError) {
+			console.log('Не удалось распарсить ответ после сохранения:', parseError);
+			try {
+				const responseText = await response.text();
+				console.log('Текст ответа:', responseText);
+			} catch (textError) {
+				console.log('Не удалось получить текст ответа:', textError);
+			}
+		}
+
 		console.log('Голоса успешно сохранены в Netlify API');
 		return true;
 	} catch (error) {
@@ -376,7 +390,12 @@ export const handler = async (event) => {
 			body: JSON.stringify({
 				success: true,
 				votes: votes[ideaId],
-				message: 'Голос успешно учтен'
+				message: 'Голос успешно учтен',
+				debugInfo: {
+					useNetlifyAPI: !!process.env.NETLIFY_API_KEY && !!process.env.NETLIFY_SITE_ID,
+					inMemoryState: JSON.stringify(memoryVotes),
+					votesMatch: JSON.stringify(memoryVotes) === JSON.stringify(votes)
+				}
 			})
 		};
 	} catch (error) {

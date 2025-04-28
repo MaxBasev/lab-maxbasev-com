@@ -87,6 +87,8 @@ const getVotesFromNetlifyApi = async () => {
 		try {
 			const parsedVotes = JSON.parse(votesVar.values[0].value);
 			console.log('Successfully parsed votes data from environment variable');
+			console.log('VOTES_DATA содержимое:', votesVar.values[0].value);
+			console.log('VOTES_DATA parsed:', JSON.stringify(parsedVotes));
 			return parsedVotes;
 		} catch (e) {
 			console.error('Error parsing votes data from environment variable:', e);
