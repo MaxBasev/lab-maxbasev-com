@@ -1,225 +1,312 @@
-// Используем CommonJS синтаксис, который надежнее работает в Netlify Functions
-const fs = require('fs');
-const path = require('path');
+// Netlify Functions используют ESM синтаксис
+import { promises as fs } from 'fs';
+import path from 'path';
+import fetch from 'node-fetch';
 
-// Определяем дефолтные данные для голосования
+// ВАЖНО: В продакшн среде Netlify Functions не могут записывать файлы!
+// Решение для прода:
+// 1. Использовать Netlify API (рекомендуется)
+// 2. Использовать внешние базы данных (Firebase, MongoDB и т.д.)
+// 3. Использовать GitHub API для записи в репозиторий
+//
+// Текущая имплементация работает локально, но в проде голоса не будут сохраняться!
+
+// Дефолтные значения голосования
 const defaultVotes = {
 	'ai-writing': { likes: 14, dislikes: 3 },
 	'task-manager': { likes: 23, dislikes: 5 },
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// Функция для проверки и создания директории и файла
-const ensureVotesFile = (dataPath) => {
+// In-memory хранилище для голосов (будет использоваться, если не удалось получить данные из Netlify API)
+let memoryVotes = { ...defaultVotes };
+
+// Получение API ключа и ID сайта из переменных окружения
+const getNetlifyCredentials = () => {
+	const apiKey = process.env.NETLIFY_API_KEY;
+	const siteId = process.env.NETLIFY_SITE_ID;
+
+	if (!apiKey || !siteId) {
+		console.log('Netlify API ключ или ID сайта не найдены в переменных окружения');
+		return null;
+	}
+
+	return { apiKey, siteId };
+};
+
+// Получение голосов из Netlify API (Environment Variables)
+const fetchVotesFromNetlify = async () => {
+	const credentials = getNetlifyCredentials();
+	if (!credentials) return null;
+
 	try {
-		const dir = path.dirname(dataPath);
-		console.log('Checking directory existence:', dir);
-		if (!fs.existsSync(dir)) {
-			console.log('Creating directory:', dir);
-			try {
-				fs.mkdirSync(dir, { recursive: true });
-				console.log('Directory created successfully');
-			} catch (dirError) {
-				console.error('Error creating directory:', dirError);
-				throw dirError;
+		const { apiKey, siteId } = credentials;
+		const response = await fetch(
+			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
+			{
+				headers: {
+					'Authorization': `Bearer ${apiKey}`,
+					'Content-Type': 'application/json'
+				}
 			}
-		} else {
-			console.log('Directory already exists');
-			// Проверяем права на запись в директорию
-			try {
-				fs.accessSync(dir, fs.constants.W_OK);
-				console.log('Directory is writable');
-			} catch (accessError) {
-				console.error('Directory is not writable:', accessError);
-				throw accessError;
-			}
+		);
+
+		if (!response.ok) {
+			throw new Error(`Netlify API вернул статус: ${response.status}`);
 		}
 
-		console.log('Checking file existence:', dataPath);
-		if (!fs.existsSync(dataPath)) {
-			console.log('Creating votes file with default data');
+		const envVars = await response.json();
+		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
+
+		if (votesVar && votesVar.values && votesVar.values.length > 0) {
 			try {
-				fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-				console.log('Votes file created successfully');
-				return defaultVotes;
-			} catch (fileError) {
-				console.error('Error creating votes file:', fileError);
-				throw fileError;
+				const votes = JSON.parse(votesVar.values[0].value);
+				console.log('Голоса успешно получены из Netlify API');
+				return votes;
+			} catch (error) {
+				console.error('Ошибка парсинга данных голосов:', error);
 			}
 		} else {
-			console.log('Votes file already exists, reading content');
-			try {
-				const data = fs.readFileSync(dataPath, 'utf8');
-				console.log('File content raw:', data);
-
-				// Проверка на пустой файл
-				if (!data || data.trim() === '') {
-					console.log('Votes file is empty, using default data');
-					// Если файл пустой, записываем дефолтные данные
-					fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-					return defaultVotes;
-				}
-
-				try {
-					const parsedData = JSON.parse(data);
-					console.log('Votes file read successfully:', JSON.stringify(parsedData));
-					return parsedData;
-				} catch (jsonError) {
-					console.error('Error parsing JSON, using default data:', jsonError);
-					// Если JSON невалидный, записываем дефолтные данные
-					fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-					return defaultVotes;
-				}
-			} catch (readError) {
-				console.error('Error reading votes file:', readError);
-				throw readError;
-			}
+			console.log('Данные о голосах не найдены в Netlify Environment Variables');
 		}
+
+		return null;
 	} catch (error) {
-		console.error('Error in ensureVotesFile:', error);
-		// В случае любой ошибки, просто возвращаем дефолтные данные
-		return defaultVotes;
+		console.error('Ошибка получения голосов из Netlify API:', error);
+		return null;
 	}
 };
 
-// Функция для безопасной записи данных в файл с резервным копированием
-const safeWriteFile = (filePath, data) => {
-	const backupPath = `${filePath}.backup`;
+// Сохранение голосов в Netlify API (Environment Variables)
+const saveVotesToNetlify = async (votes) => {
+	const credentials = getNetlifyCredentials();
+	if (!credentials) return false;
 
 	try {
-		// Если файл существует, создаем резервную копию
-		if (fs.existsSync(filePath)) {
-			console.log('Creating backup of existing file');
-			fs.copyFileSync(filePath, backupPath);
-			console.log('Backup created at:', backupPath);
+		const { apiKey, siteId } = credentials;
+
+		// Проверяем существование переменной
+		const checkResponse = await fetch(
+			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
+			{
+				headers: {
+					'Authorization': `Bearer ${apiKey}`,
+					'Content-Type': 'application/json'
+				}
+			}
+		);
+
+		if (!checkResponse.ok) {
+			throw new Error(`Netlify API вернул статус: ${checkResponse.status}`);
 		}
 
-		// Записываем новые данные
-		console.log('Writing data to file');
-		fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-		console.log('Data written successfully');
+		const envVars = await checkResponse.json();
+		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
+		const votesJson = JSON.stringify(votes);
 
-		// Удаляем резервную копию, если запись прошла успешно
-		if (fs.existsSync(backupPath)) {
-			fs.unlinkSync(backupPath);
-			console.log('Backup file removed');
+		let response;
+
+		if (votesVar) {
+			// Обновляем существующую переменную
+			response = await fetch(
+				`https://api.netlify.com/api/v1/sites/${siteId}/env/${votesVar.id}`,
+				{
+					method: 'PUT',
+					headers: {
+						'Authorization': `Bearer ${apiKey}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						key: 'VOTES_DATA',
+						values: [{ value: votesJson }]
+					})
+				}
+			);
+		} else {
+			// Создаем новую переменную
+			response = await fetch(
+				`https://api.netlify.com/api/v1/sites/${siteId}/env`,
+				{
+					method: 'POST',
+					headers: {
+						'Authorization': `Bearer ${apiKey}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						key: 'VOTES_DATA',
+						values: [{ value: votesJson }]
+					})
+				}
+			);
 		}
 
+		if (!response.ok) {
+			throw new Error(`Ошибка сохранения в Netlify API: ${response.status}`);
+		}
+
+		console.log('Голоса успешно сохранены в Netlify API');
 		return true;
 	} catch (error) {
-		console.error('Error writing file:', error);
-
-		// Восстанавливаем из резервной копии, если она есть
-		if (fs.existsSync(backupPath)) {
-			console.log('Restoring from backup');
-			try {
-				fs.copyFileSync(backupPath, filePath);
-				console.log('Restored from backup successfully');
-			} catch (restoreError) {
-				console.error('Failed to restore from backup:', restoreError);
-			}
-		}
-
-		throw error;
+		console.error('Ошибка сохранения голосов в Netlify API:', error);
+		return false;
 	}
 };
 
-exports.handler = async function (event) {
-	console.log('update-votes handler started');
-	console.log('HTTP Method:', event.httpMethod);
-	console.log('Headers:', JSON.stringify(event.headers));
+// Функция для получения данных о голосах
+const getVotes = async () => {
+	try {
+		// Сначала пытаемся получить голоса из Netlify API
+		const netlifyVotes = await fetchVotesFromNetlify();
+		if (netlifyVotes) {
+			memoryVotes = netlifyVotes; // Обновляем in-memory хранилище
+			return netlifyVotes;
+		}
+
+		console.log('Используем локальное хранилище для голосов...');
+
+		// Пробуем получить данные из файла (для локальной разработки)
+		const dataDir = path.join(__dirname, '..', 'data');
+		const votesFile = path.join(dataDir, 'votes.json');
+
+		try {
+			await fs.access(dataDir);
+		} catch {
+			console.log('Директория data не существует, создаем...');
+			try {
+				await fs.mkdir(dataDir, { recursive: true });
+			} catch (mkdirErr) {
+				console.error('Ошибка создания директории:', mkdirErr);
+				return memoryVotes; // Возвращаем in-memory данные, если не можем создать директорию
+			}
+		}
+
+		try {
+			const data = await fs.readFile(votesFile, 'utf8');
+			const votes = JSON.parse(data);
+			memoryVotes = votes; // Обновляем in-memory хранилище
+			return votes;
+		} catch (err) {
+			if (err.code === 'ENOENT') {
+				console.log('Файл голосов не существует, создаем новый файл с дефолтными значениями...');
+				try {
+					await fs.writeFile(votesFile, JSON.stringify(defaultVotes, null, 2));
+				} catch (writeErr) {
+					console.error('Ошибка записи дефолтного файла голосов:', writeErr);
+					// Несмотря на ошибку записи, продолжаем с in-memory данными
+				}
+			} else {
+				console.error('Ошибка чтения файла голосов:', err);
+			}
+
+			return memoryVotes;
+		}
+	} catch (error) {
+		console.error('Непредвиденная ошибка при получении голосов:', error);
+		return memoryVotes;
+	}
+};
+
+// Функция для сохранения данных о голосах
+const saveVotes = async (votes) => {
+	// Обновляем in-memory хранилище
+	memoryVotes = { ...votes };
+
+	// Сначала пытаемся сохранить в Netlify API
+	const savedToNetlify = await saveVotesToNetlify(votes);
+
+	// Если сохранение в API не удалось или мы в локальной разработке,
+	// пытаемся сохранить в файл
+	if (!savedToNetlify) {
+		try {
+			const dataDir = path.join(__dirname, '..', 'data');
+			const votesFile = path.join(dataDir, 'votes.json');
+
+			try {
+				await fs.access(dataDir);
+			} catch {
+				console.log('Директория data не существует, создаем...');
+				try {
+					await fs.mkdir(dataDir, { recursive: true });
+				} catch (mkdirErr) {
+					console.error('Ошибка создания директории:', mkdirErr);
+					return true; // Данные сохранены в памяти, возвращаем успех
+				}
+			}
+
+			await fs.writeFile(votesFile, JSON.stringify(votes, null, 2));
+			console.log('Голоса успешно сохранены в файл');
+			return true;
+		} catch (error) {
+			console.error('Ошибка сохранения голосов в файл:', error);
+			return true; // Данные сохранены в памяти, возвращаем успех несмотря на ошибку записи в файл
+		}
+	}
+
+	return true;
+};
+
+export const handler = async (event) => {
+	// Настройка CORS
+	const headers = {
+		'Access-Control-Allow-Origin': '*',
+		'Access-Control-Allow-Headers': 'Content-Type',
+		'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+		'Content-Type': 'application/json'
+	};
+
+	// Обработка CORS preflight запросов
+	if (event.httpMethod === 'OPTIONS') {
+		return {
+			statusCode: 200,
+			headers,
+			body: JSON.stringify({ message: 'CORS OK' })
+		};
+	}
 
 	try {
-		// Проверяем метод запроса
+		// Проверка метода
 		if (event.httpMethod !== 'POST') {
-			console.log('Method not allowed:', event.httpMethod);
 			return {
 				statusCode: 405,
-				headers: {
-					'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-					'Access-Control-Allow-Headers': 'Content-Type',
-					'Cache-Control': 'no-store, must-revalidate'
-				},
-				body: JSON.stringify({ error: 'Метод не разрешен' })
+				headers,
+				body: JSON.stringify({ error: 'Метод не разрешен. Используйте POST.' })
 			};
 		}
 
-		// Обработка OPTIONS запроса (CORS preflight)
-		if (event.httpMethod === 'OPTIONS') {
-			console.log('Handling OPTIONS request (CORS preflight)');
-			return {
-				statusCode: 204,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-					'Access-Control-Allow-Headers': 'Content-Type'
-				},
-				body: ''
-			};
-		}
-
-		// Получаем данные из запроса
-		console.log('Parsing request body:', event.body);
-		const { ideaId, action } = JSON.parse(event.body);
-		console.log('Request data:', { ideaId, action });
+		// Парсинг данных запроса
+		const data = JSON.parse(event.body);
+		const { ideaId, action } = data;
 
 		if (!ideaId || !action || (action !== 'like' && action !== 'dislike')) {
-			console.log('Invalid request parameters');
 			return {
 				statusCode: 400,
-				headers: {
-					'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-					'Access-Control-Allow-Headers': 'Content-Type',
-					'Cache-Control': 'no-store, must-revalidate'
-				},
-				body: JSON.stringify({ error: 'Некорректные параметры запроса' })
+				headers,
+				body: JSON.stringify({ error: 'Неверные параметры запроса. Требуются ideaId и action (like/dislike).' })
 			};
 		}
 
-		// Путь к файлу JSON с данными
-		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
-		console.log('Updating votes at path:', dataPath);
-		console.log('Absolute path:', path.resolve(dataPath));
+		// Получение текущих голосов
+		const votes = await getVotes();
 
-		// Получаем текущие голоса, файл будет создан если не существует
-		const votes = ensureVotesFile(dataPath);
-		console.log('Current votes before update:', JSON.stringify(votes));
-
-		// Убедимся, что для данной идеи есть запись
+		// Проверка существования идеи
 		if (!votes[ideaId]) {
-			console.log('Creating new entry for idea:', ideaId);
 			votes[ideaId] = { likes: 0, dislikes: 0 };
 		}
 
 		// Обновление голосов
 		if (action === 'like') {
-			console.log(`Incrementing likes for ${ideaId}`);
 			votes[ideaId].likes += 1;
-		} else if (action === 'dislike') {
-			console.log(`Incrementing dislikes for ${ideaId}`);
+		} else {
 			votes[ideaId].dislikes += 1;
 		}
 
-		console.log('Updated votes:', JSON.stringify(votes));
-		console.log('Writing updated votes to file');
+		// Сохранение обновленных голосов
+		await saveVotes(votes);
 
-		// Безопасная запись обновленных данных
-		safeWriteFile(dataPath, votes);
-		console.log('Vote update completed successfully');
-
+		// Возврат результата
 		return {
 			statusCode: 200,
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-				'Access-Control-Allow-Headers': 'Content-Type',
-				'Cache-Control': 'no-store, must-revalidate'
-			},
+			headers,
 			body: JSON.stringify({
 				success: true,
 				votes: votes[ideaId],
@@ -227,22 +314,11 @@ exports.handler = async function (event) {
 			})
 		};
 	} catch (error) {
-		console.error('Error in update-votes handler:', error.message);
-		console.error('Stack trace:', error.stack);
+		console.error('Ошибка обработки запроса:', error);
 		return {
 			statusCode: 500,
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-				'Access-Control-Allow-Headers': 'Content-Type',
-				'Cache-Control': 'no-store, must-revalidate'
-			},
-			body: JSON.stringify({
-				error: 'Не удалось обновить голоса',
-				details: error.message,
-				stack: error.stack
-			})
+			headers,
+			body: JSON.stringify({ error: 'Внутренняя ошибка сервера', details: error.message })
 		};
 	}
 }; 

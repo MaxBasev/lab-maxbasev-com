@@ -1,6 +1,16 @@
 // Используем CommonJS синтаксис, который надежнее работает в Netlify Functions
 const fs = require('fs');
 const path = require('path');
+const fetch = require('node-fetch');
+
+// ВАЖНО: В продакшн среде Netlify Functions не могут записывать файлы!
+// Решение для прода:
+// 1. Использовать Netlify API (рекомендуется)
+// 2. Использовать внешние базы данных (Firebase, MongoDB и т.д.)
+// 3. Использовать GitHub API для записи в репозиторий
+//
+// Текущая имплементация работает локально, но в проде голоса не будут сохраняться
+// между вызовами функций!
 
 // Определяем дефолтные данные для голосования
 const defaultVotes = {
@@ -9,77 +19,104 @@ const defaultVotes = {
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// Функция для проверки и создания директории и файла
-const ensureVotesFile = (dataPath) => {
+// Временное in-memory хранилище для использования в пределах одной сессии
+// Будет использоваться только если не удалось получить данные из Netlify API
+let inMemoryVotes = null;
+
+// Конфигурация API Netlify
+const NETLIFY_API_URL = 'https://api.netlify.com/api/v1';
+const VARIABLE_KEY = 'VOTES_DATA'; // Имя переменной окружения для хранения голосов
+
+// Функция для получения API-ключа из переменных окружения
+const getNetlifyApiKey = () => {
+	return process.env.NETLIFY_API_KEY || '';
+};
+
+// Функция для получения ID сайта из переменных окружения
+const getNetlifySiteId = () => {
+	return process.env.NETLIFY_SITE_ID || '';
+};
+
+// Функция для получения данных из Netlify API
+const getVotesFromNetlifyApi = async () => {
+	const apiKey = getNetlifyApiKey();
+	const siteId = getNetlifySiteId();
+
+	if (!apiKey || !siteId) {
+		console.log('Netlify API key or site ID not found in environment variables');
+		return null;
+	}
+
 	try {
-		const dir = path.dirname(dataPath);
-		console.log('Checking directory existence:', dir);
-		if (!fs.existsSync(dir)) {
-			console.log('Creating directory:', dir);
-			try {
-				fs.mkdirSync(dir, { recursive: true });
-				console.log('Directory created successfully');
-			} catch (dirError) {
-				console.error('Error creating directory:', dirError);
-				throw dirError;
-			}
-		} else {
-			console.log('Directory already exists');
-			// Проверяем права на запись в директорию
-			try {
-				fs.accessSync(dir, fs.constants.W_OK);
-				console.log('Directory is writable');
-			} catch (accessError) {
-				console.error('Directory is not writable:', accessError);
-				throw accessError;
-			}
+		// Получаем переменные окружения для текущего сайта
+		const response = await fetch(`${NETLIFY_API_URL}/sites/${siteId}/env?access_token=${apiKey}`);
+
+		if (!response.ok) {
+			console.error('Failed to fetch environment variables from Netlify API:', response.statusText);
+			return null;
 		}
 
-		console.log('Checking file existence:', dataPath);
-		if (!fs.existsSync(dataPath)) {
-			console.log('Creating votes file with default data');
-			try {
-				fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-				console.log('Votes file created successfully');
-				return defaultVotes;
-			} catch (fileError) {
-				console.error('Error creating votes file:', fileError);
-				throw fileError;
-			}
-		} else {
-			console.log('Votes file already exists, reading content');
-			try {
-				const data = fs.readFileSync(dataPath, 'utf8');
-				console.log('File content raw:', data);
+		const envVars = await response.json();
+		const votesVar = envVars.find(v => v.key === VARIABLE_KEY);
 
-				// Проверка на пустой файл
-				if (!data || data.trim() === '') {
-					console.log('Votes file is empty, using default data');
-					// Если файл пустой, записываем дефолтные данные
-					fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-					return defaultVotes;
-				}
+		if (!votesVar || !votesVar.values || !votesVar.values[0] || !votesVar.values[0].value) {
+			console.log('Votes data not found in Netlify environment variables');
+			return null;
+		}
 
+		try {
+			return JSON.parse(votesVar.values[0].value);
+		} catch (e) {
+			console.error('Error parsing votes data from environment variable:', e);
+			return null;
+		}
+	} catch (error) {
+		console.error('Error fetching data from Netlify API:', error);
+		return null;
+	}
+};
+
+// Функция для получения данных голосования
+const getVotes = async () => {
+	// Если у нас уже есть данные в памяти, используем их
+	if (inMemoryVotes) {
+		console.log('Using in-memory votes data');
+		return inMemoryVotes;
+	}
+
+	// Пытаемся получить данные из Netlify API
+	const netlifyVotes = await getVotesFromNetlifyApi();
+	if (netlifyVotes) {
+		console.log('Using votes data from Netlify API');
+		inMemoryVotes = netlifyVotes;
+		return netlifyVotes;
+	}
+
+	// Если не удалось получить из API, пытаемся прочитать из файла (для локальной разработки)
+	try {
+		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
+		console.log('Attempting to read votes from file (local development only):', dataPath);
+
+		if (fs.existsSync(dataPath)) {
+			const data = fs.readFileSync(dataPath, 'utf8');
+			if (data && data.trim() !== '') {
 				try {
-					const parsedData = JSON.parse(data);
-					console.log('Votes file read successfully:', JSON.stringify(parsedData));
-					return parsedData;
-				} catch (jsonError) {
-					console.error('Error parsing JSON, using default data:', jsonError);
-					// Если JSON невалидный, записываем дефолтные данные
-					fs.writeFileSync(dataPath, JSON.stringify(defaultVotes, null, 2), 'utf8');
-					return defaultVotes;
+					inMemoryVotes = JSON.parse(data);
+					console.log('Loaded votes from file');
+					return inMemoryVotes;
+				} catch (e) {
+					console.error('Error parsing votes JSON:', e);
 				}
-			} catch (readError) {
-				console.error('Error reading votes file:', readError);
-				throw readError;
 			}
 		}
 	} catch (error) {
-		console.error('Error in ensureVotesFile:', error);
-		// В случае любой ошибки, просто возвращаем дефолтные данные
-		return defaultVotes;
+		console.error('Error reading votes file:', error);
 	}
+
+	// Если не удалось загрузить, используем дефолтные данные
+	console.log('Using default votes data');
+	inMemoryVotes = JSON.parse(JSON.stringify(defaultVotes));
+	return inMemoryVotes;
 };
 
 exports.handler = async function (event) {
@@ -102,13 +139,8 @@ exports.handler = async function (event) {
 			};
 		}
 
-		// В Netlify функции, пути относительны к корню функции
-		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
-		console.log('Attempting to access votes file at:', dataPath);
-		console.log('Absolute path:', path.resolve(dataPath));
-
-		// Обеспечиваем существование файла и получаем данные
-		const votes = ensureVotesFile(dataPath);
+		// Получаем данные голосования
+		const votes = await getVotes();
 		console.log('Returning votes:', JSON.stringify(votes));
 
 		return {
