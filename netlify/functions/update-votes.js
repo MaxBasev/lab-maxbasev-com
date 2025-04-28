@@ -26,6 +26,10 @@ const getNetlifyCredentials = () => {
 	const apiKey = process.env.NETLIFY_API_KEY;
 	const siteId = process.env.NETLIFY_SITE_ID;
 
+	console.log('NETLIFY_API_KEY present:', apiKey ? 'YES (length: ' + apiKey.length + ')' : 'NO');
+	console.log('NETLIFY_SITE_ID present:', siteId ? 'YES: ' + siteId : 'NO');
+	console.log('Available environment variables:', Object.keys(process.env).join(', '));
+
 	if (!apiKey || !siteId) {
 		console.log('Netlify API ключ или ID сайта не найдены в переменных окружения');
 		return null;
@@ -41,6 +45,8 @@ const fetchVotesFromNetlify = async () => {
 
 	try {
 		const { apiKey, siteId } = credentials;
+		console.log(`Пытаемся получить данные из Netlify API: ${NETLIFY_API_URL}/sites/${siteId}/env`);
+
 		const response = await fetch(
 			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
 			{
@@ -51,17 +57,31 @@ const fetchVotesFromNetlify = async () => {
 			}
 		);
 
+		console.log('Netlify API response status:', response.status);
+		console.log('Netlify API response statusText:', response.statusText);
+
 		if (!response.ok) {
+			// Получаем текст ошибки для диагностики
+			try {
+				const errorText = await response.text();
+				console.error('Error response body:', errorText);
+			} catch (textError) {
+				console.error('Could not read error response:', textError);
+			}
+
 			throw new Error(`Netlify API вернул статус: ${response.status}`);
 		}
 
 		const envVars = await response.json();
+		console.log('Environment variables fetched, count:', envVars.length);
+
 		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
+		console.log('VOTES_DATA variable found:', votesVar ? 'YES' : 'NO');
 
 		if (votesVar && votesVar.values && votesVar.values.length > 0) {
 			try {
 				const votes = JSON.parse(votesVar.values[0].value);
-				console.log('Голоса успешно получены из Netlify API');
+				console.log('Голоса успешно получены из Netlify API:', JSON.stringify(votes));
 				return votes;
 			} catch (error) {
 				console.error('Ошибка парсинга данных голосов:', error);
@@ -84,8 +104,10 @@ const saveVotesToNetlify = async (votes) => {
 
 	try {
 		const { apiKey, siteId } = credentials;
+		console.log('Пытаемся сохранить голоса в Netlify API...');
 
 		// Проверяем существование переменной
+		console.log(`Проверяем существование переменной VOTES_DATA: ${NETLIFY_API_URL}/sites/${siteId}/env`);
 		const checkResponse = await fetch(
 			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
 			{
@@ -96,18 +118,35 @@ const saveVotesToNetlify = async (votes) => {
 			}
 		);
 
+		console.log('Check response status:', checkResponse.status);
+		console.log('Check response statusText:', checkResponse.statusText);
+
 		if (!checkResponse.ok) {
+			// Получаем текст ошибки для диагностики
+			try {
+				const errorText = await checkResponse.text();
+				console.error('Error response body:', errorText);
+			} catch (textError) {
+				console.error('Could not read error response:', textError);
+			}
+
 			throw new Error(`Netlify API вернул статус: ${checkResponse.status}`);
 		}
 
 		const envVars = await checkResponse.json();
+		console.log('Environment variables fetched, count:', envVars.length);
+
 		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
+		console.log('VOTES_DATA variable found:', votesVar ? 'YES (id: ' + votesVar.id + ')' : 'NO');
+
 		const votesJson = JSON.stringify(votes);
+		console.log('Votes data to save:', votesJson);
 
 		let response;
 
 		if (votesVar) {
 			// Обновляем существующую переменную
+			console.log(`Обновляем существующую переменную: ${NETLIFY_API_URL}/sites/${siteId}/env/${votesVar.id}`);
 			response = await fetch(
 				`https://api.netlify.com/api/v1/sites/${siteId}/env/${votesVar.id}`,
 				{
@@ -124,6 +163,7 @@ const saveVotesToNetlify = async (votes) => {
 			);
 		} else {
 			// Создаем новую переменную
+			console.log(`Создаем новую переменную: ${NETLIFY_API_URL}/sites/${siteId}/env`);
 			response = await fetch(
 				`https://api.netlify.com/api/v1/sites/${siteId}/env`,
 				{
@@ -140,7 +180,18 @@ const saveVotesToNetlify = async (votes) => {
 			);
 		}
 
+		console.log('Save response status:', response.status);
+		console.log('Save response statusText:', response.statusText);
+
 		if (!response.ok) {
+			// Получаем текст ошибки для диагностики
+			try {
+				const errorText = await response.text();
+				console.error('Error response body:', errorText);
+			} catch (textError) {
+				console.error('Could not read error response:', textError);
+			}
+
 			throw new Error(`Ошибка сохранения в Netlify API: ${response.status}`);
 		}
 
@@ -156,6 +207,7 @@ const saveVotesToNetlify = async (votes) => {
 const getVotes = async () => {
 	try {
 		// Сначала пытаемся получить голоса из Netlify API
+		console.log('Attempting to get votes from Netlify API...');
 		const netlifyVotes = await fetchVotesFromNetlify();
 		if (netlifyVotes) {
 			memoryVotes = netlifyVotes; // Обновляем in-memory хранилище
@@ -245,6 +297,9 @@ const saveVotes = async (votes) => {
 	return true;
 };
 
+// Добавляем константу для API URL
+const NETLIFY_API_URL = 'https://api.netlify.com/api/v1';
+
 export const handler = async (event) => {
 	// Настройка CORS
 	const headers = {
@@ -254,8 +309,14 @@ export const handler = async (event) => {
 		'Content-Type': 'application/json'
 	};
 
+	console.log('update-votes handler started');
+	console.log('HTTP Method:', event.httpMethod);
+	console.log('Headers:', JSON.stringify(event.headers));
+	console.log('Available environment variables:', Object.keys(process.env).join(', '));
+
 	// Обработка CORS preflight запросов
 	if (event.httpMethod === 'OPTIONS') {
+		console.log('Handling OPTIONS request (CORS preflight)');
 		return {
 			statusCode: 200,
 			headers,
@@ -274,7 +335,9 @@ export const handler = async (event) => {
 		}
 
 		// Парсинг данных запроса
+		console.log('Request body:', event.body);
 		const data = JSON.parse(event.body);
+		console.log('Parsed data:', JSON.stringify(data));
 		const { ideaId, action } = data;
 
 		if (!ideaId || !action || (action !== 'like' && action !== 'dislike')) {
@@ -287,6 +350,7 @@ export const handler = async (event) => {
 
 		// Получение текущих голосов
 		const votes = await getVotes();
+		console.log('Current votes before update:', JSON.stringify(votes));
 
 		// Проверка существования идеи
 		if (!votes[ideaId]) {
@@ -299,6 +363,8 @@ export const handler = async (event) => {
 		} else {
 			votes[ideaId].dislikes += 1;
 		}
+
+		console.log('Updated votes:', JSON.stringify(votes));
 
 		// Сохранение обновленных голосов
 		await saveVotes(votes);

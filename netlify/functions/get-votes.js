@@ -29,12 +29,16 @@ const VARIABLE_KEY = 'VOTES_DATA'; // Имя переменной окружен
 
 // Функция для получения API-ключа из переменных окружения
 const getNetlifyApiKey = () => {
-	return process.env.NETLIFY_API_KEY || '';
+	const apiKey = process.env.NETLIFY_API_KEY || '';
+	console.log('NETLIFY_API_KEY present:', apiKey ? 'YES (length: ' + apiKey.length + ')' : 'NO');
+	return apiKey;
 };
 
 // Функция для получения ID сайта из переменных окружения
 const getNetlifySiteId = () => {
-	return process.env.NETLIFY_SITE_ID || '';
+	const siteId = process.env.NETLIFY_SITE_ID || '';
+	console.log('NETLIFY_SITE_ID present:', siteId ? 'YES: ' + siteId : 'NO');
+	return siteId;
 };
 
 // Функция для получения данных из Netlify API
@@ -48,16 +52,32 @@ const getVotesFromNetlifyApi = async () => {
 	}
 
 	try {
+		console.log(`Attempting to fetch data from ${NETLIFY_API_URL}/sites/${siteId}/env`);
 		// Получаем переменные окружения для текущего сайта
 		const response = await fetch(`${NETLIFY_API_URL}/sites/${siteId}/env?access_token=${apiKey}`);
 
+		console.log('Netlify API response status:', response.status);
+		console.log('Netlify API response statusText:', response.statusText);
+
 		if (!response.ok) {
 			console.error('Failed to fetch environment variables from Netlify API:', response.statusText);
+
+			// Получаем текст ошибки для диагностики
+			try {
+				const errorText = await response.text();
+				console.error('Error response body:', errorText);
+			} catch (textError) {
+				console.error('Could not read error response:', textError);
+			}
+
 			return null;
 		}
 
 		const envVars = await response.json();
+		console.log('Environment variables fetched, count:', envVars.length);
+
 		const votesVar = envVars.find(v => v.key === VARIABLE_KEY);
+		console.log('VOTES_DATA variable found:', votesVar ? 'YES' : 'NO');
 
 		if (!votesVar || !votesVar.values || !votesVar.values[0] || !votesVar.values[0].value) {
 			console.log('Votes data not found in Netlify environment variables');
@@ -65,7 +85,9 @@ const getVotesFromNetlifyApi = async () => {
 		}
 
 		try {
-			return JSON.parse(votesVar.values[0].value);
+			const parsedVotes = JSON.parse(votesVar.values[0].value);
+			console.log('Successfully parsed votes data from environment variable');
+			return parsedVotes;
 		} catch (e) {
 			console.error('Error parsing votes data from environment variable:', e);
 			return null;
@@ -85,6 +107,7 @@ const getVotes = async () => {
 	}
 
 	// Пытаемся получить данные из Netlify API
+	console.log('Attempting to get votes from Netlify API...');
 	const netlifyVotes = await getVotesFromNetlifyApi();
 	if (netlifyVotes) {
 		console.log('Using votes data from Netlify API');
@@ -123,6 +146,9 @@ exports.handler = async function (event) {
 	console.log('get-votes handler started');
 	console.log('HTTP Method:', event.httpMethod);
 	console.log('Headers:', JSON.stringify(event.headers));
+
+	// Дамп всех доступных переменных окружения (без значений, только ключи)
+	console.log('Available environment variables:', Object.keys(process.env).join(', '));
 
 	try {
 		// Обработка OPTIONS запроса (CORS preflight)
