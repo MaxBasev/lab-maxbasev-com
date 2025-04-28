@@ -94,7 +94,7 @@ export default function Home() {
 			<footer className="bg-lab-darker/80 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8 border-t border-lab-cyan/20 relative z-10 portfolio:bg-white portfolio:border-indigo-100">
 				<div className="flex flex-col items-center">
 					<p className="text-center text-lab-muted font-mono portfolio:text-indigo-700/80 portfolio:font-sans">
-						Powered by sleepless nights and way too much coffee.
+						Built by Max Basev during caffeine overdoses and existential dread
 					</p>
 					<div className="flex gap-4 mt-3">
 						<a

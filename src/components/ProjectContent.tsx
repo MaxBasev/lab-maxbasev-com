@@ -60,7 +60,74 @@ Launched on IndieHackers and ProductHunt for fun, not fame.
 
 🚀 Try It
 Download on App Store or Google Play.
-Or, you know... keep doomscrolling. (No pressure.)`
+Or, you know... keep doomscrolling. (No pressure.)`,
+	'zentava': `🧘 Zentava — Your Personal AI Mentor
+🚀 About the Project
+Zentava is an AI-powered mentor designed to support your personal growth, emotional balance, and decision-making clarity.
+
+Built to provide encouragement and tailored advice through natural conversations — anytime you need a nudge forward.
+
+🔥 The Problem
+Self-improvement tools often feel cold, overwhelming, or judgmental.
+
+Zentava offers warm, non-judgmental AI conversations that prioritize your mental well-being and real-world momentum.
+
+🛠️ The Solution
+
+Set personal goals or simply talk things out
+
+Personalized AI feedback using ChatGPT
+
+Track your emotional state and progress
+
+Designed for clarity, not complexity
+
+📈 Tech Stack
+
+Frontend: Next.js
+
+Backend: Node.js + MongoDB
+
+Authentication: Firebase Auth
+
+AI Layer: OpenAI ChatGPT API
+
+🧠 Product Philosophy
+
+Growth without pressure
+
+Conversations over endless to-do lists
+
+Progress over perfection
+
+✨ Key Features
+🔒 Private, Secure Conversations
+🧘 Personalized Mentorship with AI
+📈 Light Progress Tracking
+🎯 Focused on Mental Clarity and Growth
+🌐 Multi-language support (EN, RU, ES)
+
+🔮 What's Next
+
+Full public launch after private beta
+
+Expanded conversation topics
+
+Deeper emotional tracking features
+
+📸 Screenshots
+Landing page
+Onboarding / Sign-in
+Conversation screen (prototype)
+User dashboard (WIP)
+
+🧪 Behind the Scenes
+Initial idea prototyped over a few intense coffee-fueled nights.
+Tested with early users through invite-only beta.
+Feedback loop driven by real conversations and actual user struggles.
+
+🚀 Try It
+Sign up for the waitlist at Zentava.life and be among the first to meet your AI mentor.`
 };
 
 interface ProjectContentProps {
