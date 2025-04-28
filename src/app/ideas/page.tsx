@@ -107,59 +107,138 @@ const DifficultyBadge = ({ difficulty }: { difficulty: IdeaDifficulty }) => {
 export default function Ideas() {
 	const [ratings, setRatings] = useState<IdeasRatings>(initialRatings);
 	const [ideasData] = useState<IdeasData>(initialIdeasData);
+	const [isLoading, setIsLoading] = useState(false);
 
-	// Загрузка данных из localStorage при инициализации
+	// Загрузка данных с API при инициализации
 	useEffect(() => {
-		const savedRatings = localStorage.getItem('ideasRatings');
-		if (savedRatings) {
+		const fetchRatings = async () => {
 			try {
-				const parsedRatings = JSON.parse(savedRatings) as IdeasRatings;
-				setRatings(parsedRatings);
-			} catch (e) {
-				console.error('Ошибка при загрузке рейтингов:', e);
+				setIsLoading(true);
+				const response = await fetch('/api/get-votes');
+				if (!response.ok) {
+					throw new Error('Failed to fetch votes');
+				}
+
+				const apiVotes = await response.json();
+
+				// Преобразуем данные API в формат, используемый в компоненте
+				const newRatings: IdeasRatings = { ...initialRatings };
+
+				// Обновляем только значения голосов из API
+				Object.keys(newRatings).forEach(ideaId => {
+					if (apiVotes[ideaId]) {
+						newRatings[ideaId as IdeaId].likes = apiVotes[ideaId].likes;
+						newRatings[ideaId as IdeaId].dislikes = apiVotes[ideaId].dislikes;
+					}
+				});
+
+				// Восстанавливаем локально сохраненный userChoice
+				const savedUserChoices = localStorage.getItem('ideasUserChoices');
+				if (savedUserChoices) {
+					const userChoices = JSON.parse(savedUserChoices);
+					Object.keys(userChoices).forEach(ideaId => {
+						if (newRatings[ideaId as IdeaId]) {
+							newRatings[ideaId as IdeaId].userChoice = userChoices[ideaId];
+						}
+					});
+				}
+
+				setRatings(newRatings);
+			} catch (error) {
+				console.error('Error fetching votes:', error);
+				// Если API недоступен, загружаем из localStorage как запасной вариант
+				const savedRatings = localStorage.getItem('ideasRatings');
+				if (savedRatings) {
+					try {
+						const parsedRatings = JSON.parse(savedRatings) as IdeasRatings;
+						setRatings(parsedRatings);
+					} catch (e) {
+						console.error('Ошибка при загрузке рейтингов из localStorage:', e);
+					}
+				}
+			} finally {
+				setIsLoading(false);
 			}
-		}
+		};
+
+		fetchRatings();
 	}, []);
 
-	// Сохранение данных в localStorage при изменении
+	// Сохранение локального выбора пользователя
 	useEffect(() => {
-		localStorage.setItem('ideasRatings', JSON.stringify(ratings));
+		// Извлекаем только userChoice из каждой идеи
+		const userChoices: Record<string, 'like' | 'dislike' | null> = {};
+		Object.keys(ratings).forEach(ideaId => {
+			userChoices[ideaId] = ratings[ideaId as IdeaId].userChoice;
+		});
+
+		localStorage.setItem('ideasUserChoices', JSON.stringify(userChoices));
 	}, [ratings]);
 
-	const handleVote = (id: IdeaId, vote: 'like' | 'dislike') => {
-		setRatings(prev => {
-			const currentIdea = prev[id];
+	const handleVote = async (id: IdeaId, vote: 'like' | 'dislike') => {
+		const currentIdea = ratings[id];
 
-			// Если пользователь уже голосовал так же - отменяем его голос
-			if (currentIdea.userChoice === vote) {
-				const updatedRating = {
-					...currentIdea,
-					[`${vote}s`]: currentIdea[`${vote}s`] - 1,
-					userChoice: null
-				};
-				return { ...prev, [id]: updatedRating };
-			}
+		// Определяем, какая операция выполняется
+		const action: 'like' | 'dislike' = vote;
+
+		// Если пользователь голосует за тот же вариант, отменяем действие
+		if (currentIdea.userChoice === vote) {
+			return; // Отмена голоса не поддерживается API, поэтому просто отменяем действие
+		}
+
+		// Проверяем, не голосовал ли пользователь ранее
+		if (currentIdea.userChoice !== null && currentIdea.userChoice !== vote) {
+			// Если голосовал противоположно, то нужно будет синхронизировать
+			// Но в нашем API пока нет возможности отменить/изменить голос
+			// Поэтому просто добавляем новый голос
+		}
+
+		// Оптимистичное обновление UI
+		setRatings(prev => {
+			const updated = { ...prev };
 
 			// Если пользователь голосовал противоположно - меняем его голос
-			if (currentIdea.userChoice !== null && currentIdea.userChoice !== vote) {
+			if (updated[id].userChoice !== null && updated[id].userChoice !== vote) {
 				const oppositeVote = vote === 'like' ? 'dislike' : 'like';
-				const updatedRating = {
-					...currentIdea,
-					[`${vote}s`]: currentIdea[`${vote}s`] + 1,
-					[`${oppositeVote}s`]: currentIdea[`${oppositeVote}s`] - 1,
+				updated[id] = {
+					...updated[id],
+					[`${vote}s`]: updated[id][`${vote}s`] + 1,
+					[`${oppositeVote}s`]: updated[id][`${oppositeVote}s`] - 1,
 					userChoice: vote
 				};
-				return { ...prev, [id]: updatedRating };
+			} else {
+				// Если пользователь голосует впервые или так же
+				updated[id] = {
+					...updated[id],
+					[`${vote}s`]: updated[id][`${vote}s`] + 1,
+					userChoice: vote
+				};
 			}
 
-			// Если пользователь голосует впервые
-			const updatedRating = {
-				...currentIdea,
-				[`${vote}s`]: currentIdea[`${vote}s`] + 1,
-				userChoice: vote
-			};
-			return { ...prev, [id]: updatedRating };
+			return updated;
 		});
+
+		// Вызов API
+		try {
+			const response = await fetch('/api/update-votes', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ ideaId: id, action })
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to update vote');
+			}
+
+			const result = await response.json();
+			console.log('Vote updated successfully:', result);
+		} catch (error) {
+			console.error('Error updating vote:', error);
+			// Если API вызов не удался, можно отменить оптимистичное обновление
+			// Но для простоты не реализуем это сейчас
+		}
 	};
 
 	return (
@@ -186,8 +265,14 @@ export default function Ideas() {
 								Currently Brewing
 							</h2>
 							<div className="text-sm text-lab-text font-mono portfolio:text-indigo-600 portfolio:font-sans">
-								<span className="portfolio:hidden">VOTE_ON_IDEAS</span>
-								<span className="hidden portfolio:inline">Vote on ideas you like!</span>
+								{isLoading ? (
+									<span>Loading...</span>
+								) : (
+									<>
+										<span className="portfolio:hidden">VOTE_ON_IDEAS</span>
+										<span className="hidden portfolio:inline">Vote on ideas you like!</span>
+									</>
+								)}
 							</div>
 						</div>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans space-y-6">

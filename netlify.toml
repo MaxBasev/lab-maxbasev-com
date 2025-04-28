@@ -1,0 +1,12 @@
+[build]
+  functions = "netlify/functions"
+  publish = "out"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["fs", "path"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200 

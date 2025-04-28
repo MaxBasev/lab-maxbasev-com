@@ -1,0 +1,11 @@
+{
+	"name": "netlify-functions",
+	"version": "1.0.0",
+	"description": "Netlify Functions for vote tracking",
+	"type": "module",
+	"dependencies": {
+		"fs": "0.0.1-security",
+		"path": "^0.12.7",
+		"url": "^0.11.0"
+	}
+}
