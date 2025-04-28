@@ -10,8 +10,7 @@ export type ProjectTag =
 	| 'Beta'
 	| 'AI-powered'
 	| 'Crypto'
-	| 'iOS App'
-	| 'Healthcare';
+	| 'iOS App';
 
 export type ProjectLinks = {
 	github?: string;
@@ -46,7 +45,7 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'AI-powered': { bg: 'bg-violet-900/30', text: 'text-violet-200' },
 		'Crypto': { bg: 'bg-amber-900/30', text: 'text-amber-200' },
 		'iOS App': { bg: 'bg-purple-900/30', text: 'text-purple-200' },
-		'Healthcare': { bg: 'bg-emerald-900/30', text: 'text-emerald-200' },
+		// 'Healthcare': { bg: 'bg-emerald-900/30', text: 'text-emerald-200' },
 	};
 
 	// Portfolio mode tags use colors that correspond to the tag type with better contrast
@@ -63,7 +62,7 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'AI-powered': { bg: 'portfolio:bg-violet-100', text: 'portfolio:text-violet-800' },
 		'Crypto': { bg: 'portfolio:bg-amber-100', text: 'portfolio:text-amber-800' },
 		'iOS App': { bg: 'portfolio:bg-purple-100', text: 'portfolio:text-purple-800' },
-		'Healthcare': { bg: 'portfolio:bg-emerald-100', text: 'portfolio:text-emerald-800' },
+		// 'Healthcare': { bg: 'portfolio:bg-emerald-100', text: 'portfolio:text-emerald-800' },
 	};
 
 	const labColors = labModeColors[tag];

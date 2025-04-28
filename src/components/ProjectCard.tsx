@@ -44,10 +44,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
 	return (
 		<>
-			<div className="angled-card bg-lab-medium/90 rounded-xl shadow-lg hover:shadow-neon-cyan transition-all duration-300 hover:scale-[1.01] border border-lab-cyan/20 overflow-hidden relative group">
+			<div className="angled-card bg-lab-medium/90 rounded-xl shadow-lg hover:shadow-neon-cyan transition-all duration-300 hover:scale-[1.01] border border-lab-cyan/20 overflow-hidden relative group flex flex-col h-full">
 				{project.image && (
 					<div className="w-full h-60 relative border-b border-lab-cyan/20 overflow-hidden portfolio:border-gray-100">
-						<div className="absolute inset-0 bg-lab-dark/40 z-10 group-hover:bg-lab-dark/20 transition-all duration-300 portfolio:bg-black/0 portfolio:group-hover:bg-black/5"></div>
 						<Image
 							src={project.image}
 							alt={project.title}
@@ -57,7 +56,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 						/>
 					</div>
 				)}
-				<div className="p-6 relative portfolio:p-7">
+				<div className="p-6 relative portfolio:p-7 flex flex-col flex-grow">
 					{/* Lab tube decoration top-right - hidden in portfolio mode */}
 					<div className="absolute -top-3 right-4 w-1 h-6 bg-lab-cyan/20 rounded-full portfolio:hidden"></div>
 
@@ -76,7 +75,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 						{project.title}
 					</h2>
 
-					<p className={`text-lab-text text-sm mb-4 min-h-[40px] portfolio:text-indigo-700 portfolio:font-sans portfolio:card-text`}>
+					<p className={`text-lab-text text-sm mb-4 flex-grow portfolio:text-indigo-700 portfolio:font-sans portfolio:card-text`}>
 						{project.description}
 					</p>
 
@@ -86,7 +85,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 						))}
 					</div>
 
-					<div className="flex justify-between items-center">
+					<div className="flex justify-between items-center mt-auto">
 						<ProjectLinks links={project.links} />
 
 						<button

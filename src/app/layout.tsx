@@ -82,10 +82,8 @@ export default function RootLayout({
 				</div>
 
 				{/* Portfolio Mode Footer */}
-				<footer className="hidden portfolio:block">
-					<div className="container mx-auto text-center">
-						<p className="text-portfolio-accent/80">Built by Max Basev · No frameworks were harmed.</p>
-					</div>
+				<footer className="hidden portfolio:block w-full">
+					<p className="text-portfolio-accent/80 text-center">Built by Max Basev · No frameworks were harmed.</p>
 				</footer>
 			</body>
 		</html>

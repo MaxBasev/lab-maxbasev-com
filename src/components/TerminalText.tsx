@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const experiments = [
 	"> running test: UghOkay mobile app... success.",
 	"> compiling code for Focus Buddy... complete.",
-	"> analyzing Pocket Journal data structures... done.",
 	"> deploying latest build to lab environment... success.",
 	"> testing Tailwind responsiveness... passed."
 ];
