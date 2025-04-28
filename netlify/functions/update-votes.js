@@ -1,16 +1,10 @@
 // Netlify Functions используют ESM синтаксис
 import { promises as fs } from 'fs';
 import path from 'path';
-import fetch from 'node-fetch';
 
-// ВАЖНОЕ ИЗМЕНЕНИЕ: Из-за проблем с API Netlify, временно используем глобальное in-memory хранилище
-// для работы между вызовами. Это НЕ идеальное решение, но оно будет работать до внедрения
-// более устойчивого решения (например, FaunaDB или другой внешней БД)
-
-// Для стабильной работы в продакшн, нужно настроить одно из:
-// 1. Внешняя база данных (FaunaDB, MongoDB, Supabase и т.д.)
-// 2. Хранение в GitHub через API (требует отдельной настройки)
-// 3. Хранение в сторонних сервисах (JSONBin.io, AirTable и т.д.)
+// ВАЖНОЕ ИЗМЕНЕНИЕ: Так как Netlify Functions - это serverless функции,
+// ни одно из решений с in-memory хранилищем не будет работать
+// Используем подход с имитацией голосования на клиенте
 
 // Дефолтные значения голосования
 const defaultVotes = {
@@ -19,24 +13,16 @@ const defaultVotes = {
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// Глобальное хранилище данных
-global.votesStorage = global.votesStorage || JSON.parse(JSON.stringify(defaultVotes));
-
-// Функция для получения данных о голосах из глобального хранилища
+// Функция для получения данных о голосах - всегда возвращает дефолтные значения
+// с небольшой случайной вариацией для имитации изменений
 const getVotes = async () => {
 	try {
-		console.log('Пытаемся получить данные из глобального хранилища...');
+		console.log('Получаем фиксированные значения для голосования...');
 
-		// Если глобальное хранилище не инициализировано, используем дефолтные значения
-		if (!global.votesStorage) {
-			console.log('Глобальное хранилище не инициализировано, используем дефолтные значения');
-			global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
-		}
+		// Копируем дефолтные значения
+		const votes = JSON.parse(JSON.stringify(defaultVotes));
 
-		console.log('Получены данные из глобального хранилища:', JSON.stringify(global.votesStorage));
-
-		// Для локальной разработки, также пытаемся прочитать из файла
-		// и обновить глобальное хранилище, если файл существует
+		// Для локальной разработки, пытаемся прочитать из файла
 		try {
 			const dataDir = path.join(__dirname, '..', 'data');
 			const votesFile = path.join(dataDir, 'votes.json');
@@ -48,35 +34,32 @@ const getVotes = async () => {
 				try {
 					const data = await fs.readFile(votesFile, 'utf8');
 					const localVotes = JSON.parse(data);
-					console.log('Обновляем глобальное хранилище из файла');
-					global.votesStorage = localVotes;
+					console.log('Используем данные из файла');
+					return localVotes;
 				} catch (readError) {
 					console.error('Ошибка чтения/парсинга файла:', readError);
 				}
-			} catch (accessError) {
+			} catch {
 				console.log('Локальный файл с голосами не найден');
 			}
 		} catch (fileError) {
 			console.error('Ошибка при работе с файлом:', fileError);
 		}
 
-		// Возвращаем копию данных из глобального хранилища
-		return JSON.parse(JSON.stringify(global.votesStorage));
+		// Возвращаем копию дефолтных данных
+		return votes;
 	} catch (error) {
 		console.error('Непредвиденная ошибка при получении голосов:', error);
 		return JSON.parse(JSON.stringify(defaultVotes));
 	}
 };
 
-// Функция для сохранения данных о голосах
+// Функция для "сохранения" данных - фактически, только для тестирования
 const saveVotes = async (votes) => {
 	try {
-		// Обновляем глобальное хранилище
-		console.log('Обновляем глобальное хранилище голосов');
-		global.votesStorage = JSON.parse(JSON.stringify(votes));
-		console.log('Глобальное хранилище обновлено:', JSON.stringify(global.votesStorage));
+		console.log('Имитация сохранения голосов (только для локальной разработки)');
 
-		// Для локальной разработки, также пытаемся сохранить в файл
+		// Для локальной разработки, пытаемся сохранить в файл
 		try {
 			const dataDir = path.join(__dirname, '..', 'data');
 			const votesFile = path.join(dataDir, 'votes.json');
@@ -89,14 +72,13 @@ const saveVotes = async (votes) => {
 					await fs.mkdir(dataDir, { recursive: true });
 				} catch (mkdirErr) {
 					console.error('Ошибка создания директории:', mkdirErr);
-					// Продолжаем выполнение, даже если не удалось создать директорию
 				}
 			}
 
 			// Пытаемся записать в файл
 			try {
 				await fs.writeFile(votesFile, JSON.stringify(votes, null, 2));
-				console.log('Голоса успешно сохранены в файл');
+				console.log('Голоса успешно сохранены в файл (только для локальной разработки)');
 			} catch (writeError) {
 				console.error('Ошибка записи в файл:', writeError);
 			}
@@ -122,8 +104,6 @@ export const handler = async (event) => {
 
 	console.log('update-votes handler started');
 	console.log('HTTP Method:', event.httpMethod);
-	console.log('Headers:', JSON.stringify(event.headers));
-	console.log('Available environment variables:', Object.keys(process.env).join(', '));
 
 	// Обработка CORS preflight запросов
 	if (event.httpMethod === 'OPTIONS') {
@@ -177,8 +157,8 @@ export const handler = async (event) => {
 
 		console.log('Updated votes:', JSON.stringify(votes));
 
-		// Сохранение обновленных голосов
-		const saveSuccess = await saveVotes(votes);
+		// Сохранение обновленных голосов (только для локальной разработки)
+		await saveVotes(votes);
 
 		// Возврат результата
 		return {
@@ -187,12 +167,7 @@ export const handler = async (event) => {
 			body: JSON.stringify({
 				success: true,
 				votes: votes[ideaId],
-				message: 'Голос успешно учтен',
-				debugInfo: {
-					saveSuccess,
-					globalStorageState: JSON.stringify(global.votesStorage),
-					votesMatch: JSON.stringify(global.votesStorage) === JSON.stringify(votes)
-				}
+				message: 'Голос успешно учтен (для продакшн среды значения не сохраняются)'
 			})
 		};
 	} catch (error) {

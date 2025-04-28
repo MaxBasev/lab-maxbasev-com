@@ -1,19 +1,10 @@
 // Используем CommonJS синтаксис, который надежнее работает в Netlify Functions
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
 
-// ВАЖНОЕ ИЗМЕНЕНИЕ: Из-за проблем с API Netlify, временно используем глобальное in-memory хранилище
-// для работы между вызовами. Это НЕ идеальное решение, но оно будет работать до внедрения
-// более устойчивого решения (например, FaunaDB или другой внешней БД)
-
-// Для стабильной работы в продакшн, нужно настроить одно из:
-// 1. Внешняя база данных (FaunaDB, MongoDB, Supabase и т.д.)
-// 2. Хранение в GitHub через API (требует отдельной настройки)
-// 3. Хранение в сторонних сервисах (JSONBin.io, AirTable и т.д.)
-
-// Глобальное хранилище данных 
-global.votesStorage = global.votesStorage || null;
+// ВАЖНОЕ ИЗМЕНЕНИЕ: Так как Netlify Functions - это serverless функции,
+// ни одно из решений с in-memory хранилищем не будет работать в продакшене
+// Эта функция возвращает фиксированные значения
 
 // Определяем дефолтные данные для голосования
 const defaultVotes = {
@@ -22,64 +13,42 @@ const defaultVotes = {
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// Получение голосов из глобального хранилища
-const getVotesFromGlobal = () => {
-	// Если глобальное хранилище не инициализировано, используем дефолтные значения
-	if (!global.votesStorage) {
-		console.log('Инициализируем глобальное хранилище с дефолтными значениями');
-		global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
-	}
-	console.log('Получены данные из глобального хранилища:', JSON.stringify(global.votesStorage));
-	return JSON.parse(JSON.stringify(global.votesStorage));
-};
-
 // Функция для получения данных голосования
 const getVotes = async () => {
-	// Первый приоритет - глобальное хранилище
-	console.log('Пытаемся получить данные из глобального хранилища...');
-	const globalVotes = getVotesFromGlobal();
-	if (globalVotes) {
-		console.log('Используем данные из глобального хранилища');
-		return globalVotes;
-	}
+	console.log('Получаем фиксированные значения для голосования...');
 
-	// Если по какой-то причине не удалось получить из глобального хранилища
-	// Пытаемся прочитать из файла (для локальной разработки)
+	// Клонируем дефолтные значения
+	const votes = JSON.parse(JSON.stringify(defaultVotes));
+
+	// Для локальной разработки, пытаемся прочитать из файла
 	try {
 		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
-		console.log('Attempting to read votes from file (local development only):', dataPath);
+		console.log('Пытаемся прочитать данные из файла (только для локальной разработки):', dataPath);
 
 		if (fs.existsSync(dataPath)) {
 			const data = fs.readFileSync(dataPath, 'utf8');
 			if (data && data.trim() !== '') {
 				try {
 					const fileVotes = JSON.parse(data);
-					// Обновляем глобальное хранилище
-					global.votesStorage = JSON.parse(JSON.stringify(fileVotes));
-					console.log('Loaded votes from file');
+					console.log('Данные успешно загружены из файла');
 					return fileVotes;
 				} catch (e) {
-					console.error('Error parsing votes JSON:', e);
+					console.error('Ошибка парсинга JSON из файла:', e);
 				}
 			}
 		}
 	} catch (error) {
-		console.error('Error reading votes file:', error);
+		console.error('Ошибка чтения файла:', error);
 	}
 
-	// Если не удалось загрузить, используем дефолтные данные
-	console.log('Using default votes data');
-	global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
-	return JSON.parse(JSON.stringify(defaultVotes));
+	// Если не удалось загрузить из файла, используем дефолтные данные
+	console.log('Использование дефолтных значений');
+	return votes;
 };
 
 exports.handler = async function (event) {
 	console.log('get-votes handler started');
 	console.log('HTTP Method:', event.httpMethod);
-	console.log('Headers:', JSON.stringify(event.headers));
-
-	// Дамп всех доступных переменных окружения (без значений, только ключи)
-	console.log('Available environment variables:', Object.keys(process.env).join(', '));
 
 	try {
 		// Обработка OPTIONS запроса (CORS preflight)
@@ -98,7 +67,7 @@ exports.handler = async function (event) {
 
 		// Получаем данные голосования
 		const votes = await getVotes();
-		console.log('Returning votes:', JSON.stringify(votes));
+		console.log('Возвращаемые данные о голосах:', JSON.stringify(votes));
 
 		return {
 			statusCode: 200,
@@ -112,7 +81,7 @@ exports.handler = async function (event) {
 			body: JSON.stringify(votes)
 		};
 	} catch (error) {
-		console.error('Error in get-votes handler:', error.message);
+		console.error('Ошибка в обработчике get-votes:', error.message);
 		console.error('Stack trace:', error.stack);
 		return {
 			statusCode: 500,
@@ -125,8 +94,7 @@ exports.handler = async function (event) {
 			},
 			body: JSON.stringify({
 				error: 'Не удалось получить данные о голосах',
-				details: error.message,
-				stack: error.stack
+				details: error.message
 			})
 		};
 	}
