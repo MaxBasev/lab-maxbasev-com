@@ -47,10 +47,7 @@ Widget support for even faster access
 Mini insights: track tiny victories
 
 📸 Screenshots
-Home screen
-Add/Edit tasks screen
-About screen
-Empty state screen
+[IMAGE_GALLERY]
 
 🧪 Behind the Scenes
 Designed in Figma in one evening.
@@ -295,15 +292,23 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 		// Разбиваем текст на строки
 		const lines = text.split('\n');
 
+		// Проверяем, есть ли специальный маркер для изображений
+		const hasImageGallery = lines.some(line => line.includes('[IMAGE_GALLERY]'));
+
 		// Форматируем каждую строку
-		return lines.map((line, index) => {
+		const formattedLines = lines.map((line, index) => {
+			// Пропускаем строку с маркером галереи изображений
+			if (line.includes('[IMAGE_GALLERY]')) {
+				return null;
+			}
+
 			// Обрабатываем заголовки с эмодзи
 			if (line.match(/^🚀|^🔥|^🛠️|^📈|^🧠|^✨|^🔮|^📸|^🧪|^🚀/)) {
 				return <h3 key={index} className="text-xl font-bold mt-6 mb-3 text-lab-cyan portfolio:text-indigo-700">{line}</h3>;
 			}
 
 			// Обрабатываем основной заголовок
-			if (line.match(/^📱/)) {
+			if (line.match(/^📱|^🏥|^🧩/)) {
 				return <h2 key={index} className="text-2xl font-bold mb-4 text-lab-purple portfolio:text-indigo-800">{line}</h2>;
 			}
 
@@ -314,7 +319,52 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 
 			// Обычный текст
 			return <p key={index} className={`mb-2 ${isModal ? 'text-lab-text' : 'text-lab-text'}`}>{line}</p>;
-		});
+		}).filter(Boolean);
+
+		// Для проекта UghOkay добавляем изображения, если есть маркер
+		if (projectId === 'ugh-okay' && hasImageGallery) {
+			// Находим индекс заголовка "Screenshots"
+			const screenshotsIndex = formattedLines.findIndex(
+				(el) => React.isValidElement(el) &&
+					el.type === 'h3' &&
+					typeof el.props === 'object' &&
+					el.props !== null &&
+					'children' in el.props &&
+					typeof el.props.children === 'string' &&
+					el.props.children.includes('Screenshots')
+			);
+
+			if (screenshotsIndex !== -1) {
+				// Вставляем галерею после заголовка
+				formattedLines.splice(screenshotsIndex + 1, 0, (
+					<div key="image-gallery" className="mt-4 mb-6 grid grid-cols-3 gap-4">
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen3.jpg"
+								alt="UghOkay Screenshot 1"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen4.jpg"
+								alt="UghOkay Screenshot 2"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen5.jpg"
+								alt="UghOkay Screenshot 3"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+					</div>
+				));
+			}
+		}
+
+		return formattedLines;
 	};
 
 	return <div className="project-content">{formatContent(content)}</div>;
