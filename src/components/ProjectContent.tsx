@@ -127,7 +127,80 @@ Tested with early users through invite-only beta.
 Feedback loop driven by real conversations and actual user struggles.
 
 🚀 Try It
-Sign up for the waitlist at Zentava.life and be among the first to meet your AI mentor.`
+Sign up for the waitlist at Zentava.life and be among the first to meet your AI mentor.`,
+	'santa-maria-dashboard': `🏥 Santa Maria — Health Management Platform
+🚀 About the Project
+A full-featured web system for clinics to manage patient bookings, treatment schedules, medical records, and financial operations — all in one place.
+
+Built for real-world clinic workflows, not just theoretical "best practices."
+
+🔥 The Problem
+Traditional clinic software is either outdated, overly complicated, or requires expensive customization.
+
+Santa Maria Dashboard was created to deliver a flexible, modern, all-in-one system tailored for everyday use by doctors, staff, and administrators.
+
+🛠️ The Solution
+
+Appointment scheduling and patient booking
+
+Medical treatment tracking and exam records
+
+Invoice management and financial reporting
+
+Multi-role access system (admin, doctor, accountant)
+
+Internal analytics dashboards
+
+📈 Tech Stack
+
+Frontend: Angular
+
+Backend: Node.js + Express
+
+Database: MongoDB
+
+Authentication: Firebase Auth
+
+Hosting: Dedicated cloud servers
+
+🧠 Product Philosophy
+
+Practicality over bells and whistles
+
+Clear workflows for medical and administrative staff
+
+Scalability for growing clinic networks
+
+✨ Key Features
+📅 Advanced Appointment Scheduling
+📋 Full Patient Medical Records
+💳 Invoice and Payment Management
+🧑‍⚕️ Multi-Role Permissions System
+📊 Operational Dashboards and Analytics
+🌐 Language Support (Multilingual ready)
+
+🔮 What's Next
+
+Patient portal for online booking and personal records
+
+Integration with insurance providers
+
+Mobile app expansion
+
+📸 Screenshots
+Admin Dashboard overview
+Appointment scheduling module
+Patient profile and treatment history
+Financial analytics reports
+
+🧪 Behind the Scenes
+Designed from real clinical requirements after consulting with medical practitioners.
+Iteratively improved based on feedback from actual clinic operations.
+Built under NDA — client details confidential.
+
+🚀 Try It
+Currently deployed and in daily use by private medical centers.
+Demo access available upon request.`
 };
 
 interface ProjectContentProps {
