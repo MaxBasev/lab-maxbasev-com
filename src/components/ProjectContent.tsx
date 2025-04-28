@@ -200,7 +200,71 @@ Built under NDA — client details confidential.
 
 🚀 Try It
 Currently deployed and in daily use by private medical centers.
-Demo access available upon request.`
+Demo access available upon request.`,
+	'extenswitch': `🧩 ExtenSwitch — One-Click Chrome Extension Manager
+🚀 About the Project
+A minimalistic Chrome extension for instantly enabling or disabling other extensions with a single click — perfect for crypto wallets, dev tools, or any cluttered browser setup.
+
+Built out of frustration with endless trips to Chrome settings.
+
+🔥 The Problem
+Managing multiple Chrome extensions (especially wallets, tools, and plugins) is a hassle.
+Chrome's built-in UI for enabling/disabling is slow and buried deep in menus.
+
+🛠️ The Solution
+
+One-click toggle for all your installed extensions
+
+Smart filters: view All, Enabled, or Disabled extensions
+
+Lightweight popup interface
+
+Focused on speed and zero-friction UX
+
+📈 Tech Stack
+
+Manifest v3 (Chrome Extensions API)
+
+Vanilla JavaScript + HTML + TailwindCSS
+
+No external dependencies
+
+Minimal local storage usage
+
+🧠 Product Philosophy
+
+Speed over complexity
+
+Local-only operation (no backend)
+
+Built to solve a real daily irritation
+
+✨ Key Features
+⚡ Instant Toggle of Extensions
+🧹 Declutter Your Browser in Seconds
+🔎 Filter by Enabled/Disabled Status
+🔒 No Data Collection or Tracking
+
+🔮 What's Next
+
+Group extensions into custom sets
+
+Quick-enable profiles (e.g., "Crypto Work Mode" vs "Gaming Mode")
+
+Dark theme for popup UI
+
+📸 Screenshots
+Main popup view with extensions
+Enabled/disabled filter example
+Settings and management screen (minimal)
+
+🧪 Behind the Scenes
+Built in a weekend sprint to scratch an itch.
+Inspired by juggling too many crypto wallets and dev tools.
+Currently available on Chrome Web Store (pending review).
+
+🚀 Try It
+Install on Chrome and experience instant control over your extensions!`
 };
 
 interface ProjectContentProps {
