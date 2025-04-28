@@ -3,13 +3,14 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 
-// ВАЖНО: В продакшн среде Netlify Functions не могут записывать файлы!
-// Решение для прода:
-// 1. Использовать Netlify API (рекомендуется)
-// 2. Использовать внешние базы данных (Firebase, MongoDB и т.д.)
-// 3. Использовать GitHub API для записи в репозиторий
-//
-// Текущая имплементация работает локально, но в проде голоса не будут сохраняться!
+// ВАЖНОЕ ИЗМЕНЕНИЕ: Из-за проблем с API Netlify, временно используем глобальное in-memory хранилище
+// для работы между вызовами. Это НЕ идеальное решение, но оно будет работать до внедрения
+// более устойчивого решения (например, FaunaDB или другой внешней БД)
+
+// Для стабильной работы в продакшн, нужно настроить одно из:
+// 1. Внешняя база данных (FaunaDB, MongoDB, Supabase и т.д.)
+// 2. Хранение в GitHub через API (требует отдельной настройки)
+// 3. Хранение в сторонних сервисах (JSONBin.io, AirTable и т.д.)
 
 // Дефолтные значения голосования
 const defaultVotes = {
@@ -18,271 +19,64 @@ const defaultVotes = {
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// In-memory хранилище для голосов (будет использоваться, если не удалось получить данные из Netlify API)
-let memoryVotes = { ...defaultVotes };
+// Глобальное хранилище данных
+global.votesStorage = global.votesStorage || JSON.parse(JSON.stringify(defaultVotes));
 
-// Получение API ключа и ID сайта из переменных окружения
-const getNetlifyCredentials = () => {
-	const apiKey = process.env.NETLIFY_API_KEY;
-	const siteId = process.env.NETLIFY_SITE_ID;
-
-	console.log('NETLIFY_API_KEY present:', apiKey ? 'YES (length: ' + apiKey.length + ')' : 'NO');
-	console.log('NETLIFY_SITE_ID present:', siteId ? 'YES: ' + siteId : 'NO');
-	console.log('Available environment variables:', Object.keys(process.env).join(', '));
-
-	if (!apiKey || !siteId) {
-		console.log('Netlify API ключ или ID сайта не найдены в переменных окружения');
-		return null;
-	}
-
-	return { apiKey, siteId };
-};
-
-// Получение голосов из Netlify API (Environment Variables)
-const fetchVotesFromNetlify = async () => {
-	const credentials = getNetlifyCredentials();
-	if (!credentials) return null;
-
-	try {
-		const { apiKey, siteId } = credentials;
-		console.log(`Пытаемся получить данные из Netlify API: ${NETLIFY_API_URL}/sites/${siteId}/env`);
-
-		const response = await fetch(
-			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
-			{
-				headers: {
-					'Authorization': `Bearer ${apiKey}`,
-					'Content-Type': 'application/json'
-				}
-			}
-		);
-
-		console.log('Netlify API response status:', response.status);
-		console.log('Netlify API response statusText:', response.statusText);
-
-		if (!response.ok) {
-			// Получаем текст ошибки для диагностики
-			try {
-				const errorText = await response.text();
-				console.error('Error response body:', errorText);
-			} catch (textError) {
-				console.error('Could not read error response:', textError);
-			}
-
-			throw new Error(`Netlify API вернул статус: ${response.status}`);
-		}
-
-		const envVars = await response.json();
-		console.log('Environment variables fetched, count:', envVars.length);
-
-		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
-		console.log('VOTES_DATA variable found:', votesVar ? 'YES' : 'NO');
-
-		if (votesVar && votesVar.values && votesVar.values.length > 0) {
-			try {
-				const votes = JSON.parse(votesVar.values[0].value);
-				console.log('Голоса успешно получены из Netlify API:', JSON.stringify(votes));
-				return votes;
-			} catch (error) {
-				console.error('Ошибка парсинга данных голосов:', error);
-			}
-		} else {
-			console.log('Данные о голосах не найдены в Netlify Environment Variables');
-		}
-
-		return null;
-	} catch (error) {
-		console.error('Ошибка получения голосов из Netlify API:', error);
-		return null;
-	}
-};
-
-// Сохранение голосов в Netlify API (Environment Variables)
-const saveVotesToNetlify = async (votes) => {
-	const credentials = getNetlifyCredentials();
-	if (!credentials) return false;
-
-	try {
-		const { apiKey, siteId } = credentials;
-		console.log('Пытаемся сохранить голоса в Netlify API...');
-
-		// Проверяем существование переменной
-		console.log(`Проверяем существование переменной VOTES_DATA: ${NETLIFY_API_URL}/sites/${siteId}/env`);
-		const checkResponse = await fetch(
-			`https://api.netlify.com/api/v1/sites/${siteId}/env`,
-			{
-				headers: {
-					'Authorization': `Bearer ${apiKey}`,
-					'Content-Type': 'application/json'
-				}
-			}
-		);
-
-		console.log('Check response status:', checkResponse.status);
-		console.log('Check response statusText:', checkResponse.statusText);
-
-		if (!checkResponse.ok) {
-			// Получаем текст ошибки для диагностики
-			try {
-				const errorText = await checkResponse.text();
-				console.error('Error response body:', errorText);
-			} catch (textError) {
-				console.error('Could not read error response:', textError);
-			}
-
-			throw new Error(`Netlify API вернул статус: ${checkResponse.status}`);
-		}
-
-		const envVars = await checkResponse.json();
-		console.log('Environment variables fetched, count:', envVars.length);
-
-		const votesVar = envVars.find(v => v.key === 'VOTES_DATA');
-		console.log('VOTES_DATA variable found:', votesVar ? 'YES (id: ' + votesVar.id + ')' : 'NO');
-
-		const votesJson = JSON.stringify(votes);
-		console.log('Votes data to save:', votesJson);
-
-		let response;
-
-		if (votesVar) {
-			// Обновляем существующую переменную
-			console.log(`Обновляем существующую переменную: ${NETLIFY_API_URL}/sites/${siteId}/env/${votesVar.id}`);
-			response = await fetch(
-				`https://api.netlify.com/api/v1/sites/${siteId}/env/${votesVar.id}`,
-				{
-					method: 'PUT',
-					headers: {
-						'Authorization': `Bearer ${apiKey}`,
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						key: 'VOTES_DATA',
-						values: [{ value: votesJson }]
-					})
-				}
-			);
-		} else {
-			// Создаем новую переменную
-			console.log(`Создаем новую переменную: ${NETLIFY_API_URL}/sites/${siteId}/env`);
-			response = await fetch(
-				`https://api.netlify.com/api/v1/sites/${siteId}/env`,
-				{
-					method: 'POST',
-					headers: {
-						'Authorization': `Bearer ${apiKey}`,
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						key: 'VOTES_DATA',
-						values: [{ value: votesJson }]
-					})
-				}
-			);
-		}
-
-		console.log('Save response status:', response.status);
-		console.log('Save response statusText:', response.statusText);
-
-		if (!response.ok) {
-			// Получаем текст ошибки для диагностики
-			try {
-				const errorText = await response.text();
-				console.error('Error response body:', errorText);
-			} catch (textError) {
-				console.error('Could not read error response:', textError);
-			}
-
-			throw new Error(`Ошибка сохранения в Netlify API: ${response.status}`);
-		}
-
-		// Проверяем ответ от API
-		try {
-			const responseData = await response.json();
-			console.log('Ответ от API после сохранения:', JSON.stringify(responseData));
-		} catch (parseError) {
-			console.log('Не удалось распарсить ответ после сохранения:', parseError);
-			try {
-				const responseText = await response.text();
-				console.log('Текст ответа:', responseText);
-			} catch (textError) {
-				console.log('Не удалось получить текст ответа:', textError);
-			}
-		}
-
-		console.log('Голоса успешно сохранены в Netlify API');
-		return true;
-	} catch (error) {
-		console.error('Ошибка сохранения голосов в Netlify API:', error);
-		return false;
-	}
-};
-
-// Функция для получения данных о голосах
+// Функция для получения данных о голосах из глобального хранилища
 const getVotes = async () => {
 	try {
-		// Сначала пытаемся получить голоса из Netlify API
-		console.log('Attempting to get votes from Netlify API...');
-		const netlifyVotes = await fetchVotesFromNetlify();
-		if (netlifyVotes) {
-			memoryVotes = netlifyVotes; // Обновляем in-memory хранилище
-			return netlifyVotes;
+		console.log('Пытаемся получить данные из глобального хранилища...');
+
+		// Если глобальное хранилище не инициализировано, используем дефолтные значения
+		if (!global.votesStorage) {
+			console.log('Глобальное хранилище не инициализировано, используем дефолтные значения');
+			global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
 		}
 
-		console.log('Используем локальное хранилище для голосов...');
+		console.log('Получены данные из глобального хранилища:', JSON.stringify(global.votesStorage));
 
-		// Пробуем получить данные из файла (для локальной разработки)
-		const dataDir = path.join(__dirname, '..', 'data');
-		const votesFile = path.join(dataDir, 'votes.json');
-
+		// Для локальной разработки, также пытаемся прочитать из файла
+		// и обновить глобальное хранилище, если файл существует
 		try {
-			await fs.access(dataDir);
-		} catch {
-			console.log('Директория data не существует, создаем...');
+			const dataDir = path.join(__dirname, '..', 'data');
+			const votesFile = path.join(dataDir, 'votes.json');
+
+			// Проверяем существование файла
 			try {
-				await fs.mkdir(dataDir, { recursive: true });
-			} catch (mkdirErr) {
-				console.error('Ошибка создания директории:', mkdirErr);
-				return memoryVotes; // Возвращаем in-memory данные, если не можем создать директорию
-			}
-		}
-
-		try {
-			const data = await fs.readFile(votesFile, 'utf8');
-			const votes = JSON.parse(data);
-			memoryVotes = votes; // Обновляем in-memory хранилище
-			return votes;
-		} catch (err) {
-			if (err.code === 'ENOENT') {
-				console.log('Файл голосов не существует, создаем новый файл с дефолтными значениями...');
+				await fs.access(votesFile);
+				console.log('Найден локальный файл с голосами, читаем его');
 				try {
-					await fs.writeFile(votesFile, JSON.stringify(defaultVotes, null, 2));
-				} catch (writeErr) {
-					console.error('Ошибка записи дефолтного файла голосов:', writeErr);
-					// Несмотря на ошибку записи, продолжаем с in-memory данными
+					const data = await fs.readFile(votesFile, 'utf8');
+					const localVotes = JSON.parse(data);
+					console.log('Обновляем глобальное хранилище из файла');
+					global.votesStorage = localVotes;
+				} catch (readError) {
+					console.error('Ошибка чтения/парсинга файла:', readError);
 				}
-			} else {
-				console.error('Ошибка чтения файла голосов:', err);
+			} catch (accessError) {
+				console.log('Локальный файл с голосами не найден');
 			}
-
-			return memoryVotes;
+		} catch (fileError) {
+			console.error('Ошибка при работе с файлом:', fileError);
 		}
+
+		// Возвращаем копию данных из глобального хранилища
+		return JSON.parse(JSON.stringify(global.votesStorage));
 	} catch (error) {
 		console.error('Непредвиденная ошибка при получении голосов:', error);
-		return memoryVotes;
+		return JSON.parse(JSON.stringify(defaultVotes));
 	}
 };
 
 // Функция для сохранения данных о голосах
 const saveVotes = async (votes) => {
-	// Обновляем in-memory хранилище
-	memoryVotes = { ...votes };
+	try {
+		// Обновляем глобальное хранилище
+		console.log('Обновляем глобальное хранилище голосов');
+		global.votesStorage = JSON.parse(JSON.stringify(votes));
+		console.log('Глобальное хранилище обновлено:', JSON.stringify(global.votesStorage));
 
-	// Сначала пытаемся сохранить в Netlify API
-	const savedToNetlify = await saveVotesToNetlify(votes);
-
-	// Если сохранение в API не удалось или мы в локальной разработке,
-	// пытаемся сохранить в файл
-	if (!savedToNetlify) {
+		// Для локальной разработки, также пытаемся сохранить в файл
 		try {
 			const dataDir = path.join(__dirname, '..', 'data');
 			const votesFile = path.join(dataDir, 'votes.json');
@@ -295,24 +89,27 @@ const saveVotes = async (votes) => {
 					await fs.mkdir(dataDir, { recursive: true });
 				} catch (mkdirErr) {
 					console.error('Ошибка создания директории:', mkdirErr);
-					return true; // Данные сохранены в памяти, возвращаем успех
+					// Продолжаем выполнение, даже если не удалось создать директорию
 				}
 			}
 
-			await fs.writeFile(votesFile, JSON.stringify(votes, null, 2));
-			console.log('Голоса успешно сохранены в файл');
-			return true;
+			// Пытаемся записать в файл
+			try {
+				await fs.writeFile(votesFile, JSON.stringify(votes, null, 2));
+				console.log('Голоса успешно сохранены в файл');
+			} catch (writeError) {
+				console.error('Ошибка записи в файл:', writeError);
+			}
 		} catch (error) {
-			console.error('Ошибка сохранения голосов в файл:', error);
-			return true; // Данные сохранены в памяти, возвращаем успех несмотря на ошибку записи в файл
+			console.error('Ошибка при работе с файлом:', error);
 		}
+
+		return true;
+	} catch (error) {
+		console.error('Непредвиденная ошибка при сохранении голосов:', error);
+		return false;
 	}
-
-	return true;
 };
-
-// Добавляем константу для API URL
-const NETLIFY_API_URL = 'https://api.netlify.com/api/v1';
 
 export const handler = async (event) => {
 	// Настройка CORS
@@ -381,7 +178,7 @@ export const handler = async (event) => {
 		console.log('Updated votes:', JSON.stringify(votes));
 
 		// Сохранение обновленных голосов
-		await saveVotes(votes);
+		const saveSuccess = await saveVotes(votes);
 
 		// Возврат результата
 		return {
@@ -392,9 +189,9 @@ export const handler = async (event) => {
 				votes: votes[ideaId],
 				message: 'Голос успешно учтен',
 				debugInfo: {
-					useNetlifyAPI: !!process.env.NETLIFY_API_KEY && !!process.env.NETLIFY_SITE_ID,
-					inMemoryState: JSON.stringify(memoryVotes),
-					votesMatch: JSON.stringify(memoryVotes) === JSON.stringify(votes)
+					saveSuccess,
+					globalStorageState: JSON.stringify(global.votesStorage),
+					votesMatch: JSON.stringify(global.votesStorage) === JSON.stringify(votes)
 				}
 			})
 		};

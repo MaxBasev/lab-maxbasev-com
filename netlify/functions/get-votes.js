@@ -3,14 +3,17 @@ const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
 
-// ВАЖНО: В продакшн среде Netlify Functions не могут записывать файлы!
-// Решение для прода:
-// 1. Использовать Netlify API (рекомендуется)
-// 2. Использовать внешние базы данных (Firebase, MongoDB и т.д.)
-// 3. Использовать GitHub API для записи в репозиторий
-//
-// Текущая имплементация работает локально, но в проде голоса не будут сохраняться
-// между вызовами функций!
+// ВАЖНОЕ ИЗМЕНЕНИЕ: Из-за проблем с API Netlify, временно используем глобальное in-memory хранилище
+// для работы между вызовами. Это НЕ идеальное решение, но оно будет работать до внедрения
+// более устойчивого решения (например, FaunaDB или другой внешней БД)
+
+// Для стабильной работы в продакшн, нужно настроить одно из:
+// 1. Внешняя база данных (FaunaDB, MongoDB, Supabase и т.д.)
+// 2. Хранение в GitHub через API (требует отдельной настройки)
+// 3. Хранение в сторонних сервисах (JSONBin.io, AirTable и т.д.)
+
+// Глобальное хранилище данных 
+global.votesStorage = global.votesStorage || null;
 
 // Определяем дефолтные данные для голосования
 const defaultVotes = {
@@ -19,105 +22,29 @@ const defaultVotes = {
 	'snippet-manager': { likes: 9, dislikes: 2 }
 };
 
-// Временное in-memory хранилище для использования в пределах одной сессии
-// Будет использоваться только если не удалось получить данные из Netlify API
-let inMemoryVotes = null;
-
-// Конфигурация API Netlify
-const NETLIFY_API_URL = 'https://api.netlify.com/api/v1';
-const VARIABLE_KEY = 'VOTES_DATA'; // Имя переменной окружения для хранения голосов
-
-// Функция для получения API-ключа из переменных окружения
-const getNetlifyApiKey = () => {
-	const apiKey = process.env.NETLIFY_API_KEY || '';
-	console.log('NETLIFY_API_KEY present:', apiKey ? 'YES (length: ' + apiKey.length + ')' : 'NO');
-	return apiKey;
-};
-
-// Функция для получения ID сайта из переменных окружения
-const getNetlifySiteId = () => {
-	const siteId = process.env.NETLIFY_SITE_ID || '';
-	console.log('NETLIFY_SITE_ID present:', siteId ? 'YES: ' + siteId : 'NO');
-	return siteId;
-};
-
-// Функция для получения данных из Netlify API
-const getVotesFromNetlifyApi = async () => {
-	const apiKey = getNetlifyApiKey();
-	const siteId = getNetlifySiteId();
-
-	if (!apiKey || !siteId) {
-		console.log('Netlify API key or site ID not found in environment variables');
-		return null;
+// Получение голосов из глобального хранилища
+const getVotesFromGlobal = () => {
+	// Если глобальное хранилище не инициализировано, используем дефолтные значения
+	if (!global.votesStorage) {
+		console.log('Инициализируем глобальное хранилище с дефолтными значениями');
+		global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
 	}
-
-	try {
-		console.log(`Attempting to fetch data from ${NETLIFY_API_URL}/sites/${siteId}/env`);
-		// Получаем переменные окружения для текущего сайта
-		const response = await fetch(`${NETLIFY_API_URL}/sites/${siteId}/env?access_token=${apiKey}`);
-
-		console.log('Netlify API response status:', response.status);
-		console.log('Netlify API response statusText:', response.statusText);
-
-		if (!response.ok) {
-			console.error('Failed to fetch environment variables from Netlify API:', response.statusText);
-
-			// Получаем текст ошибки для диагностики
-			try {
-				const errorText = await response.text();
-				console.error('Error response body:', errorText);
-			} catch (textError) {
-				console.error('Could not read error response:', textError);
-			}
-
-			return null;
-		}
-
-		const envVars = await response.json();
-		console.log('Environment variables fetched, count:', envVars.length);
-
-		const votesVar = envVars.find(v => v.key === VARIABLE_KEY);
-		console.log('VOTES_DATA variable found:', votesVar ? 'YES' : 'NO');
-
-		if (!votesVar || !votesVar.values || !votesVar.values[0] || !votesVar.values[0].value) {
-			console.log('Votes data not found in Netlify environment variables');
-			return null;
-		}
-
-		try {
-			const parsedVotes = JSON.parse(votesVar.values[0].value);
-			console.log('Successfully parsed votes data from environment variable');
-			console.log('VOTES_DATA содержимое:', votesVar.values[0].value);
-			console.log('VOTES_DATA parsed:', JSON.stringify(parsedVotes));
-			return parsedVotes;
-		} catch (e) {
-			console.error('Error parsing votes data from environment variable:', e);
-			return null;
-		}
-	} catch (error) {
-		console.error('Error fetching data from Netlify API:', error);
-		return null;
-	}
+	console.log('Получены данные из глобального хранилища:', JSON.stringify(global.votesStorage));
+	return JSON.parse(JSON.stringify(global.votesStorage));
 };
 
 // Функция для получения данных голосования
 const getVotes = async () => {
-	// Если у нас уже есть данные в памяти, используем их
-	if (inMemoryVotes) {
-		console.log('Using in-memory votes data');
-		return inMemoryVotes;
+	// Первый приоритет - глобальное хранилище
+	console.log('Пытаемся получить данные из глобального хранилища...');
+	const globalVotes = getVotesFromGlobal();
+	if (globalVotes) {
+		console.log('Используем данные из глобального хранилища');
+		return globalVotes;
 	}
 
-	// Пытаемся получить данные из Netlify API
-	console.log('Attempting to get votes from Netlify API...');
-	const netlifyVotes = await getVotesFromNetlifyApi();
-	if (netlifyVotes) {
-		console.log('Using votes data from Netlify API');
-		inMemoryVotes = netlifyVotes;
-		return netlifyVotes;
-	}
-
-	// Если не удалось получить из API, пытаемся прочитать из файла (для локальной разработки)
+	// Если по какой-то причине не удалось получить из глобального хранилища
+	// Пытаемся прочитать из файла (для локальной разработки)
 	try {
 		const dataPath = path.join(__dirname, '..', 'data', 'votes.json');
 		console.log('Attempting to read votes from file (local development only):', dataPath);
@@ -126,9 +53,11 @@ const getVotes = async () => {
 			const data = fs.readFileSync(dataPath, 'utf8');
 			if (data && data.trim() !== '') {
 				try {
-					inMemoryVotes = JSON.parse(data);
+					const fileVotes = JSON.parse(data);
+					// Обновляем глобальное хранилище
+					global.votesStorage = JSON.parse(JSON.stringify(fileVotes));
 					console.log('Loaded votes from file');
-					return inMemoryVotes;
+					return fileVotes;
 				} catch (e) {
 					console.error('Error parsing votes JSON:', e);
 				}
@@ -140,8 +69,8 @@ const getVotes = async () => {
 
 	// Если не удалось загрузить, используем дефолтные данные
 	console.log('Using default votes data');
-	inMemoryVotes = JSON.parse(JSON.stringify(defaultVotes));
-	return inMemoryVotes;
+	global.votesStorage = JSON.parse(JSON.stringify(defaultVotes));
+	return JSON.parse(JSON.stringify(defaultVotes));
 };
 
 exports.handler = async function (event) {
