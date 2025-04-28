@@ -1,6 +1,9 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
+import { TagBadge } from './TagBadge';
+import { projects } from '../data/projects';
 
 // Содержимое по умолчанию для проектов
 const PROJECT_CONTENTS: Record<string, string> = {
@@ -264,6 +267,38 @@ Currently available on Chrome Web Store (pending review).
 Install on Chrome and experience instant control over your extensions!`
 };
 
+// Дополнительная информация о проектах
+const PROJECT_METADATA: Record<string, {
+	releaseDate?: string;
+	duration?: string;
+	price?: string;
+	client?: string;
+	status?: string;
+}> = {
+	'santa-maria-dashboard': {
+		releaseDate: 'October 2022',
+		duration: '24 months',
+		price: 'Commercial project',
+		client: 'Private medical clinic',
+		status: 'In production'
+	},
+	'ugh-okay': {
+		releaseDate: 'April 2025',
+		duration: '3 days',
+		status: 'Available on App Store and Google Play'
+	},
+	'extenswitch': {
+		releaseDate: 'April 2025',
+		duration: '2 days',
+		status: 'Available on Chrome Web Store'
+	},
+	'zentava': {
+		releaseDate: 'In development',
+		duration: 'Ongoing',
+		status: 'Beta'
+	}
+};
+
 interface ProjectContentProps {
 	projectId: string;
 	isModal?: boolean;
@@ -287,6 +322,15 @@ export const getProjectContent = (projectId: string): { title: string; content: 
 
 const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = false }) => {
 	const { content } = getProjectContent(projectId);
+
+	// Найдем проект по его id для получения тегов и изображения
+	const project = projects.find(p => p.id === projectId);
+	const projectTags = project?.tags || [];
+	const projectImage = project?.image || '';
+	const projectTitle = project?.title || '';
+
+	// Получаем дополнительную информацию о проекте
+	const metadata = PROJECT_METADATA[projectId] || {};
 
 	const formatContent = (text: string) => {
 		// Разбиваем текст на строки
@@ -367,7 +411,139 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 		return formattedLines;
 	};
 
-	return <div className="project-content">{formatContent(content)}</div>;
+	return (
+		<div className="project-content">
+			{/* Шапка проекта - изображение слева, теги и метаданные справа */}
+			<div className="mb-8 flex flex-col md:flex-row gap-6 border-b border-lab-cyan/20 portfolio:border-indigo-100 pb-6">
+				{/* Изображение проекта */}
+				<div className="md:w-1/3">
+					{projectImage ? (
+						<div className="relative w-full aspect-square rounded-lg overflow-hidden border border-lab-cyan/20 portfolio:border-indigo-100">
+							<Image
+								src={projectImage}
+								alt={`${projectTitle} image`}
+								className="object-contain"
+								fill
+								sizes="(max-width: 768px) 100vw, 33vw"
+								priority
+							/>
+						</div>
+					) : (
+						<div className="w-full aspect-square rounded-lg bg-lab-medium/50 flex items-center justify-center border border-lab-cyan/20 portfolio:bg-indigo-50 portfolio:border-indigo-100">
+							<span className="text-6xl">{project?.icon || '🔬'}</span>
+						</div>
+					)}
+				</div>
+
+				{/* Теги и метаданные */}
+				<div className="md:w-2/3">
+					{/* Теги проекта */}
+					{projectTags.length > 0 && (
+						<div className="flex flex-wrap gap-2 mb-6">
+							{projectTags.map((tag) => (
+								<TagBadge key={tag} tag={tag} />
+							))}
+						</div>
+					)}
+
+					{/* Метаданные проекта */}
+					{Object.keys(metadata).length > 0 && (
+						<div className="space-y-2 text-sm">
+							{metadata.releaseDate && (
+								<div className="flex justify-between border-b border-lab-cyan/10 portfolio:border-indigo-50 pb-1">
+									<span className="text-lab-muted portfolio:text-indigo-400">Release date:</span>
+									<span className="font-medium">{metadata.releaseDate}</span>
+								</div>
+							)}
+							{metadata.duration && (
+								<div className="flex justify-between border-b border-lab-cyan/10 portfolio:border-indigo-50 pb-1">
+									<span className="text-lab-muted portfolio:text-indigo-400">Development time:</span>
+									<span className="font-medium">{metadata.duration}</span>
+								</div>
+							)}
+							{metadata.price && (
+								<div className="flex justify-between border-b border-lab-cyan/10 portfolio:border-indigo-50 pb-1">
+									<span className="text-lab-muted portfolio:text-indigo-400">Cost:</span>
+									<span className="font-medium">{metadata.price}</span>
+								</div>
+							)}
+							{metadata.client && (
+								<div className="flex justify-between border-b border-lab-cyan/10 portfolio:border-indigo-50 pb-1">
+									<span className="text-lab-muted portfolio:text-indigo-400">Client:</span>
+									<span className="font-medium">{metadata.client}</span>
+								</div>
+							)}
+							{metadata.status && (
+								<div className="flex justify-between border-b border-lab-cyan/10 portfolio:border-indigo-50 pb-1">
+									<span className="text-lab-muted portfolio:text-indigo-400">Status:</span>
+									<span className="font-medium">{metadata.status}</span>
+								</div>
+							)}
+						</div>
+					)}
+
+					{/* Ссылки на проект */}
+					{project?.links && Object.keys(project.links).length > 0 && (
+						<div className="mt-6 flex flex-wrap gap-3">
+							{project.links.website && (
+								<a
+									href={project.links.website}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="px-3 py-1.5 text-sm bg-lab-cyan/10 text-lab-cyan border border-lab-cyan/30 rounded-lg hover:bg-lab-cyan/20 transition-colors portfolio:bg-indigo-100 portfolio:text-indigo-700 portfolio:border-indigo-200 portfolio:hover:bg-indigo-200"
+								>
+									Visit website
+								</a>
+							)}
+							{project.links.github && (
+								<a
+									href={project.links.github}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="px-3 py-1.5 text-sm bg-lab-purple/10 text-lab-purple border border-lab-purple/30 rounded-lg hover:bg-lab-purple/20 transition-colors portfolio:bg-indigo-50 portfolio:text-indigo-600 portfolio:border-indigo-200 portfolio:hover:bg-indigo-100"
+								>
+									GitHub
+								</a>
+							)}
+							{project.links.appStore && (
+								<a
+									href={project.links.appStore}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="px-3 py-1.5 text-sm bg-blue-900/10 text-blue-400 border border-blue-700/20 rounded-lg hover:bg-blue-900/20 transition-colors portfolio:bg-blue-50 portfolio:text-blue-600 portfolio:border-blue-200 portfolio:hover:bg-blue-100"
+								>
+									App Store
+								</a>
+							)}
+							{project.links.googlePlay && (
+								<a
+									href={project.links.googlePlay}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="px-3 py-1.5 text-sm bg-green-900/10 text-green-400 border border-green-700/20 rounded-lg hover:bg-green-900/20 transition-colors portfolio:bg-green-50 portfolio:text-green-600 portfolio:border-green-200 portfolio:hover:bg-green-100"
+								>
+									Google Play
+								</a>
+							)}
+							{project.links.blog && (
+								<a
+									href={project.links.blog}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="px-3 py-1.5 text-sm bg-yellow-900/10 text-yellow-400 border border-yellow-700/20 rounded-lg hover:bg-yellow-900/20 transition-colors portfolio:bg-yellow-50 portfolio:text-yellow-600 portfolio:border-yellow-200 portfolio:hover:bg-yellow-100"
+								>
+									Blog
+								</a>
+							)}
+						</div>
+					)}
+				</div>
+			</div>
+
+			{/* Основной контент проекта */}
+			{formatContent(content)}
+		</div>
+	);
 };
 
 export default ProjectContent; 
