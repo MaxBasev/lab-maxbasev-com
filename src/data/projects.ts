@@ -6,7 +6,7 @@ export const projects: Project[] = [
 		title: 'Ugh Okay',
 		description: 'A tiny offline app that helps you fight indecision and doomscrolling. Add things you actually want to do - then tap the button when your brain freezes. It picks one for you. That\'s it. No sync, no pressure, no pushy owl.',
 		icon: '🧠',
-		image: '/images/projects/UghOkay.png',
+		image: '/images/projects/UghOkay.webp',
 		tags: ['Mobile App', 'Pet Project'],
 		links: {
 			website: 'https://ughokay.maxbasev.com',
