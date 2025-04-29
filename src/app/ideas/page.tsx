@@ -137,7 +137,13 @@ export default function Ideas() {
 		const fetchVotes = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch('/api/votes');
+				const response = await fetch('/api/votes', {
+					cache: 'no-store',
+					headers: {
+						'Pragma': 'no-cache',
+						'Cache-Control': 'no-cache'
+					}
+				});
 
 				if (!response.ok) {
 					throw new Error('Failed to fetch votes');
@@ -213,8 +219,11 @@ export default function Ideas() {
 			const response = await fetch('/api/votes', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Pragma': 'no-cache',
+					'Cache-Control': 'no-cache'
 				},
+				cache: 'no-store',
 				body: JSON.stringify({ ideaId: id, action: vote })
 			});
 

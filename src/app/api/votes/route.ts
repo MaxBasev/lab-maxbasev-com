@@ -20,6 +20,19 @@ const defaultVotes: VotesCollection = {
 	'personal-ai': { likes: 19, dislikes: 4 }
 };
 
+// Константа для хранения ключа Redis (один и тот же для всех инстансов)
+const REDIS_VOTES_KEY = 'lab_votes_v1';
+
+// Функция для создания заголовков без кеширования
+const getNoCacheHeaders = () => {
+	return {
+		'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+		'Pragma': 'no-cache',
+		'Expires': '0',
+		'Surrogate-Control': 'no-store'
+	};
+};
+
 // Redis client initialization
 const getRedisClient = async () => {
 	// Создаем и подключаем клиент при каждом запросе
@@ -41,30 +54,38 @@ export async function GET() {
 
 		try {
 			// Try to get votes from Redis
-			const storedVotes = await redis.get('lab:votes');
+			const storedVotes = await redis.get(REDIS_VOTES_KEY);
 
 			// If no votes found, initialize with default votes
 			if (!storedVotes) {
-				await redis.set('lab:votes', JSON.stringify(defaultVotes));
+				await redis.set(REDIS_VOTES_KEY, JSON.stringify(defaultVotes));
 				await redis.disconnect();
-				return NextResponse.json(defaultVotes);
+				return NextResponse.json(defaultVotes, {
+					headers: getNoCacheHeaders()
+				});
 			}
 
 			// Parse and return stored votes
 			const votes = JSON.parse(storedVotes);
 			await redis.disconnect();
-			return NextResponse.json(votes);
+			return NextResponse.json(votes, {
+				headers: getNoCacheHeaders()
+			});
 
 		} catch (error) {
 			console.error('Redis operation error:', error);
 			await redis.disconnect();
-			return NextResponse.json(defaultVotes);
+			return NextResponse.json(defaultVotes, {
+				headers: getNoCacheHeaders()
+			});
 		}
 
 	} catch (error) {
 		console.error('Could not connect to Redis:', error);
 		// Fallback to default votes if Redis connection fails
-		return NextResponse.json(defaultVotes);
+		return NextResponse.json(defaultVotes, {
+			headers: getNoCacheHeaders()
+		});
 	}
 }
 
@@ -81,7 +102,10 @@ export async function POST(request: Request) {
 		if (!ideaId || !action || (action !== 'like' && action !== 'dislike')) {
 			return NextResponse.json(
 				{ error: 'Invalid parameters. Required: ideaId and action (like/dislike)' },
-				{ status: 400 }
+				{
+					status: 400,
+					headers: getNoCacheHeaders()
+				}
 			);
 		}
 
@@ -90,7 +114,7 @@ export async function POST(request: Request) {
 			const redis = await getRedisClient();
 
 			// Get current votes
-			const storedVotes = await redis.get('lab:votes');
+			const storedVotes = await redis.get(REDIS_VOTES_KEY);
 			const votes: VotesCollection = storedVotes
 				? JSON.parse(storedVotes)
 				: { ...defaultVotes };
@@ -108,16 +132,21 @@ export async function POST(request: Request) {
 			}
 
 			// Save updated votes
-			await redis.set('lab:votes', JSON.stringify(votes));
+			await redis.set(REDIS_VOTES_KEY, JSON.stringify(votes));
 
 			// Close Redis connection
 			await redis.disconnect();
 
 			// Return result
-			return NextResponse.json({
-				success: true,
-				votes: votes[ideaId]
-			});
+			return NextResponse.json(
+				{
+					success: true,
+					votes: votes[ideaId]
+				},
+				{
+					headers: getNoCacheHeaders()
+				}
+			);
 
 		} catch (error) {
 			console.error('Redis operation error:', error);
@@ -135,18 +164,26 @@ export async function POST(request: Request) {
 				votes[ideaId].dislikes += 1;
 			}
 
-			return NextResponse.json({
-				success: true,
-				votes: votes[ideaId],
-				message: 'Used fallback storage due to Redis error'
-			});
+			return NextResponse.json(
+				{
+					success: true,
+					votes: votes[ideaId],
+					message: 'Used fallback storage due to Redis error'
+				},
+				{
+					headers: getNoCacheHeaders()
+				}
+			);
 		}
 
 	} catch (error) {
 		console.error('Error processing request:', error);
 		return NextResponse.json(
 			{ error: 'Failed to update votes' },
-			{ status: 500 }
+			{
+				status: 500,
+				headers: getNoCacheHeaders()
+			}
 		);
 	}
 } 
