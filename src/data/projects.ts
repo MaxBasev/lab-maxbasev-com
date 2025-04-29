@@ -35,7 +35,7 @@ export const projects: Project[] = [
 		tags: ['Web App', 'Freelance Work'],
 		links: {
 			website: 'https://sybillehealth.com/booking',
-			blog: 'https://gitbook.com/project-overview'
+			blog: 'https://maxbasev.gitbook.io/santa-maria-dashboard/en/menu'
 		}
 	},
 	{
@@ -46,7 +46,8 @@ export const projects: Project[] = [
 		image: '/images/projects/ExtenSwitch.png',
 		tags: ['Chrome Extension', 'Tool', 'Pet Project'],
 		links: {
-			website: 'https://chrome.google.com/webstore'
+			website: 'https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb',
+			blog: 'https://en.skazoff.com/the-journey-of-creating-extenswitch/'
 		}
 	},
 	{
@@ -69,7 +70,7 @@ export const projects: Project[] = [
 		tags: ['Chrome Extension', 'Pet Project', 'Tool'],
 		links: {
 			website: 'https://bareminimumhero.com',
-			blog: 'https://chrome.google.com/webstore'
+			blog: 'https://en.skazoff.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
 		}
 	},
 	{
@@ -80,8 +81,7 @@ export const projects: Project[] = [
 		image: '/images/projects/Tagoshi_Promo.png',
 		tags: ['Chrome Extension', 'Tool', 'Pet Project', 'Crypto'],
 		links: {
-			website: 'https://skazoff.ru',
-			blog: 'https://chrome.google.com/webstore'
+			website: 'https://chromewebstore.google.com/detail/dhgdhhgndiifpgggdnmaclknboipnjkd?utm_source=item-share-cb'
 		}
 	},
 	{
@@ -92,7 +92,7 @@ export const projects: Project[] = [
 		image: '/images/projects/Santa_Maria_logo.png',
 		tags: ['iOS App', 'Freelance Work'],
 		links: {
-			appStore: 'https://apps.apple.com'
+			appStore: 'https://apps.apple.com/us/app/santa-maria-mobile/id6470041758'
 		}
 	},
 	{
@@ -114,7 +114,7 @@ export const projects: Project[] = [
 		image: '/images/projects/Focus_Buddy_promo.png',
 		tags: ['Chrome Extension', 'Tool'],
 		links: {
-			website: 'https://focusbuddy.maxbasev.com',
+			website: 'https://chromewebstore.google.com/detail/ccjjaibohkfmlljiggepjecnlddehpkc?utm_source=item-share-cb',
 			github: 'https://github.com/MaxBasev/focus-buddy'
 		}
 	}
