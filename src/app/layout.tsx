@@ -45,6 +45,13 @@ export const metadata: Metadata = {
 			},
 		],
 	},
+	icons: {
+		icon: [
+			{ url: '/favicon.ico' },
+			{ url: '/favicon.png' }
+		],
+		apple: { url: '/favicon.png' }
+	},
 };
 
 export default function RootLayout({
