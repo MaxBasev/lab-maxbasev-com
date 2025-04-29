@@ -44,19 +44,20 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
 	return (
 		<>
-			<div className="angled-card bg-lab-medium/90 rounded-xl shadow-lg hover:shadow-neon-cyan transition-all duration-300 hover:scale-[1.01] border border-lab-cyan/20 overflow-hidden relative group flex flex-col h-full">
+			<div className="angled-card bg-lab-medium/90 rounded-xl shadow-lg hover:shadow-neon-cyan transition-all duration-300 hover:scale-[1.01] border border-lab-cyan/20 overflow-hidden relative group flex flex-col h-full w-full max-w-full">
 				{project.image && (
-					<div className="w-full h-60 relative border-b border-lab-cyan/20 overflow-hidden portfolio:border-gray-100">
+					<div className="w-full h-48 sm:h-60 relative border-b border-lab-cyan/20 overflow-hidden portfolio:border-gray-100">
 						<Image
 							src={project.image}
 							alt={project.title}
 							fill
-							className="object-cover transition-transform duration-700 group-hover:scale-110"
+							className="object-contain sm:object-cover transition-transform duration-700 group-hover:scale-110"
+							sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
 							priority={project.id === 'ugh-okay'}
 						/>
 					</div>
 				)}
-				<div className="p-6 relative portfolio:p-7 flex flex-col flex-grow">
+				<div className="p-4 sm:p-6 relative portfolio:p-7 flex flex-col flex-grow">
 					{/* Lab tube decoration top-right - hidden in portfolio mode */}
 					<div className="absolute -top-3 right-4 w-1 h-6 bg-lab-cyan/20 rounded-full portfolio:hidden"></div>
 

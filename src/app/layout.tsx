@@ -52,6 +52,12 @@ export const metadata: Metadata = {
 		],
 		apple: { url: '/favicon.png' }
 	},
+	viewport: {
+		width: 'device-width',
+		initialScale: 1,
+		maximumScale: 5,
+		userScalable: true
+	},
 };
 
 export default function RootLayout({
@@ -84,7 +90,7 @@ export default function RootLayout({
 					</div>
 				</div>
 
-				<div className="container mx-auto">
+				<div className="container mx-auto px-4">
 					{children}
 				</div>
 

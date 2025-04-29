@@ -33,18 +33,18 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col min-h-screen relative overflow-hidden portfolio:bg-white">
-			<main className="flex-grow pt-10 pb-20 px-4 relative z-10 portfolio:bg-white">
+			<main className="flex-grow pt-5 sm:pt-10 pb-10 sm:pb-20 px-4 relative z-10 portfolio:bg-white">
 				<div className="max-w-7xl mx-auto">
-					<div className="mb-12 relative">
+					<div className="mb-8 sm:mb-12 relative">
 						{/* Lab decoration elements */}
 						<div className="absolute -top-5 left-1/4 w-1 h-20 bg-lab-cyan/20 rounded-full portfolio:hidden"></div>
 						<div className="absolute -top-2 right-1/4 w-1 h-10 bg-lab-purple/20 rounded-full portfolio:hidden"></div>
 
-						<h1 className="text-4xl md:text-5xl font-mono font-bold mb-4 text-center text-white portfolio:text-indigo-900">
+						<h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold mb-3 sm:mb-4 text-center text-white portfolio:text-indigo-900">
 							<span role="img" aria-label="Lab" className="mr-3 animate-pulse">🧪</span>
 							Max&apos;s <span className="text-lab-cyan portfolio:text-[#1fbd89] neon-text portfolio:no-underline">Lab</span>
 						</h1>
-						<p className="text-lg text-center text-lab-text max-w-2xl mx-auto font-mono portfolio:text-indigo-700 portfolio:font-sans">
+						<p className="text-base sm:text-lg text-center text-lab-text max-w-2xl mx-auto font-mono portfolio:text-indigo-700 portfolio:font-sans">
 							Digital experiments, half-finished ideas, and surprisingly working tools.
 						</p>
 
@@ -53,8 +53,8 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="mb-10 flex flex-col md:flex-row justify-between gap-6">
-						<div className="order-2 md:order-1 p-4 rounded-xl border border-lab-cyan/20 portfolio:border-portfolio-accent/20 portfolio:shadow-none portfolio:p-5">
+					<div className="mb-6 sm:mb-10 flex flex-col md:flex-row justify-between gap-4 sm:gap-6">
+						<div className="order-2 md:order-1 p-3 sm:p-4 rounded-xl border border-lab-cyan/20 portfolio:border-portfolio-accent/20 portfolio:shadow-none portfolio:p-5">
 							<TagFilter
 								tags={allTags}
 								selectedTags={selectedTags}
