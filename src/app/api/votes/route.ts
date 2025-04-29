@@ -12,18 +12,18 @@ type VotesCollection = {
 
 // Default votes data
 const defaultVotes: VotesCollection = {
-	'ai-writing': { likes: 14, dislikes: 3 },
-	'task-manager': { likes: 23, dislikes: 5 },
-	'snippet-manager': { likes: 9, dislikes: 2 },
-	'deep-work-timer': { likes: 7, dislikes: 1 },
-	'reading-list': { likes: 15, dislikes: 2 },
-	'personal-ai': { likes: 19, dislikes: 4 }
+	'ai-writing': { likes: 0, dislikes: 0 },
+	'task-manager': { likes: 0, dislikes: 5 },
+	'snippet-manager': { likes: 0, dislikes: 0 },
+	'deep-work-timer': { likes: 0, dislikes: 0 },
+	'reading-list': { likes: 0, dislikes: 0 },
+	'personal-ai': { likes: 0, dislikes: 0 }
 };
 
-// Константа для хранения ключа Redis (один и тот же для всех инстансов)
+// Constant for Redis votes key
 const REDIS_VOTES_KEY = 'lab_votes_v1';
 
-// Функция для создания заголовков без кеширования
+// Function to create no-cache headers
 const getNoCacheHeaders = () => {
 	return {
 		'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -35,7 +35,7 @@ const getNoCacheHeaders = () => {
 
 // Redis client initialization
 const getRedisClient = async () => {
-	// Создаем и подключаем клиент при каждом запросе
+	// Create and connect client on each request
 	const client = createClient({
 		url: process.env.REDIS_URL
 	});
