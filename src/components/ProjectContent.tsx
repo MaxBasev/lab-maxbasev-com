@@ -264,7 +264,361 @@ Inspired by juggling too many crypto wallets and dev tools.
 Currently available on Chrome Web Store (pending review).
 
 🚀 Try It
-Install on Chrome and experience instant control over your extensions!`
+Install on Chrome and experience instant control over your extensions!`,
+	'crypto-news-bot': `🧠 Crypto News Bot — Project Details
+📰 AI-Powered Crypto News Aggregator for Telegram
+🚀 About the Project
+An internal tool built for a private client (under NDA) to deliver translated and curated crypto news directly into a Telegram channel — powered by GPT and a fully custom backend.
+
+Built to streamline multilingual crypto news distribution.
+
+🔥 The Problem
+Staying up-to-date with crypto news is hard — especially when you need quality, translated updates aggregated from multiple sources.
+Manual curation is time-consuming, and existing solutions are either noisy or lack multilingual support.
+
+🛠️ The Solution
+
+Aggregates live news from CryptoPanic API
+
+Translates and summarizes using GPT (OpenAI API)
+
+Stores original and processed data in MongoDB
+
+Sends formatted updates to a private Telegram channel
+
+Admin Dashboard for editing, prompting, and tracking performance
+
+📈 Tech Stack
+
+Node.js for the backend service
+
+MongoDB for persistent structured data
+
+OpenAI API for smart translations and summarization
+
+Telegram Bot API for content delivery
+
+Next.js for a clean, responsive admin dashboard
+
+Firebase Auth for secure access control
+
+✨ Key Features
+🌍 Multilingual translation of crypto news
+⚙️ Dynamic prompt control for GPT via admin panel
+📊 Stats & analytics on news performance
+✏️ Inline editing of AI-generated content
+📲 Instant delivery to Telegram
+
+🧪 Behind the Scenes
+
+Built under NDA for a client in the crypto media space
+
+Admin dashboard includes full control over GPT prompts and fallback logic
+
+Emphasis on clean UI, fast iteration, and zero downtime delivery pipeline
+
+Highly modular backend designed for scaling to other industries if needed
+
+🚫 Privacy Note
+This is a private, client-specific tool — not publicly accessible.`,
+	'bare-minimum-hero': `⭐ Bare Minimum Hero — Project Details
+🧠 Chrome Extension That Rewards You for Doing Literally Anything
+
+🚀 About the Project
+A sarcastic emotional support extension for burnt-out creatives and minimal-effort champions.
+You click the button. You get validation.
+No stats. No charts. Just vibes and barely-useful tips.
+
+Built for fun, sanity, and the glory of barely showing up.
+
+🔥 The Problem
+Most productivity tools assume you're thriving.
+What if you're not? What if doing the bare minimum is already a win?
+
+🛠️ The Solution
+
+A single daily button: press when you've done anything at all
+
+Earn 1 (entire!) hero point and get a sarcastic compliment
+
+Randomized validation quotes, achievement streaks, emergency mode, and meme-grade tips
+
+Everything designed to make minimal effort feel like a personal triumph
+
+Plus a landing page with just enough dopamine to keep you breathing
+
+📈 Tech Stack
+
+Chrome Extension: Vanilla JS, localStorage, no backend
+
+Landing Page: Next.js with TailwindCSS, hosted on Vercel
+
+Multi-language support: English & Russian
+
+Fully offline, no data collection, no guilt
+
+✨ Key Features
+🔘 One-button daily interaction
+🎉 Emergency Mode for spiral moments
+📅 Streak tracking with ironic medals (e.g. "Certified Non-Quitter")
+🧠 "Barely Useful Tips" feed
+🌐 Beautiful landing page → bareminimumhero.com
+💬 Localized in EN / RU
+📸 Downloadable share cards for social bragging rights
+
+🧪 Behind the Scenes
+
+Design, icon, branding, and tone done in one chaotic weekend
+
+Writing and copy: brainstormed with ChatGPT, polished with sarcasm
+
+Listed on Chrome Web Store, shared on social media, gathered cult followers
+
+Not trying to "optimize your productivity", just trying to help you not disappear
+
+🔮 What's Next
+
+Firefox version (if 3 people ask)
+
+Share-to-social features with quote cards
+
+Optional dark mode (because ✨aesthetic suffering✨)
+
+Possibly a mobile app for The Button™ (don't tempt me)
+
+📸 Screenshots
+
+Chrome extension UI
+
+Streak mode with ironic medals
+
+Emergency validation monologue
+
+Landing page with star icon and quotes
+
+Example download card`,
+	'tagoshi': `💱 Tagoshi — Project Details
+🌐 Crypto Price Converter for Real-World Shopping
+🧩 Chrome Extension That Brings Web3 Vibes to Web2 Stores
+
+🚀 About the Project
+Tagoshi is a Chrome extension that automatically converts product prices on Amazon, eBay, and AliExpress into your favorite cryptocurrencies — directly on the page.
+No need for calculators or tab-switching. Just real-time crypto pricing, baked right into your shopping flow.
+
+🔥 The Problem
+Crypto enthusiasts often need to mentally (or manually) convert fiat prices into BTC, ETH, etc.
+This is tedious, especially when you're living that full degen lifestyle.
+
+🛠️ The Solution
+
+Injects crypto equivalents next to fiat prices on product pages
+
+Uses Binance API for accurate, up-to-date conversion rates
+
+Supports major coins: BTC, ETH, SOL, BNB, XRP
+
+Works seamlessly on Amazon, eBay, and AliExpress
+
+Clean integration — doesn't break the page layout
+
+📈 Tech Stack
+
+Chrome Extension (Vanilla JS)
+
+Binance Public API for live rates
+
+Regex-powered DOM parsing for price detection
+
+Smart caching with auto-refresh every 10 mins
+
+Fully client-side, no data collection
+
+✨ Key Features
+🧠 Real-time conversion on product pages
+📦 Zero-setup experience — install and go
+🎯 Minimalist design that blends with native UI
+🔄 Auto-refreshes rates every 10 minutes
+🔒 No permissions creep, no tracking
+
+🧪 Behind the Scenes
+
+Built to scratch the "what is this in ETH?" itch
+
+Designed and shipped in a weekend
+
+Maintained as a micro-side-project for crypto-fluent users
+
+Used by people who say "this iPhone is only 0.02 BTC" unironically
+
+🚀 Try It
+Chrome Web Store: Tagoshi - Crypto Price Converter`,
+	'santa-maria-ios': `📱 Santa Maria – Mobile App (iOS/iPadOS)
+🩺 Personalized Health Dashboard for Patients
+Built with Flutter · iOS Exclusive · For Santa Maria Clinics
+
+🚀 About the Project
+The iOS client app was developed as a companion to the Santa Maria Health Dashboard — providing patients with secure, real-time access to their medical journey, directly from their mobile devices.
+
+This wasn't just an app — it was an extension of the clinic's digital infrastructure, focused on usability, clarity, and smooth communication between patients and healthcare providers.
+
+🔥 The Problem
+Many clinics use outdated or fragmented systems that leave patients in the dark about their appointments, procedures, or lab results.
+The goal was to bring clarity, trust, and usability to the patient experience — on modern Apple devices.
+
+🛠️ The Solution
+
+📅 Full booking system: view, manage, and cancel appointments
+
+🧪 Access to lab results and medical history
+
+🕓 See upcoming procedures in a clean, structured timeline
+
+🧾 Invoice & billing overview
+
+🔐 Secure authentication and data handling (Firebase)
+
+🎯 Designed for simplicity and clarity, even for less tech-savvy users
+
+📈 Tech Stack
+
+Flutter (iOS/iPadOS only)
+
+Firebase Authentication
+
+REST API backend (Node.js + MongoDB)
+
+Realtime data sync for appointments and status updates
+
+Modular codebase for future expansion (Android, wearables, etc.)
+
+🧪 Behind the Scenes
+
+Built under NDA for a private client
+
+Fully synced with the existing Santa Maria admin dashboard
+
+Delivered alongside the clinic's broader digital transformation initiative
+
+Published on the App Store
+
+🚀 Try It
+🔗 Santa Maria Mobile on App Store
+(Note: access requires authorized clinic login)`,
+	'cheqly-life': `✅ Cheqly.life — Project Details
+📊 Visual Goal Tracker for Normal People™
+Web App · Beta Mode · Built for personal use, open to the world
+
+🚀 About the Project
+Cheqly is a minimal but powerful system for daily goal tracking, inspired by the idea that self-awareness beats motivation — especially when you're just trying to survive modern life.
+
+It's not a habit app. It's not a bullet journal.
+It's a spreadsheet you don't hate to look at.
+
+🔥 The Problem
+You write your goals. You forget them. Rinse and repeat.
+Traditional to-do apps don't help when the real challenge is staying aware of your long-term progress — or noticing that you've ghosted your health column for three weeks straight.
+
+🛠️ The Solution
+
+A grid of life categories (health, work, etc.) × time (day/week/month)
+
+✅ Green = did something
+
+⚪️ White = nothing happened
+
+❌ Red = something went wrong
+
+Auto-aggregation from daily → weekly → monthly
+
+Weekly/monthly review mode to spot patterns and course-correct
+
+Focused on visual feedback, not nagging
+
+📈 Tech Stack
+
+Next.js frontend
+
+Node.js + MongoDB backend
+
+Firebase Auth for login
+
+Tailwind CSS for minimal, responsive design
+
+OpenAI integration (coming later) for reflective insights or auto-highlights
+
+🧪 Behind the Scenes
+
+Built for personal accountability
+
+Now evolving into a SaaS tool with future plans for subscription model
+
+Still in beta (invite-only, for now)
+
+UI/UX inspired by old-school Excel with modern brain energy
+
+✨ Key Features
+📅 Daily + Weekly + Monthly grid view
+📈 Visual feedback on goal consistency
+🧠 Built-in shame-based motivation (the red cells…)
+🔐 Private by default
+🧪 Optional AI analysis (coming soon)
+
+🌐 Try It (soon)
+Website: cheqly.life
+(Currently in closed beta — but you can ask nicely)`,
+	'focus-buddy': `🧠 Focus Buddy — Project Details
+🚫 Block Distractions. ✅ Do Literally Anything Else.
+Chrome Extension · Productivity Tool · Built on impulse (as usual)
+
+🚀 About the Project
+Focus Buddy is a tiny Chrome extension that gently (or aggressively) blocks websites that keep stealing your time and attention.
+
+No timers. No complicated rules.
+Just you, your to-do list, and a digital bouncer for your browser.
+
+🔥 The Problem
+We all have "that one site" (or five).
+You open a new tab to do something productive… and suddenly it's 40 minutes later, you're reading about raccoons in hats.
+
+🛠️ The Solution
+
+Add any website to your blocklist
+
+Toggle focus mode on/off in one click
+
+Clean, lightweight interface
+
+Works offline, saves your list in Chrome storage
+
+Doesn't scream at you — just quietly prevents dumb decisions
+
+🧰 Tech Stack
+
+Chrome Extension (Manifest v3)
+
+HTML/CSS + vanilla JS
+
+Chrome APIs: webNavigation, storage, host_permissions
+
+Lightweight, no background memory bloat
+
+🧪 Behind the Scenes
+
+Built in a few hours as a side-distraction from procrastinating on another project
+
+Fully privacy-friendly — no data leaves your browser
+
+Meant to be dumb-simple and fast to deploy
+
+✨ Key Features
+🛑 One-click website blocking
+📃 Local-only blocklist
+⚡ Minimal permissions
+🎯 Designed for the "I'll just check Twitter real quick" moment
+🙅 No analytics. No tracking. No pressure.
+
+🔗 Try It Now
+Focus Buddy on Chrome Web Store`
 };
 
 // Additional project information
@@ -296,6 +650,42 @@ const PROJECT_METADATA: Record<string, {
 		releaseDate: 'In development',
 		duration: 'Ongoing',
 		status: 'Beta'
+	},
+	'crypto-news-bot': {
+		releaseDate: 'December 2023',
+		duration: '3 months',
+		price: 'Commercial project',
+		client: 'Crypto media company (under NDA)',
+		status: 'In production'
+	},
+	'bare-minimum-hero': {
+		releaseDate: 'March 2025',
+		duration: '1 weekend',
+		status: 'Available on Chrome Web Store'
+	},
+	'tagoshi': {
+		releaseDate: 'February 2025',
+		duration: '1 weekend',
+		status: 'Available on Chrome Web Store'
+	},
+	'santa-maria-ios': {
+		releaseDate: 'November 2022',
+		duration: '6 months',
+		price: 'Commercial project',
+		client: 'Private medical clinic',
+		status: 'Available on App Store (private)'
+	},
+	'cheqly-life': {
+		releaseDate: 'January 2025',
+		duration: '3 months',
+		price: 'Free (beta)',
+		status: 'Beta (invite-only)'
+	},
+	'focus-buddy': {
+		releaseDate: 'October 2024',
+		duration: '1 day',
+		price: 'Free',
+		status: 'Available on Chrome Web Store'
 	}
 };
 

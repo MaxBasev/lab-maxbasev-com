@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "../components/Navbar";
@@ -14,6 +14,13 @@ const jetBrainsMono = JetBrains_Mono({
 	display: "swap",
 	variable: "--font-jetbrains-mono",
 });
+
+export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	maximumScale: 5,
+	userScalable: true
+};
 
 export const metadata: Metadata = {
 	title: "Max's Lab",
@@ -51,12 +58,6 @@ export const metadata: Metadata = {
 			{ url: '/favicon.png' }
 		],
 		apple: { url: '/favicon.png' }
-	},
-	viewport: {
-		width: 'device-width',
-		initialScale: 1,
-		maximumScale: 5,
-		userScalable: true
 	},
 };
 

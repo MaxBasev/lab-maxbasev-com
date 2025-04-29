@@ -46,9 +46,9 @@ export default {
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-				'lab-grid': "url('/images/lab-grid.svg')",
-				'lab-noise': "url('/images/noise.png')",
-				'portfolio-dots': "url('/images/portfolio-dots.svg')",
+				'lab-grid': "linear-gradient(to right, rgba(0, 255, 224, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 255, 224, 0.05) 1px, transparent 1px)",
+				'lab-noise': "radial-gradient(rgba(0, 255, 224, 0.05) 1px, transparent 0)",
+				'portfolio-dots': "radial-gradient(rgba(31, 189, 137, 0.1) 1px, transparent 0)",
 			},
 			animation: {
 				'glow': 'glow 1.5s ease-in-out infinite alternate',
