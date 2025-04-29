@@ -21,59 +21,221 @@ type VoteChoice = 'like' | 'dislike' | null;
 type UserChoices = Record<string, VoteChoice>;
 
 const ideasData: IdeasData = {
-	'ai-writing': {
-		title: 'AI Writing Assistant',
-		description: 'A browser extension that helps with writing clearer, more concise text. Uses AI to suggest improvements without changing your voice.',
-		tags: ['Chrome Extension', 'AI-powered', 'Early Design'],
+	'fast-feelings-diary': {
+		title: 'Fast Feelings Diary',
+		description: 'A micro-journal with a widget. Tap. Type. Done. Capture tiny moods before they fade — like that one dream about raccoons.',
+		tags: ['Mobile App', 'Productivity', 'Mental Health'],
+		status: 'Prototype',
+		difficulty: 'Medium',
+		likes: 18,
+		dislikes: 2
+	},
+	'inbox-shame': {
+		title: 'InboxShame',
+		description: 'Shows the number of unread emails and, when you open Gmail, reminds you: "You did this to yourself."',
+		tags: ['Chrome Extension', 'Productivity'],
 		status: 'Early Research',
+		difficulty: 'Easy',
+		likes: 15,
+		dislikes: 2
+	},
+	'tab-stretcher': {
+		title: 'TabStretcher',
+		description: 'If you have more than 10 tabs open, the browser screen subtly "sags" — gentle shaming for tab hoarders.',
+		tags: ['Chrome Extension', 'Productivity'],
+		status: 'Draft',
+		difficulty: 'Medium',
+		likes: 12,
+		dislikes: 3
+	},
+	'calm-scroll': {
+		title: 'CalmScroll',
+		description: 'Slows down scrolling on Twitter/Reddit. Optional "Wisdom Mode" that displays random quotes during doomscrolling.',
+		tags: ['Chrome Extension', 'Mental Health'],
+		status: 'Draft',
+		difficulty: 'Medium',
+		likes: 14,
+		dislikes: 4
+	},
+	'rage-text': {
+		title: 'RageText',
+		description: 'Write an angry message, hit "Send" — and it disappears into oblivion. Therapy, but cheaper.',
+		tags: ['Web App', 'Mental Health'],
+		status: 'Draft',
+		difficulty: 'Easy',
+		likes: 17,
+		dislikes: 1
+	},
+	'mood-ring': {
+		title: 'MoodRing.site',
+		description: 'Pick your daily mood with an emoji. Get a personal vibe report every 7 days. Fully offline via localStorage.',
+		tags: ['Web App', 'Mental Health'],
+		status: 'Draft',
+		difficulty: 'Easy',
+		likes: 16,
+		dislikes: 2
+	},
+	'dm-myself': {
+		title: 'DM Myself',
+		description: 'Send a message to your future self via email. Choose how many days later you want it to arrive. Emotional time-travel!',
+		tags: ['Web App', 'Productivity'],
+		status: 'Early Research',
+		difficulty: 'Easy',
+		likes: 13,
+		dislikes: 1
+	},
+	'one-button-note': {
+		title: 'OneButtonNote',
+		description: 'A widget that lets you quickly record a voice note or a text thought. One tap. Instant memory saving.',
+		tags: ['Mobile App', 'Productivity'],
+		status: 'Early Research',
+		difficulty: 'Medium',
+		likes: 18,
+		dislikes: 2
+	},
+	'habit-but-sarcastic': {
+		title: 'HabitButSarcastic',
+		description: 'A habit tracker where every achievement is met with sarcastic praise. Motivation... but make it ironic.',
+		tags: ['Mobile App', 'Productivity'],
+		status: 'Draft',
+		difficulty: 'Medium',
+		likes: 15,
+		dislikes: 5
+	},
+	'offline-vibes': {
+		title: 'Offline Vibes',
+		description: 'Set your "offline mode" with one button. Notifies selected contacts that you\'re alive, just unavailable.',
+		tags: ['Mobile App', 'Mental Health'],
+		status: 'Draft',
+		difficulty: 'Hard',
+		likes: 19,
+		dislikes: 2
+	},
+	'gas-me-not': {
+		title: 'GasMeNot',
+		description: 'A browser extension showing gas fees in USD — if fees are too high, it simply tells you: "Go touch grass."',
+		tags: ['Chrome Extension', 'Crypto'],
+		status: 'Draft',
 		difficulty: 'Medium',
 		likes: 14,
 		dislikes: 3
 	},
-	'task-manager': {
-		title: 'Minimal Task Manager',
-		description: 'Ultra-lightweight task manager with focus on simplicity and keyboard shortcuts. No accounts, no cloud sync, just local tasks.',
-		tags: ['Web App', 'Tool', 'In Development'],
-		status: 'Prototype',
-		difficulty: 'Easy',
-		likes: 23,
-		dislikes: 5
-	},
-	'snippet-manager': {
-		title: 'Code Snippet Manager',
-		description: 'VS Code extension for saving, organizing and reusing code snippets with smart context detection.',
-		tags: ['VS Code Extension', 'Tool', 'Concept'],
+	'nft-epitaph-generator': {
+		title: 'NFT Epitaph Generator',
+		description: 'Enter your failed NFT project name — get a generated digital tombstone. Share it for closure.',
+		tags: ['Web App', 'Crypto', 'NFT'],
 		status: 'Draft',
-		difficulty: 'Nightmare fuel',
-		likes: 9,
-		dislikes: 2
+		difficulty: 'Easy',
+		likes: 11,
+		dislikes: 6
 	},
-	'deep-work-timer': {
-		title: 'Deep Work Timer',
-		description: 'A timer application that enforces focus sessions using psychological techniques and gentle accountability.',
-		tags: ['Desktop App', 'Productivity', 'Early Concept'],
+	'hodl-panic-button': {
+		title: 'HodlPanic Button',
+		description: 'One button. When the crypto market crashes, tap it to get a calming stoic quote or a random Elon tweet.',
+		tags: ['Web App', 'Crypto', 'Mental Health'],
+		status: 'Early Research',
+		difficulty: 'Easy',
+		likes: 16,
+		dislikes: 4
+	},
+	'gpt-text-spinner': {
+		title: 'GPT Text Spinner',
+		description: 'Paste your text — get 3 versions: one for LinkedIn, one for Twitter, and one for "Mom, I\'m famous."',
+		tags: ['AI', 'Web App', 'Productivity'],
 		status: 'Draft',
 		difficulty: 'Medium',
-		likes: 7,
+		likes: 18,
 		dislikes: 1
 	},
-	'reading-list': {
-		title: 'Reading List Tracker',
-		description: 'Browser extension that helps organize articles, blogs and papers to read later, with built-in comprehension scoring.',
-		tags: ['Browser Extension', 'Content', 'Research Phase'],
-		status: 'On Hold',
+	'existential-gpt': {
+		title: 'Existential GPT',
+		description: 'An AI chatbot that only responds with deep philosophical questions. Great for self-doubt sessions.',
+		tags: ['AI', 'Web App', 'Philosophy'],
+		status: 'Early Research',
+		difficulty: 'Medium',
+		likes: 15,
+		dislikes: 5
+	},
+	'prompt-tarot': {
+		title: 'Prompt Tarot',
+		description: 'Type your dilemma — get a tarot-style random AI prompt with advice. Mystic meets machine.',
+		tags: ['AI', 'Web App'],
+		status: 'Draft',
+		difficulty: 'Medium',
+		likes: 17,
+		dislikes: 3
+	},
+	'stoic-crypto-bot': {
+		title: 'Stoic Crypto Bot',
+		description: 'Telegram bot that gives stoic advice for crypto traders. → Ask: "BTC dropped 20%, what now?" → Get: "You can\'t control the market. You can control your mind." For inner peace… and maybe outer profit.',
+		tags: ['Telegram Bot', 'Crypto', 'Philosophy'],
+		status: 'Early Research',
+		difficulty: 'Medium',
+		likes: 12,
+		dislikes: 3
+	},
+	'nft-wisdom-series': {
+		title: 'NFT Wisdom Series',
+		description: 'Philosophical quotes as NFT art. Seneca meets Satoshi. Minted. Minimal. Metaphysical. "Greed is your worst trade."',
+		tags: ['NFT', 'Crypto', 'Art', 'Philosophy'],
+		status: 'Draft',
 		difficulty: 'Hard',
+		likes: 9,
+		dislikes: 4
+	},
+	'zen-crypto-quotes': {
+		title: 'Zen Crypto Quotes',
+		description: 'A one-page site with daily stoic quotes applied to the crypto chaos. No login. No charts. Just peace. Click. Breathe. Cope.',
+		tags: ['Web App', 'Crypto', 'Philosophy'],
+		status: 'Draft',
+		difficulty: 'Easy',
 		likes: 15,
 		dislikes: 2
 	},
-	'personal-ai': {
-		title: 'Personal AI Assistant',
-		description: 'Privacy-focused assistant for personal knowledge management and retrieval.',
-		tags: ['AI', 'Desktop App', 'Research'],
+	'karma-token': {
+		title: 'Karma Token',
+		description: 'A social crypto token for good vibes only. Earn tokens for helping others, being ethical, or just not rage-quitting Telegram. 100% pointless. 100% meaningful.',
+		tags: ['Crypto', 'Social', 'Blockchain'],
+		status: 'Early Research',
+		difficulty: 'Nightmare fuel',
+		likes: 11,
+		dislikes: 5
+	},
+	'stoic-crypto-course': {
+		title: 'Stoic Crypto Course (For Dummies)',
+		description: 'Micro-course on staying sane in crypto. Topics: Control what you can, Chill when market crashes, Greed is not alpha. Distributed via Gumroad, not the blockchain.',
+		tags: ['Course', 'Crypto', 'Philosophy'],
+		status: 'On Hold',
+		difficulty: 'Medium',
+		likes: 14,
+		dislikes: 3
+	},
+	'philosophy-generator': {
+		title: 'Philosophy Generator',
+		description: 'A website that gives you existential advice on crypto problems. "Should I sell?" → "Freedom is a burden. Choose wisely." "ETH is falling" → "Detach from outcomes." Build it with HTML, soul, and sarcasm.',
+		tags: ['Web App', 'Crypto', 'Philosophy'],
+		status: 'Draft',
+		difficulty: 'Easy',
+		likes: 8,
+		dislikes: 1
+	},
+	'auto-gpt-twitter-coach': {
+		title: 'Auto-GPT Twitter Coach',
+		description: 'A tool that writes tweets for you. Pick a topic → Pick an account → Get spicy AI content. Because why think when GPT can vibe for you?',
+		tags: ['AI', 'Tool', 'Social Media'],
+		status: 'Early Research',
+		difficulty: 'Hard',
+		likes: 13,
+		dislikes: 7
+	},
+	'you-but-posthumous': {
+		title: 'You, but Posthumous',
+		description: 'AI journal that learns your personality. App asks you deep questions. Logs them. Trains on them. Recreates your mind someday. (For science… or spooky nostalgia.)',
+		tags: ['AI', 'Personal', 'Existential'],
 		status: 'Early Research',
 		difficulty: 'Nightmare fuel',
 		likes: 19,
-		dislikes: 4
+		dislikes: 8
 	}
 };
 
@@ -184,63 +346,11 @@ export default function Ideas() {
 		}
 	}, [userChoices]);
 
-	const handleVote = async (id: string, vote: 'like' | 'dislike') => {
-		const currentChoice = userChoices[id];
+	// Get the one idea for Currently Brewing
+	const brewingIdea = ['fast-feelings-diary'].map(id => [id, ideasList[id]] as [string, IdeaInfo]);
 
-		// If user has already voted the same way, do nothing
-		if (currentChoice === vote) {
-			return;
-		}
-
-		// Optimistic UI update
-		const updatedIdeas = { ...ideasList };
-		const updatedChoices = { ...userChoices };
-
-		// If changing vote from opposite choice
-		if (currentChoice && currentChoice !== vote) {
-			// Decrement previous choice, increment new choice
-			const oppositeVote = vote === 'like' ? 'dislike' : 'like';
-			updatedIdeas[id][`${oppositeVote}s`] -= 1;
-			updatedIdeas[id][`${vote}s`] += 1;
-		} else {
-			// First time voting 
-			updatedIdeas[id][`${vote}s`] += 1;
-		}
-
-		// Update user choice
-		updatedChoices[id] = vote;
-
-		// Update state
-		setIdeasList(updatedIdeas);
-		setUserChoices(updatedChoices);
-
-		// Call API to update vote
-		try {
-			const response = await fetch('/api/votes', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Pragma': 'no-cache',
-					'Cache-Control': 'no-cache'
-				},
-				cache: 'no-store',
-				body: JSON.stringify({ ideaId: id, action: vote })
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to update vote');
-			}
-
-			// API response could be used to sync state if needed
-			const result = await response.json();
-			console.log('Vote updated successfully:', result);
-		} catch (error) {
-			console.error('Error updating vote:', error);
-			// Revert optimistic update on error
-			setIdeasList(ideasList);
-			setUserChoices(userChoices);
-		}
-	};
+	// Get the rest for Future Experiments
+	const futureIdeas = Object.entries(ideasList).filter(([id]) => id !== 'fast-feelings-diary');
 
 	return (
 		<div className="flex flex-col min-h-screen relative overflow-hidden portfolio:bg-white">
@@ -270,14 +380,14 @@ export default function Ideas() {
 									<span>Loading...</span>
 								) : (
 									<>
-										<span className="portfolio:hidden">VOTE_ON_IDEAS</span>
-										<span className="hidden portfolio:inline">Vote on ideas you like!</span>
+										<span className="portfolio:hidden">VOTING_SOON</span>
+										<span className="hidden portfolio:inline">Voting coming soon!</span>
 									</>
 								)}
 							</div>
 						</div>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans space-y-6">
-							{Object.entries(ideasList).slice(0, 3).map(([id, idea]) => (
+							{brewingIdea.map(([id, idea]) => (
 								<div key={id} className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
 									<div className="flex justify-between items-start">
 										<div>
@@ -290,28 +400,20 @@ export default function Ideas() {
 											</div>
 										</div>
 										<div className="flex items-center space-x-4 ml-4">
-											<button
-												onClick={() => handleVote(id, 'like')}
-												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${userChoices[id] === 'like'
-													? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
-													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50 portfolio:text-green-700'
-													}`}
-												aria-label="Like this idea"
+											<div
+												className="flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-lab-muted cursor-not-allowed opacity-60 portfolio:text-gray-500"
+												aria-label="Like this idea (coming soon)"
 											>
 												<span role="img" aria-hidden="true">👍</span>
 												<span>{idea.likes}</span>
-											</button>
-											<button
-												onClick={() => handleVote(id, 'dislike')}
-												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${userChoices[id] === 'dislike'
-													? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
-													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50 portfolio:text-red-700'
-													}`}
-												aria-label="Dislike this idea"
+											</div>
+											<div
+												className="flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-lab-muted cursor-not-allowed opacity-60 portfolio:text-gray-500"
+												aria-label="Dislike this idea (coming soon)"
 											>
 												<span role="img" aria-hidden="true">👎</span>
 												<span>{idea.dislikes}</span>
-											</button>
+											</div>
 										</div>
 									</div>
 									<p className="mb-3">
@@ -335,12 +437,18 @@ export default function Ideas() {
 						</h2>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans">
 							<ul className="space-y-4">
-								{Object.entries(ideasList).slice(3).map(([id, idea]) => (
+								{futureIdeas.map(([id, idea]) => (
 									<li key={id} className="flex items-start gap-3">
 										<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">
-											{idea.title.includes('Timer') ? '⏱️' :
-												idea.title.includes('Reading') ? '📚' :
-													idea.title.includes('AI') ? '🤖' : '💡'}
+											{idea.tags.includes('Chrome Extension') ? '🧩' :
+												idea.tags.includes('Mobile App') ? '📱' :
+													idea.tags.includes('Web App') ? '🌐' :
+														idea.tags.includes('Crypto') || idea.tags.includes('Token') ? '🪙' :
+															idea.tags.includes('Zen') || idea.tags.includes('Stoic') ? '🧘' :
+																idea.tags.includes('NFT') ? '🎨' :
+																	idea.tags.includes('Philosophy') ? '📚' :
+																		idea.tags.includes('AI') ? '🤖' :
+																			idea.tags.includes('Posthumous') ? '🧬' : '💡'}
 										</span>
 										<div>
 											<div className="flex items-center gap-2 mb-1">
@@ -350,28 +458,20 @@ export default function Ideas() {
 											</div>
 											<p>{idea.description}</p>
 											<div className="flex items-center mt-2 space-x-3">
-												<button
-													onClick={() => handleVote(id, 'like')}
-													className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-xs ${userChoices[id] === 'like'
-														? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
-														: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50 portfolio:text-green-700'
-														}`}
-													aria-label="Like this idea"
+												<div
+													className="flex items-center space-x-1 px-1.5 py-1 rounded text-xs text-lab-muted cursor-not-allowed opacity-60 portfolio:text-gray-500"
+													aria-label="Like this idea (coming soon)"
 												>
 													<span role="img" aria-hidden="true">👍</span>
 													<span>{idea.likes}</span>
-												</button>
-												<button
-													onClick={() => handleVote(id, 'dislike')}
-													className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-xs ${userChoices[id] === 'dislike'
-														? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
-														: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50 portfolio:text-red-700'
-														}`}
-													aria-label="Dislike this idea"
+												</div>
+												<div
+													className="flex items-center space-x-1 px-1.5 py-1 rounded text-xs text-lab-muted cursor-not-allowed opacity-60 portfolio:text-gray-500"
+													aria-label="Dislike this idea (coming soon)"
 												>
 													<span role="img" aria-hidden="true">👎</span>
 													<span>{idea.dislikes}</span>
-												</button>
+												</div>
 											</div>
 										</div>
 									</li>
