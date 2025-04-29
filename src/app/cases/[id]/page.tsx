@@ -5,8 +5,8 @@ import { projects } from '../../../data/projects';
 import { ProjectCard } from '../../../components/ProjectCard';
 
 export default function ProjectPage() {
-	// Возвращаем все проекты, чтобы автоматически открылся нужный модальный попап
-	// через useEffect в компоненте ProjectCard
+	// Return all projects so the correct modal will open automatically 
+	// through useEffect in the ProjectCard component
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

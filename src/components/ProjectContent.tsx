@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { TagBadge } from './TagBadge';
 import { projects } from '../data/projects';
 
-// Содержимое по умолчанию для проектов
+// Default content for projects
 const PROJECT_CONTENTS: Record<string, string> = {
 	'ugh-okay': `📱 Ugh Okay — The Button That Saves Your Brain
 🚀 About the Project
@@ -267,7 +267,7 @@ Currently available on Chrome Web Store (pending review).
 Install on Chrome and experience instant control over your extensions!`
 };
 
-// Дополнительная информация о проектах
+// Additional project information
 const PROJECT_METADATA: Record<string, {
 	releaseDate?: string;
 	duration?: string;
@@ -304,7 +304,7 @@ interface ProjectContentProps {
 	isModal?: boolean;
 }
 
-// Получаем контент для проекта по его id
+// Get content for a project by its id
 export const getProjectContent = (projectId: string): { title: string; content: string } => {
 	if (PROJECT_CONTENTS[projectId]) {
 		return {
@@ -313,7 +313,7 @@ export const getProjectContent = (projectId: string): { title: string; content: 
 		};
 	}
 
-	// Контент по умолчанию, если проект не найден
+	// Default content if the project is not found
 	return {
 		title: `${projectId.charAt(0).toUpperCase() + projectId.slice(1).replace(/-/g, ' ')} — Project Details`,
 		content: "Detailed information about this project is coming soon."
@@ -323,51 +323,51 @@ export const getProjectContent = (projectId: string): { title: string; content: 
 const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = false }) => {
 	const { content } = getProjectContent(projectId);
 
-	// Найдем проект по его id для получения тегов и изображения
+	// Find the project by its id to get tags and image
 	const project = projects.find(p => p.id === projectId);
 	const projectTags = project?.tags || [];
 	const projectImage = project?.image || '';
 	const projectTitle = project?.title || '';
 
-	// Получаем дополнительную информацию о проекте
+	// Get additional project information
 	const metadata = PROJECT_METADATA[projectId] || {};
 
 	const formatContent = (text: string) => {
-		// Разбиваем текст на строки
+		// Split text into lines
 		const lines = text.split('\n');
 
-		// Проверяем, есть ли специальный маркер для изображений
+		// Check if there is a special marker for images
 		const hasImageGallery = lines.some(line => line.includes('[IMAGE_GALLERY]'));
 
-		// Форматируем каждую строку
+		// Format each line
 		const formattedLines = lines.map((line, index) => {
-			// Пропускаем строку с маркером галереи изображений
+			// Skip the line with the image gallery marker
 			if (line.includes('[IMAGE_GALLERY]')) {
 				return null;
 			}
 
-			// Обрабатываем заголовки с эмодзи
+			// Process headers with emojis
 			if (line.match(/^🚀|^🔥|^🛠️|^📈|^🧠|^✨|^🔮|^📸|^🧪|^🚀/)) {
 				return <h3 key={index} className="text-xl font-bold mt-6 mb-3 text-lab-cyan portfolio:text-indigo-700">{line}</h3>;
 			}
 
-			// Обрабатываем основной заголовок
+			// Process the main header
 			if (line.match(/^📱|^🏥|^🧩/)) {
 				return <h2 key={index} className="text-2xl font-bold mb-4 text-lab-purple portfolio:text-indigo-800">{line}</h2>;
 			}
 
-			// Пустые строки преобразуем в отступы
+			// Empty lines are converted to indents
 			if (line.trim() === '') {
 				return <div key={index} className="h-2"></div>;
 			}
 
-			// Обычный текст
+			// Regular text
 			return <p key={index} className={`mb-2 ${isModal ? 'text-lab-text' : 'text-lab-text'}`}>{line}</p>;
 		}).filter(Boolean);
 
-		// Для проекта UghOkay добавляем изображения, если есть маркер
+		// For the UghOkay project, add images if there is a marker
 		if (projectId === 'ugh-okay' && hasImageGallery) {
-			// Находим индекс заголовка "Screenshots"
+			// Find the index of the "Screenshots" header
 			const screenshotsIndex = formattedLines.findIndex(
 				(el) => React.isValidElement(el) &&
 					el.type === 'h3' &&
@@ -379,7 +379,7 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 			);
 
 			if (screenshotsIndex !== -1) {
-				// Вставляем галерею после заголовка
+				// Insert the gallery after the header
 				formattedLines.splice(screenshotsIndex + 1, 0, (
 					<div key="image-gallery" className="mt-4 mb-6 grid grid-cols-3 gap-4">
 						<div className="overflow-hidden rounded-lg">
@@ -413,9 +413,9 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 
 	return (
 		<div className="project-content">
-			{/* Шапка проекта - изображение слева, теги и метаданные справа */}
+			{/* Project header - image on the left, tags and metadata on the right */}
 			<div className="mb-8 flex flex-col md:flex-row gap-6 border-b border-lab-cyan/20 portfolio:border-indigo-100 pb-6">
-				{/* Изображение проекта */}
+				{/* Project image */}
 				<div className="md:w-1/3">
 					{projectImage ? (
 						<div className="relative w-full aspect-square rounded-lg overflow-hidden border border-lab-cyan/20 portfolio:border-indigo-100">
@@ -435,9 +435,9 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 					)}
 				</div>
 
-				{/* Теги и метаданные */}
+				{/* Tags and metadata */}
 				<div className="md:w-2/3">
-					{/* Теги проекта */}
+					{/* Project tags */}
 					{projectTags.length > 0 && (
 						<div className="flex flex-wrap gap-2 mb-6">
 							{projectTags.map((tag) => (
@@ -446,7 +446,7 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 						</div>
 					)}
 
-					{/* Метаданные проекта */}
+					{/* Project metadata */}
 					{Object.keys(metadata).length > 0 && (
 						<div className="space-y-2 text-sm">
 							{metadata.releaseDate && (
@@ -482,7 +482,7 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 						</div>
 					)}
 
-					{/* Ссылки на проект */}
+					{/* Project links */}
 					{project?.links && Object.keys(project.links).length > 0 && (
 						<div className="mt-6 flex flex-wrap gap-3">
 							{project.links.website && (
@@ -540,7 +540,7 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 				</div>
 			</div>
 
-			{/* Основной контент проекта */}
+			{/* Main project content */}
 			{formatContent(content)}
 		</div>
 	);

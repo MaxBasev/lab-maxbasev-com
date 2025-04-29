@@ -5,12 +5,12 @@ type Props = {
 	params: { id: string };
 };
 
-// Генерация метаданных на основе статического пути
+// Generate metadata for the project
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	// Находим проект по ID
+	// Find the project by ID
 	const project = projects.find(p => p.id === params.id);
 
-	// Если проект не найден, возвращаем дефолтные метаданные
+	// If the project is not found, return default metadata
 	if (!project) {
 		return {
 			title: 'Project Not Found | Max\'s Lab',
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		};
 	}
 
-	// Возвращаем метаданные для проекта
+	// Return metadata for the project
 	return {
 		title: `${project.title} | Max's Lab`,
 		description: project.description,

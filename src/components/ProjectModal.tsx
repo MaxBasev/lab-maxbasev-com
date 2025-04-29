@@ -13,31 +13,31 @@ interface ProjectModalProps {
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, content, projectId }) => {
 	const modalRef = useRef<HTMLDivElement>(null);
-	// Состояние для анимации затемнения фона
+	// State for background fading animation
 	const [fadeIn, setFadeIn] = useState(false);
 
-	// Управляем анимацией при открытии/закрытии
+	// Manage animation when opening/closing
 	useEffect(() => {
 		if (isOpen) {
-			// При открытии модального окна, сначала показываем фон (с нулевой прозрачностью)
+			// When the modal is opened, first show the background (with zero opacity)
 			setFadeIn(true);
-			// Затем через небольшую задержку делаем его непрозрачным
+			// Then after a small delay make it opaque
 			const timer = setTimeout(() => {
 				document.body.style.overflow = 'hidden';
 			}, 50);
 			return () => clearTimeout(timer);
 		} else {
-			// При закрытии сначала делаем фон прозрачным
+			// When closing, first make the background transparent
 			document.body.style.overflow = 'auto';
-			// Затем удаляем элемент из DOM
+			// Then remove the element from the DOM after a small delay
 			const timer = setTimeout(() => {
 				setFadeIn(false);
-			}, 300); // Должно соответствовать длительности анимации в CSS
+			}, 300); // Should match the duration of the CSS animation
 			return () => clearTimeout(timer);
 		}
 	}, [isOpen]);
 
-	// Закрытие по клику вне модального окна
+	// Close by clicking outside the modal
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -53,7 +53,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 		};
 	}, [isOpen, onClose]);
 
-	// Закрытие по клавише Escape
+	// Close by pressing the Escape key
 	useEffect(() => {
 		const handleEscKey = (event: KeyboardEvent) => {
 			if (event.key === 'Escape') {
@@ -69,33 +69,33 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 		};
 	}, [isOpen, onClose]);
 
-	// Если модальное окно закрыто и анимация завершена, не рендерим ничего
+	// If the modal is closed and the animation is complete, don't render anything
 	if (!isOpen && !fadeIn) return null;
 
-	// Для обратной совместимости - если передан projectId, используем компонент ProjectContent
-	// иначе форматируем контент как раньше
+	// For backward compatibility - if projectId is passed, use the ProjectContent component
+	// otherwise format the content as before
 	const formatContent = (text: string) => {
-		// Разбиваем текст на строки
+		// Split text into lines
 		const lines = text.split('\n');
 
-		// Форматируем каждую строку
+		// Format each line
 		return lines.map((line, index) => {
-			// Обрабатываем заголовки с эмодзи
+			// Process headers with emojis
 			if (line.match(/^🚀|^🔥|^🛠️|^📈|^🧠|^✨|^🔮|^📸|^🧪|^🚀/)) {
 				return <h3 key={index} className="text-xl font-bold mt-6 mb-3 text-lab-cyan portfolio:text-indigo-700">{line}</h3>;
 			}
 
-			// Обрабатываем основной заголовок
+			// Process the main header
 			if (line.match(/^📱/)) {
 				return <h2 key={index} className="text-2xl font-bold mb-4 text-lab-purple portfolio:text-indigo-800">{line}</h2>;
 			}
 
-			// Пустые строки преобразуем в отступы
+			// Empty lines are converted to indents
 			if (line.trim() === '') {
 				return <div key={index} className="h-2"></div>;
 			}
 
-			// Обычный текст
+			// Regular text
 			return <p key={index} className="mb-2">{line}</p>;
 		});
 	};

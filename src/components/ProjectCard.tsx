@@ -16,26 +16,26 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 	const isDeadProject = project.tags.includes('Dead Project');
 	const [modalOpen, setModalOpen] = useState(false);
 
-	// Проверяем, открыт ли URL с /cases/[id]
+	// Check if the URL is /cases/[id]
 	useEffect(() => {
 		const projectUrlPattern = new RegExp(`/cases/${project.id}$`);
 		if (projectUrlPattern.test(pathname)) {
 			setModalOpen(true);
 		} else if (pathname === '/cases' || pathname === '/') {
-			// Закрываем модальное окно, если перешли на страницу /cases или /
+			// Close the modal if you go to the /cases or / page
 			setModalOpen(false);
 		}
 	}, [pathname, project.id]);
 
 	const handleReadMore = () => {
-		// Меняем URL на /cases/[id] без перезагрузки страницы через history API
+		// Change the URL to /cases/[id] without reloading the page through the history API
 		window.history.pushState({}, '', `/cases/${project.id}`);
 		setModalOpen(true);
 	};
 
 	const handleCloseModal = () => {
 		setModalOpen(false);
-		// Возвращаемся на главную страницу при закрытии модального окна через history API
+		// Go back to the main page when the modal is closed through the history API
 		window.history.pushState({}, '', '/');
 	};
 
