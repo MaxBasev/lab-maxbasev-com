@@ -27,15 +27,25 @@ export const projects: Project[] = [
 		}
 	},
 	{
-		id: 'santa-maria-dashboard',
-		title: 'Santa Maria Health Dashboard',
-		description: 'A full-scale web system for clinics: patient bookings, scheduling, invoices, medical records, and admin management — all in one place.',
-		icon: '🏥',
-		image: '/images/projects/Santa_Maria_logo.png',
-		tags: ['Web App', 'Freelance Work'],
+		id: 'cheqly-life',
+		title: 'Cheqly Life',
+		description: 'Track your goals efficiently. Build habits that stick. Cheqly helps you stay consistent and motivated with simple daily check-ins and visual feedback. No endless forms. No distractions. Just a clean interface focused on momentum.',
+		icon: '📈',
+		image: '/images/projects/Cheqly_Promo.png',
+		tags: ['SaaS', 'Web App', 'Beta'],
 		links: {
-			website: 'https://sybillehealth.com/booking',
-			blog: 'https://maxbasev.gitbook.io/santa-maria-dashboard/en/menu'
+			website: 'https://cheqly.life'
+		}
+	},
+	{
+		id: 'crypto-news-bot',
+		title: 'Crypto News Bot',
+		description: 'AI-powered Telegram bot that aggregates and translates crypto news. Built with GPT, MongoDB, and a custom dashboard.',
+		icon: '🛰️',
+		image: '/images/projects/TGBot.png',
+		tags: ['Freelance Work', 'AI-powered'],
+		links: {
+			blog: 'NDA'
 		}
 	},
 	{
@@ -51,14 +61,15 @@ export const projects: Project[] = [
 		}
 	},
 	{
-		id: 'crypto-news-bot',
-		title: 'Crypto News Bot',
-		description: 'AI-powered Telegram bot that aggregates and translates crypto news. Built with GPT, MongoDB, and a custom dashboard.',
-		icon: '🛰️',
-		image: '/images/projects/TGBot.png',
-		tags: ['Freelance Work', 'AI-powered'],
+		id: 'santa-maria-dashboard',
+		title: 'Santa Maria Health Dashboard',
+		description: 'A full-scale web system for clinics: patient bookings, scheduling, invoices, medical records, and admin management — all in one place.',
+		icon: '🏥',
+		image: '/images/projects/Santa_Maria_logo.png',
+		tags: ['Web App', 'Freelance Work'],
 		links: {
-			blog: 'NDA'
+			website: 'https://sybillehealth.com/booking',
+			blog: 'https://maxbasev.gitbook.io/santa-maria-dashboard/en/menu'
 		}
 	},
 	{
@@ -74,14 +85,15 @@ export const projects: Project[] = [
 		}
 	},
 	{
-		id: 'tagoshi',
-		title: 'Tagoshi',
-		description: 'Convert prices on Amazon, eBay, and AliExpress into crypto using live Binance rates. BTC, ETH, SOL, BNB, XRP — right where you shop.',
-		icon: '💰',
-		image: '/images/projects/Tagoshi_Promo.png',
-		tags: ['Chrome Extension', 'Tool', 'Pet Project', 'Crypto'],
+		id: 'focus-buddy',
+		title: 'Focus Buddy',
+		description: 'Chrome extension that blocks distracting websites and helps you stay focused.',
+		icon: '🎯',
+		image: '/images/projects/Focus_Buddy_promo.png',
+		tags: ['Chrome Extension', 'Tool'],
 		links: {
-			website: 'https://chromewebstore.google.com/detail/dhgdhhgndiifpgggdnmaclknboipnjkd?utm_source=item-share-cb'
+			website: 'https://chromewebstore.google.com/detail/ccjjaibohkfmlljiggepjecnlddehpkc?utm_source=item-share-cb',
+			github: 'https://github.com/MaxBasev/focus-buddy'
 		}
 	},
 	{
@@ -96,26 +108,14 @@ export const projects: Project[] = [
 		}
 	},
 	{
-		id: 'cheqly-life',
-		title: 'Cheqly Life',
-		description: 'Track your goals efficiently. Build habits that stick. Cheqly helps you stay consistent and motivated with simple daily check-ins and visual feedback. No endless forms. No distractions. Just a clean interface focused on momentum.',
-		icon: '📈',
-		image: '/images/projects/Cheqly_Promo.png',
-		tags: ['SaaS', 'Web App', 'Beta'],
+		id: 'tagoshi',
+		title: 'Tagoshi',
+		description: 'Convert prices on Amazon, eBay, and AliExpress into crypto using live Binance rates. BTC, ETH, SOL, BNB, XRP — right where you shop.',
+		icon: '💰',
+		image: '/images/projects/Tagoshi_Promo.png',
+		tags: ['Chrome Extension', 'Tool', 'Pet Project', 'Crypto'],
 		links: {
-			website: 'https://cheqly.life'
-		}
-	},
-	{
-		id: 'focus-buddy',
-		title: 'Focus Buddy',
-		description: 'Chrome extension that blocks distracting websites and helps you stay focused.',
-		icon: '🎯',
-		image: '/images/projects/Focus_Buddy_promo.png',
-		tags: ['Chrome Extension', 'Tool'],
-		links: {
-			website: 'https://chromewebstore.google.com/detail/ccjjaibohkfmlljiggepjecnlddehpkc?utm_source=item-share-cb',
-			github: 'https://github.com/MaxBasev/focus-buddy'
+			website: 'https://chromewebstore.google.com/detail/dhgdhhgndiifpgggdnmaclknboipnjkd?utm_source=item-share-cb'
 		}
 	}
 ]; 
