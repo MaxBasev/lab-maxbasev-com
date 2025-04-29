@@ -3,15 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-type IdeaId = 'ai-writing' | 'task-manager' | 'snippet-manager';
 type IdeaStatus = 'Draft' | 'Early Research' | 'Prototype' | 'On Hold';
 type IdeaDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Nightmare fuel';
-
-type IdeaRating = {
-	likes: number;
-	dislikes: number;
-	userChoice: 'like' | 'dislike' | null;
-};
 
 type IdeaInfo = {
 	title: string;
@@ -19,42 +12,72 @@ type IdeaInfo = {
 	tags: string[];
 	status: IdeaStatus;
 	difficulty: IdeaDifficulty;
+	likes: number;
+	dislikes: number;
 };
 
-type IdeasRatings = Record<IdeaId, IdeaRating>;
-type IdeasData = Record<IdeaId, IdeaInfo>;
+type IdeasData = Record<string, IdeaInfo>;
+type VoteChoice = 'like' | 'dislike' | null;
+type UserChoices = Record<string, VoteChoice>;
 
-const initialIdeasData: IdeasData = {
+const ideasData: IdeasData = {
 	'ai-writing': {
 		title: 'AI Writing Assistant',
 		description: 'A browser extension that helps with writing clearer, more concise text. Uses AI to suggest improvements without changing your voice.',
 		tags: ['Chrome Extension', 'AI-powered', 'Early Design'],
 		status: 'Early Research',
-		difficulty: 'Medium'
+		difficulty: 'Medium',
+		likes: 14,
+		dislikes: 3
 	},
 	'task-manager': {
 		title: 'Minimal Task Manager',
 		description: 'Ultra-lightweight task manager with focus on simplicity and keyboard shortcuts. No accounts, no cloud sync, just local tasks.',
 		tags: ['Web App', 'Tool', 'In Development'],
 		status: 'Prototype',
-		difficulty: 'Easy'
+		difficulty: 'Easy',
+		likes: 23,
+		dislikes: 5
 	},
 	'snippet-manager': {
 		title: 'Code Snippet Manager',
 		description: 'VS Code extension for saving, organizing and reusing code snippets with smart context detection.',
 		tags: ['VS Code Extension', 'Tool', 'Concept'],
 		status: 'Draft',
-		difficulty: 'Nightmare fuel'
+		difficulty: 'Nightmare fuel',
+		likes: 9,
+		dislikes: 2
+	},
+	'deep-work-timer': {
+		title: 'Deep Work Timer',
+		description: 'A timer application that enforces focus sessions using psychological techniques and gentle accountability.',
+		tags: ['Desktop App', 'Productivity', 'Early Concept'],
+		status: 'Draft',
+		difficulty: 'Medium',
+		likes: 7,
+		dislikes: 1
+	},
+	'reading-list': {
+		title: 'Reading List Tracker',
+		description: 'Browser extension that helps organize articles, blogs and papers to read later, with built-in comprehension scoring.',
+		tags: ['Browser Extension', 'Content', 'Research Phase'],
+		status: 'On Hold',
+		difficulty: 'Hard',
+		likes: 15,
+		dislikes: 2
+	},
+	'personal-ai': {
+		title: 'Personal AI Assistant',
+		description: 'Privacy-focused assistant for personal knowledge management and retrieval.',
+		tags: ['AI', 'Desktop App', 'Research'],
+		status: 'Early Research',
+		difficulty: 'Nightmare fuel',
+		likes: 19,
+		dislikes: 4
 	}
 };
 
-const initialRatings: IdeasRatings = {
-	'ai-writing': { likes: 14, dislikes: 3, userChoice: null },
-	'task-manager': { likes: 23, dislikes: 5, userChoice: null },
-	'snippet-manager': { likes: 9, dislikes: 2, userChoice: null }
-};
-
-// Компонент для отображения статуса идеи
+// Component for displaying idea status
 const StatusBadge = ({ status }: { status: IdeaStatus }) => {
 	const getStatusStyles = () => {
 		switch (status) {
@@ -79,7 +102,7 @@ const StatusBadge = ({ status }: { status: IdeaStatus }) => {
 	);
 };
 
-// Компонент для отображения сложности идеи
+// Component for displaying idea difficulty
 const DifficultyBadge = ({ difficulty }: { difficulty: IdeaDifficulty }) => {
 	const getDifficultyStyles = () => {
 		switch (difficulty) {
@@ -105,139 +128,108 @@ const DifficultyBadge = ({ difficulty }: { difficulty: IdeaDifficulty }) => {
 };
 
 export default function Ideas() {
-	const [ratings, setRatings] = useState<IdeasRatings>(initialRatings);
-	const [ideasData] = useState<IdeasData>(initialIdeasData);
+	const [ideasList, setIdeasList] = useState<IdeasData>(ideasData);
+	const [userChoices, setUserChoices] = useState<UserChoices>({});
 	const [isLoading, setIsLoading] = useState(false);
 
-	// Загрузка данных с API при инициализации
+	// Load votes from API on initialization
 	useEffect(() => {
-		const fetchRatings = async () => {
+		const fetchVotes = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch('/api/get-votes');
+				const response = await fetch('/api/votes');
+
 				if (!response.ok) {
 					throw new Error('Failed to fetch votes');
 				}
 
 				const apiVotes = await response.json();
 
-				// Преобразуем данные API в формат, используемый в компоненте
-				const newRatings: IdeasRatings = { ...initialRatings };
-
-				// Обновляем только значения голосов из API
-				Object.keys(newRatings).forEach(ideaId => {
-					if (apiVotes[ideaId]) {
-						newRatings[ideaId as IdeaId].likes = apiVotes[ideaId].likes;
-						newRatings[ideaId as IdeaId].dislikes = apiVotes[ideaId].dislikes;
+				// Update ideas with API vote data
+				const updatedIdeas = { ...ideasList };
+				Object.keys(apiVotes).forEach(ideaId => {
+					if (updatedIdeas[ideaId]) {
+						updatedIdeas[ideaId].likes = apiVotes[ideaId].likes;
+						updatedIdeas[ideaId].dislikes = apiVotes[ideaId].dislikes;
 					}
 				});
 
-				// Восстанавливаем локально сохраненный userChoice
+				setIdeasList(updatedIdeas);
+
+				// Load user choices from localStorage
 				const savedUserChoices = localStorage.getItem('ideasUserChoices');
 				if (savedUserChoices) {
-					const userChoices = JSON.parse(savedUserChoices);
-					Object.keys(userChoices).forEach(ideaId => {
-						if (newRatings[ideaId as IdeaId]) {
-							newRatings[ideaId as IdeaId].userChoice = userChoices[ideaId];
-						}
-					});
+					setUserChoices(JSON.parse(savedUserChoices));
 				}
-
-				setRatings(newRatings);
 			} catch (error) {
 				console.error('Error fetching votes:', error);
-				// Если API недоступен, загружаем из localStorage как запасной вариант
-				const savedRatings = localStorage.getItem('ideasRatings');
-				if (savedRatings) {
-					try {
-						const parsedRatings = JSON.parse(savedRatings) as IdeasRatings;
-						setRatings(parsedRatings);
-					} catch (e) {
-						console.error('Ошибка при загрузке рейтингов из localStorage:', e);
-					}
-				}
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
-		fetchRatings();
+		fetchVotes();
 	}, []);
 
-	// Сохранение локального выбора пользователя
+	// Save user choices to localStorage when they change
 	useEffect(() => {
-		// Извлекаем только userChoice из каждой идеи
-		const userChoices: Record<string, 'like' | 'dislike' | null> = {};
-		Object.keys(ratings).forEach(ideaId => {
-			userChoices[ideaId] = ratings[ideaId as IdeaId].userChoice;
-		});
+		if (Object.keys(userChoices).length > 0) {
+			localStorage.setItem('ideasUserChoices', JSON.stringify(userChoices));
+		}
+	}, [userChoices]);
 
-		localStorage.setItem('ideasUserChoices', JSON.stringify(userChoices));
-	}, [ratings]);
+	const handleVote = async (id: string, vote: 'like' | 'dislike') => {
+		const currentChoice = userChoices[id];
 
-	const handleVote = async (id: IdeaId, vote: 'like' | 'dislike') => {
-		const currentIdea = ratings[id];
-
-		// Определяем, какая операция выполняется
-		const action: 'like' | 'dislike' = vote;
-
-		// Если пользователь голосует за тот же вариант, отменяем действие
-		if (currentIdea.userChoice === vote) {
-			return; // Отмена голоса не поддерживается API, поэтому просто отменяем действие
+		// If user has already voted the same way, do nothing
+		if (currentChoice === vote) {
+			return;
 		}
 
-		// Проверяем, не голосовал ли пользователь ранее
-		if (currentIdea.userChoice !== null && currentIdea.userChoice !== vote) {
-			// Если голосовал противоположно, то нужно будет синхронизировать
-			// Но в нашем API пока нет возможности отменить/изменить голос
-			// Поэтому просто добавляем новый голос
+		// Optimistic UI update
+		const updatedIdeas = { ...ideasList };
+		const updatedChoices = { ...userChoices };
+
+		// If changing vote from opposite choice
+		if (currentChoice && currentChoice !== vote) {
+			// Decrement previous choice, increment new choice
+			const oppositeVote = vote === 'like' ? 'dislike' : 'like';
+			updatedIdeas[id][`${oppositeVote}s`] -= 1;
+			updatedIdeas[id][`${vote}s`] += 1;
+		} else {
+			// First time voting 
+			updatedIdeas[id][`${vote}s`] += 1;
 		}
 
-		// Оптимистичное обновление UI
-		setRatings(prev => {
-			const updated = { ...prev };
+		// Update user choice
+		updatedChoices[id] = vote;
 
-			// Если пользователь голосовал противоположно - меняем его голос
-			if (updated[id].userChoice !== null && updated[id].userChoice !== vote) {
-				const oppositeVote = vote === 'like' ? 'dislike' : 'like';
-				updated[id] = {
-					...updated[id],
-					[`${vote}s`]: updated[id][`${vote}s`] + 1,
-					[`${oppositeVote}s`]: updated[id][`${oppositeVote}s`] - 1,
-					userChoice: vote
-				};
-			} else {
-				// Если пользователь голосует впервые или так же
-				updated[id] = {
-					...updated[id],
-					[`${vote}s`]: updated[id][`${vote}s`] + 1,
-					userChoice: vote
-				};
-			}
+		// Update state
+		setIdeasList(updatedIdeas);
+		setUserChoices(updatedChoices);
 
-			return updated;
-		});
-
-		// Вызов API
+		// Call API to update vote
 		try {
-			const response = await fetch('/api/update-votes', {
+			const response = await fetch('/api/votes', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ ideaId: id, action })
+				body: JSON.stringify({ ideaId: id, action: vote })
 			});
 
 			if (!response.ok) {
 				throw new Error('Failed to update vote');
 			}
 
+			// API response could be used to sync state if needed
 			const result = await response.json();
 			console.log('Vote updated successfully:', result);
 		} catch (error) {
 			console.error('Error updating vote:', error);
-			// Если API вызов не удался, можно отменить оптимистичное обновление
-			// Но для простоты не реализуем это сейчас
+			// Revert optimistic update on error
+			setIdeasList(ideasList);
+			setUserChoices(userChoices);
 		}
 	};
 
@@ -276,7 +268,7 @@ export default function Ideas() {
 							</div>
 						</div>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans space-y-6">
-							{Object.entries(ideasData).map(([id, idea]) => (
+							{Object.entries(ideasList).slice(0, 3).map(([id, idea]) => (
 								<div key={id} className="p-4 border border-lab-cyan/20 rounded-lg portfolio:border-indigo-100">
 									<div className="flex justify-between items-start">
 										<div>
@@ -290,26 +282,26 @@ export default function Ideas() {
 										</div>
 										<div className="flex items-center space-x-4 ml-4">
 											<button
-												onClick={() => handleVote(id as IdeaId, 'like')}
-												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings[id as IdeaId].userChoice === 'like'
+												onClick={() => handleVote(id, 'like')}
+												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${userChoices[id] === 'like'
 													? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
-													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50'
+													: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50 portfolio:text-green-700'
 													}`}
 												aria-label="Like this idea"
 											>
 												<span role="img" aria-hidden="true">👍</span>
-												<span>{ratings[id as IdeaId].likes}</span>
+												<span>{idea.likes}</span>
 											</button>
 											<button
-												onClick={() => handleVote(id as IdeaId, 'dislike')}
-												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${ratings[id as IdeaId].userChoice === 'dislike'
+												onClick={() => handleVote(id, 'dislike')}
+												className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors ${userChoices[id] === 'dislike'
 													? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
-													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50'
+													: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50 portfolio:text-red-700'
 													}`}
 												aria-label="Dislike this idea"
 											>
 												<span role="img" aria-hidden="true">👎</span>
-												<span>{ratings[id as IdeaId].dislikes}</span>
+												<span>{idea.dislikes}</span>
 											</button>
 										</div>
 									</div>
@@ -334,39 +326,47 @@ export default function Ideas() {
 						</h2>
 						<div className="text-lab-text font-mono portfolio:text-indigo-700 portfolio:font-sans">
 							<ul className="space-y-4">
-								<li className="flex items-start gap-3">
-									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">⏱️</span>
-									<div>
-										<div className="flex items-center gap-2 mb-1">
-											<h3 className="font-bold">Deep Work Timer</h3>
-											<StatusBadge status="Draft" />
-											<DifficultyBadge difficulty="Medium" />
+								{Object.entries(ideasList).slice(3).map(([id, idea]) => (
+									<li key={id} className="flex items-start gap-3">
+										<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">
+											{idea.title.includes('Timer') ? '⏱️' :
+												idea.title.includes('Reading') ? '📚' :
+													idea.title.includes('AI') ? '🤖' : '💡'}
+										</span>
+										<div>
+											<div className="flex items-center gap-2 mb-1">
+												<h3 className="font-bold">{idea.title}</h3>
+												<StatusBadge status={idea.status} />
+												<DifficultyBadge difficulty={idea.difficulty} />
+											</div>
+											<p>{idea.description}</p>
+											<div className="flex items-center mt-2 space-x-3">
+												<button
+													onClick={() => handleVote(id, 'like')}
+													className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-xs ${userChoices[id] === 'like'
+														? 'bg-lab-cyan/20 text-lab-cyan portfolio:bg-green-100 portfolio:text-green-700'
+														: 'hover:bg-lab-cyan/10 text-lab-muted portfolio:hover:bg-green-50 portfolio:text-green-700'
+														}`}
+													aria-label="Like this idea"
+												>
+													<span role="img" aria-hidden="true">👍</span>
+													<span>{idea.likes}</span>
+												</button>
+												<button
+													onClick={() => handleVote(id, 'dislike')}
+													className={`flex items-center space-x-1 px-1.5 py-1 rounded transition-colors text-xs ${userChoices[id] === 'dislike'
+														? 'bg-lab-purple/20 text-lab-purple portfolio:bg-red-100 portfolio:text-red-700'
+														: 'hover:bg-lab-purple/10 text-lab-muted portfolio:hover:bg-red-50 portfolio:text-red-700'
+														}`}
+													aria-label="Dislike this idea"
+												>
+													<span role="img" aria-hidden="true">👎</span>
+													<span>{idea.dislikes}</span>
+												</button>
+											</div>
 										</div>
-										<p>A timer application that enforces focus sessions using psychological techniques and gentle accountability.</p>
-									</div>
-								</li>
-								<li className="flex items-start gap-3">
-									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">📚</span>
-									<div>
-										<div className="flex items-center gap-2 mb-1">
-											<h3 className="font-bold">Reading List Tracker</h3>
-											<StatusBadge status="On Hold" />
-											<DifficultyBadge difficulty="Hard" />
-										</div>
-										<p>Browser extension that helps organize articles, blogs and papers to read later, with built-in comprehension scoring.</p>
-									</div>
-								</li>
-								<li className="flex items-start gap-3">
-									<span role="img" aria-hidden="true" className="text-lab-purple portfolio:text-portfolio-accent text-xl mt-1">🤖</span>
-									<div>
-										<div className="flex items-center gap-2 mb-1">
-											<h3 className="font-bold">Personal AI Assistant</h3>
-											<StatusBadge status="Early Research" />
-											<DifficultyBadge difficulty="Nightmare fuel" />
-										</div>
-										<p>Privacy-focused assistant for personal knowledge management and retrieval.</p>
-									</div>
-								</li>
+									</li>
+								))}
 							</ul>
 						</div>
 					</div>

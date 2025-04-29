@@ -1,3 +1,37 @@
+# Lab MaxBasev
+
+Лабораторный проект сайта MaxBasev.com
+
+## Настройка Vercel KV для голосования
+
+Для работы функциональности голосования за идеи необходимо настроить Vercel KV:
+
+1. В панели управления Vercel перейдите в раздел Storage
+2. Создайте новую KV базу данных
+3. После создания базы данных, в разделе "Quick Start" Vercel предоставит переменные окружения
+4. Добавьте эти переменные в настройки проекта в Vercel Dashboard:
+   ```
+   KV_URL=...
+   KV_REST_API_URL=...
+   KV_REST_API_TOKEN=...
+   KV_REST_API_READ_ONLY_TOKEN=...
+   ```
+5. Для локальной разработки, создайте файл `.env.local` и добавьте те же переменные
+
+## Разработка
+
+```bash
+npm run dev
+# или
+yarn dev
+```
+
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
+
+## Деплой на Vercel
+
+Самый простой способ деплоя - [Vercel Platform](https://vercel.com/new).
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
