@@ -22,24 +22,25 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
 	const isDeadProject = project.tags.includes('Dead Project');
 
 	return (
-		<div className="flex items-center gap-4 p-5 bg-lab-medium/90 rounded-xl shadow-md hover:shadow-neon-cyan transition-all duration-300 border border-lab-cyan/20 group relative overflow-hidden">
-			{/* Lab test tube decorations */}
-			<div className="absolute -bottom-3 right-6 w-1 h-10 bg-lab-cyan/20 rounded-full"></div>
-			<div className="absolute top-0 left-6 w-1 h-6 bg-lab-cyan/20 rounded-full"></div>
+		<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 sm:p-5 bg-lab-medium/90 rounded-xl shadow-md hover:shadow-neon-cyan transition-all duration-300 border border-lab-cyan/20 group relative overflow-hidden">
+			{/* Lab test tube decorations - скрыты на мобильных */}
+			<div className="absolute -bottom-3 right-6 w-1 h-10 bg-lab-cyan/20 rounded-full hidden sm:block"></div>
+			<div className="absolute top-0 left-6 w-1 h-6 bg-lab-cyan/20 rounded-full hidden sm:block"></div>
 
 			{project.image ? (
-				<div className="w-16 h-16 relative shrink-0 rounded-xl overflow-hidden border border-lab-cyan/20">
+				<div className="w-full sm:w-16 h-32 sm:h-16 relative shrink-0 rounded-xl overflow-hidden border border-lab-cyan/20 sm:mb-0 mb-3">
 					<div className="absolute inset-0 bg-lab-dark/40 z-10 group-hover:bg-lab-dark/20 transition-all duration-300"></div>
 					<Image
 						src={project.image}
 						alt={project.title}
 						fill
+						sizes="(max-width: 640px) 100vw, 64px"
 						className="object-cover transition-transform duration-700 group-hover:scale-110"
 					/>
 				</div>
 			) : (
 				<div
-					className="text-4xl bg-lab-dark w-16 h-16 flex items-center justify-center rounded-xl border border-lab-cyan/20 shrink-0"
+					className="text-4xl bg-lab-dark w-full sm:w-16 h-16 flex items-center justify-center rounded-xl border border-lab-cyan/20 shrink-0 sm:mb-0 mb-3"
 					aria-hidden="true"
 				>
 					{project.icon}
@@ -60,14 +61,16 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
 						: '> Another experiment from the lab.'}
 				</p>
 
-				<div className="flex flex-wrap gap-2 mt-2">
+				<div className="flex flex-wrap gap-2 mt-2 mb-3 sm:mb-0">
 					{project.tags.map((tag) => (
 						<TagBadge key={tag} tag={tag} />
 					))}
 				</div>
 			</div>
 
-			<ProjectLinks links={project.links} />
+			<div className="flex justify-start sm:justify-normal w-full sm:w-auto">
+				<ProjectLinks links={project.links} />
+			</div>
 		</div>
 	);
 }; 
