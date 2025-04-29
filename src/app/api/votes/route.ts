@@ -13,7 +13,7 @@ type VotesCollection = {
 // Default votes data
 const defaultVotes: VotesCollection = {
 	'ai-writing': { likes: 0, dislikes: 0 },
-	'task-manager': { likes: 0, dislikes: 5 },
+	'task-manager': { likes: 0, dislikes: 0 },
 	'snippet-manager': { likes: 0, dislikes: 0 },
 	'deep-work-timer': { likes: 0, dislikes: 0 },
 	'reading-list': { likes: 0, dislikes: 0 },
@@ -21,7 +21,10 @@ const defaultVotes: VotesCollection = {
 };
 
 // Constant for Redis votes key
-const REDIS_VOTES_KEY = 'lab_votes_v1';
+const REDIS_VOTES_KEY = 'lab_votes_v2';
+
+// Flag to force reset votes on startup
+let FORCE_RESET = true;
 
 // Function to create no-cache headers
 const getNoCacheHeaders = () => {
@@ -44,10 +47,31 @@ const getRedisClient = async () => {
 	return client;
 };
 
+// Helper function to reset votes data
+const resetVotesData = async () => {
+	try {
+		const redis = await getRedisClient();
+		await redis.set(REDIS_VOTES_KEY, JSON.stringify(defaultVotes));
+		await redis.disconnect();
+		console.log('Votes data has been reset to defaults');
+		return true;
+	} catch (error) {
+		console.error('Failed to reset votes data:', error);
+		return false;
+	}
+};
+
 // GET /api/votes - retrieve all votes
 export async function GET() {
 	try {
 		console.log('GET /api/votes request received');
+
+		// Reset votes if forced
+		if (FORCE_RESET) {
+			await resetVotesData();
+			// Set to false after reset to prevent repeated resets
+			FORCE_RESET = false;
+		}
 
 		// Connect to Redis
 		const redis = await getRedisClient();
@@ -86,6 +110,31 @@ export async function GET() {
 		return NextResponse.json(defaultVotes, {
 			headers: getNoCacheHeaders()
 		});
+	}
+}
+
+// Delete route to reset votes (can be called via API)
+export async function DELETE() {
+	try {
+		const result = await resetVotesData();
+
+		if (result) {
+			return NextResponse.json(
+				{ success: true, message: 'Votes have been reset' },
+				{ headers: getNoCacheHeaders() }
+			);
+		} else {
+			return NextResponse.json(
+				{ success: false, message: 'Failed to reset votes' },
+				{ status: 500, headers: getNoCacheHeaders() }
+			);
+		}
+	} catch (error) {
+		console.error('Error resetting votes:', error);
+		return NextResponse.json(
+			{ success: false, message: 'Error resetting votes' },
+			{ status: 500, headers: getNoCacheHeaders() }
+		);
 	}
 }
 
