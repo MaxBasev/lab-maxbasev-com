@@ -52,8 +52,8 @@ Mini insights: track tiny victories
 📸 Screenshots
 [IMAGE_GALLERY]
 
-🧪 Behind the Scenes
-Designed in Figma in one evening.
+�� Behind the Scenes
+Initial idea prototyped over a few intense coffee-fueled nights.
 Copywriting and button ideas brainstormed with ChatGPT.
 Built over a few lazy weekends.
 Launched on IndieHackers and ProductHunt for fun, not fame.
@@ -116,10 +116,6 @@ Expanded conversation topics
 Deeper emotional tracking features
 
 📸 Screenshots
-Landing page
-Onboarding / Sign-in
-Conversation screen (prototype)
-User dashboard (WIP)
 
 🧪 Behind the Scenes
 Initial idea prototyped over a few intense coffee-fueled nights.
@@ -817,21 +813,21 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 					<div key="zentava-gallery" className="mt-4 mb-6 grid grid-cols-2 gap-4">
 						<div className="overflow-hidden rounded-lg">
 							<img
-								src="/images/projects/zentava/Zentava-Screen-02.png"
+								src="/images/projects/Zentava/Zentava-Screen-02.png"
 								alt="Zentava Onboarding"
 								className="w-full h-auto rounded-lg shadow-md"
 							/>
 						</div>
 						<div className="overflow-hidden rounded-lg">
 							<img
-								src="/images/projects/zentava/Zentava-Screen-03.png"
+								src="/images/projects/Zentava/Zentava-Screen-03.png"
 								alt="Zentava Conversation Screen"
 								className="w-full h-auto rounded-lg shadow-md"
 							/>
 						</div>
 						<div className="overflow-hidden rounded-lg">
 							<img
-								src="/images/projects/zentava/Zentava-Screen-04.png"
+								src="/images/projects/Zentava/Zentava-Screen-04.png"
 								alt="Zentava User Dashboard"
 								className="w-full h-auto rounded-lg shadow-md"
 							/>
