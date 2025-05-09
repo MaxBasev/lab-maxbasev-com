@@ -652,7 +652,7 @@ const PROJECT_METADATA: Record<string, {
 		status: 'Beta'
 	},
 	'crypto-news-bot': {
-		releaseDate: 'December 2023',
+		releaseDate: 'January 2025',
 		duration: '3 months',
 		price: 'Commercial project',
 		client: 'Crypto media company (under NDA)',
@@ -790,6 +790,56 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 							<img
 								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen5.jpg"
 								alt="UghOkay Screenshot 3"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+					</div>
+				));
+			}
+		}
+
+		// For the Zentava project, add images after the Screenshots section
+		if (projectId === 'zentava') {
+			// Find the index of the "Screenshots" header
+			const screenshotsIndex = formattedLines.findIndex(
+				(el) => React.isValidElement(el) &&
+					el.type === 'h3' &&
+					typeof el.props === 'object' &&
+					el.props !== null &&
+					'children' in el.props &&
+					typeof el.props.children === 'string' &&
+					el.props.children.includes('Screenshots')
+			);
+
+			if (screenshotsIndex !== -1) {
+				// Insert the gallery after the header
+				formattedLines.splice(screenshotsIndex + 1, 0, (
+					<div key="zentava-gallery" className="mt-4 mb-6 grid grid-cols-2 gap-4">
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/zentava/Zentava-Screen-01.png"
+								alt="Zentava Landing Page"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/zentava/Zentava-Screen-02.png"
+								alt="Zentava Onboarding"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/zentava/Zentava-Screen-03.png"
+								alt="Zentava Conversation Screen"
+								className="w-full h-auto rounded-lg shadow-md"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img
+								src="/images/projects/zentava/Zentava-Screen-04.png"
+								alt="Zentava User Dashboard"
 								className="w-full h-auto rounded-lg shadow-md"
 							/>
 						</div>
