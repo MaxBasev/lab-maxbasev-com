@@ -817,13 +817,6 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 					<div key="zentava-gallery" className="mt-4 mb-6 grid grid-cols-2 gap-4">
 						<div className="overflow-hidden rounded-lg">
 							<img
-								src="/images/projects/zentava/Zentava-Screen-01.png"
-								alt="Zentava Landing Page"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img
 								src="/images/projects/zentava/Zentava-Screen-02.png"
 								alt="Zentava Onboarding"
 								className="w-full h-auto rounded-lg shadow-md"
