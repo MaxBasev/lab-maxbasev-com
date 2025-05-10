@@ -52,12 +52,6 @@ Mini insights: track tiny victories
 📸 Screenshots
 [IMAGE_GALLERY]
 
-�� Behind the Scenes
-Initial idea prototyped over a few intense coffee-fueled nights.
-Copywriting and button ideas brainstormed with ChatGPT.
-Built over a few lazy weekends.
-Launched on IndieHackers and ProductHunt for fun, not fame.
-
 🚀 Try It
 Download on App Store or Google Play.
 Or, you know... keep doomscrolling. (No pressure.)`,
@@ -542,6 +536,24 @@ Tailwind CSS for minimal, responsive design
 
 OpenAI integration (coming later) for reflective insights or auto-highlights
 
+✨ Key Features
+📅 Daily + Weekly + Monthly grid view
+📈 Visual feedback on goal consistency
+🧠 Built-in shame-based motivation (the red cells…)
+🔐 Private by default
+🧪 Optional AI analysis (coming soon)
+
+🔮 What's Next
+
+Full public launch
+
+Mobile app companion
+
+AI-powered insights
+
+📸 Screenshots
+[IMAGE_GALLERY]
+
 🧪 Behind the Scenes
 
 Built for personal accountability
@@ -551,13 +563,6 @@ Now evolving into a SaaS tool with future plans for subscription model
 Still in beta (invite-only, for now)
 
 UI/UX inspired by old-school Excel with modern brain energy
-
-✨ Key Features
-📅 Daily + Weekly + Monthly grid view
-📈 Visual feedback on goal consistency
-🧠 Built-in shame-based motivation (the red cells…)
-🔐 Private by default
-🧪 Optional AI analysis (coming soon)
 
 🌐 Try It (soon)
 Website: cheqly.life
@@ -831,6 +836,41 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 								alt="Zentava User Dashboard"
 								className="w-full h-auto rounded-lg shadow-md"
 							/>
+						</div>
+					</div>
+				));
+			}
+		}
+
+		// For the Cheqly Life project, add images if there is a marker
+		if (projectId === 'cheqly-life') {
+			const screenshotsIndex = formattedLines.findIndex(
+				(el) => React.isValidElement(el) &&
+					el.type === 'h3' &&
+					typeof el.props === 'object' &&
+					el.props !== null &&
+					'children' in el.props &&
+					typeof el.props.children === 'string' &&
+					el.props.children.includes('Screenshots')
+			);
+
+			if (screenshotsIndex !== -1) {
+				formattedLines.splice(screenshotsIndex + 1, 0, (
+					<div key="cheqly-gallery" className="mt-4 mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+						<div className="overflow-hidden rounded-lg">
+							<img src="/images/projects/CheqlyLife/Cheqly-Screen-01.png" alt="Cheqly Life Screenshot 1" className="w-full h-auto rounded-lg shadow-md" />
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img src="/images/projects/CheqlyLife/Cheqly-Screen-02.png" alt="Cheqly Life Screenshot 2" className="w-full h-auto rounded-lg shadow-md" />
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img src="/images/projects/CheqlyLife/Cheqly-Screen-03.png" alt="Cheqly Life Screenshot 3" className="w-full h-auto rounded-lg shadow-md" />
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img src="/images/projects/CheqlyLife/Cheqly-Screen-04.png" alt="Cheqly Life Screenshot 4" className="w-full h-auto rounded-lg shadow-md" />
+						</div>
+						<div className="overflow-hidden rounded-lg">
+							<img src="/images/projects/CheqlyLife/Cheqly-Screen-05.png" alt="Cheqly Life Screenshot 5" className="w-full h-auto rounded-lg shadow-md" />
 						</div>
 					</div>
 				));
