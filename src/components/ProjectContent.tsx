@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { TagBadge } from './TagBadge';
 import { projects } from '../data/projects';
@@ -713,6 +713,8 @@ export const getProjectContent = (projectId: string): { title: string; content: 
 
 const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = false }) => {
 	const { content } = getProjectContent(projectId);
+	// Состояние для отслеживания увеличенного изображения
+	const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
 
 	// Find the project by its id to get tags and image
 	const project = projects.find(p => p.id === projectId);
@@ -722,6 +724,18 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 
 	// Get additional project information
 	const metadata = PROJECT_METADATA[projectId] || {};
+
+	// Обработчик клика по изображению для увеличения/уменьшения
+	const toggleImageSize = (e: React.MouseEvent, imageSrc: string) => {
+		e.stopPropagation(); // Останавливаем всплытие события
+		if (enlargedImage === imageSrc) {
+			// Если изображение уже увеличено, уменьшаем его
+			setEnlargedImage(null);
+		} else {
+			// Увеличиваем изображение
+			setEnlargedImage(imageSrc);
+		}
+	};
 
 	const formatContent = (text: string) => {
 		// Split text into lines
@@ -773,27 +787,43 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 				// Insert the gallery after the header
 				formattedLines.splice(screenshotsIndex + 1, 0, (
 					<div key="image-gallery" className="mt-4 mb-6 grid grid-cols-3 gap-4">
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen3.jpg"
-								alt="UghOkay Screenshot 1"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen4.jpg"
-								alt="UghOkay Screenshot 2"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen5.jpg"
-								alt="UghOkay Screenshot 3"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
+						{enlargedImage && enlargedImage.includes('UghOkay') ? (
+							<div className="col-span-3 overflow-hidden rounded-lg cursor-pointer transition-all">
+								<img
+									src={enlargedImage}
+									alt="Enlarged UghOkay Screenshot"
+									className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+									onClick={(e) => toggleImageSize(e, enlargedImage)}
+								/>
+							</div>
+						) : (
+							<>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen3.jpg"
+										alt="UghOkay Screenshot 1"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen3.jpg")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen4.jpg"
+										alt="UghOkay Screenshot 2"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen4.jpg")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen5.jpg"
+										alt="UghOkay Screenshot 3"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/UghOkay/UghOkay-Prod-1320-2868-Screen5.jpg")}
+									/>
+								</div>
+							</>
+						)}
 					</div>
 				));
 			}
@@ -816,33 +846,49 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 				// Insert the gallery after the header
 				formattedLines.splice(screenshotsIndex + 1, 0, (
 					<div key="zentava-gallery" className="mt-4 mb-6 grid grid-cols-2 gap-4">
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/Zentava/Zentava-Screen-02.png"
-								alt="Zentava Onboarding"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/Zentava/Zentava-Screen-03.png"
-								alt="Zentava Conversation Screen"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img
-								src="/images/projects/Zentava/Zentava-Screen-04.png"
-								alt="Zentava User Dashboard"
-								className="w-full h-auto rounded-lg shadow-md"
-							/>
-						</div>
+						{enlargedImage && enlargedImage.includes('Zentava') ? (
+							<div className="col-span-2 overflow-hidden rounded-lg cursor-pointer transition-all">
+								<img
+									src={enlargedImage}
+									alt="Enlarged Zentava Screenshot"
+									className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+									onClick={(e) => toggleImageSize(e, enlargedImage)}
+								/>
+							</div>
+						) : (
+							<>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/Zentava/Zentava-Screen-02.png"
+										alt="Zentava Onboarding"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/Zentava/Zentava-Screen-02.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/Zentava/Zentava-Screen-03.png"
+										alt="Zentava Conversation Screen"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/Zentava/Zentava-Screen-03.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/Zentava/Zentava-Screen-04.png"
+										alt="Zentava User Dashboard"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/Zentava/Zentava-Screen-04.png")}
+									/>
+								</div>
+							</>
+						)}
 					</div>
 				));
 			}
 		}
 
-		// For the Cheqly Life project, add images if there is a marker
+		// For the Cheqly Life project, add images
 		if (projectId === 'cheqly-life') {
 			const screenshotsIndex = formattedLines.findIndex(
 				(el) => React.isValidElement(el) &&
@@ -857,21 +903,59 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 			if (screenshotsIndex !== -1) {
 				formattedLines.splice(screenshotsIndex + 1, 0, (
 					<div key="cheqly-gallery" className="mt-4 mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-						<div className="overflow-hidden rounded-lg">
-							<img src="/images/projects/CheqlyLife/Cheqly-Screen-01.png" alt="Cheqly Life Screenshot 1" className="w-full h-auto rounded-lg shadow-md" />
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img src="/images/projects/CheqlyLife/Cheqly-Screen-02.png" alt="Cheqly Life Screenshot 2" className="w-full h-auto rounded-lg shadow-md" />
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img src="/images/projects/CheqlyLife/Cheqly-Screen-03.png" alt="Cheqly Life Screenshot 3" className="w-full h-auto rounded-lg shadow-md" />
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img src="/images/projects/CheqlyLife/Cheqly-Screen-04.png" alt="Cheqly Life Screenshot 4" className="w-full h-auto rounded-lg shadow-md" />
-						</div>
-						<div className="overflow-hidden rounded-lg">
-							<img src="/images/projects/CheqlyLife/Cheqly-Screen-05.png" alt="Cheqly Life Screenshot 5" className="w-full h-auto rounded-lg shadow-md" />
-						</div>
+						{enlargedImage && enlargedImage.includes('Cheqly') ? (
+							<div className="col-span-3 overflow-hidden rounded-lg cursor-pointer transition-all">
+								<img
+									src={enlargedImage}
+									alt="Enlarged Cheqly Screenshot"
+									className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+									onClick={(e) => toggleImageSize(e, enlargedImage)}
+								/>
+							</div>
+						) : (
+							<>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/CheqlyLife/Cheqly-Screen-01.png"
+										alt="Cheqly Life Screenshot 1"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-01.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/CheqlyLife/Cheqly-Screen-02.png"
+										alt="Cheqly Life Screenshot 2"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-02.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/CheqlyLife/Cheqly-Screen-03.png"
+										alt="Cheqly Life Screenshot 3"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-03.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/CheqlyLife/Cheqly-Screen-04.png"
+										alt="Cheqly Life Screenshot 4"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-04.png")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/CheqlyLife/Cheqly-Screen-05.png"
+										alt="Cheqly Life Screenshot 5"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-05.png")}
+									/>
+								</div>
+							</>
+						)}
 					</div>
 				));
 			}
