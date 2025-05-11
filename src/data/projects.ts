@@ -21,7 +21,7 @@ export const projects: Project[] = [
 		description: 'A custom Telegram bot that manages crypto subscriptions for the Level UP community. Supports multi-chain payments, verifies transactions, and handles access control automatically.',
 		icon: '🔐',
 		image: '/images/projects/crypto-subscription.png',
-		tags: ['Freelance Work', 'Telegram Bot', 'Crypto'],
+		tags: ['Freelance Work', 'Crypto'],
 		links: {
 			blog: 'NDA'
 		}
