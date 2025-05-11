@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	title: "Max's Lab",
 	description:
-		"A digital playground of experimental projects by Max Basev. Discover web tools, applications, and experiments from the lab.",
+		"Digital experiments, half-finished ideas, and surprisingly working tools.",
 	keywords: [
 		"Max Basev",
 		"digital lab",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 	],
 	openGraph: {
 		title: "Max's Lab",
-		description: "A digital playground of experimental projects by Max Basev",
+		description: "Digital experiments, half-finished ideas, and surprisingly working tools.",
 		url: "https://lab.maxbasev.com",
 		siteName: "Max's Lab",
 		locale: "en_US",
@@ -51,6 +51,12 @@ export const metadata: Metadata = {
 				alt: "Max's Lab",
 			},
 		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Max's Lab",
+		description: "Digital experiments, half-finished ideas, and surprisingly working tools.",
+		images: ["/images/og-image.png"],
 	},
 	icons: {
 		icon: [
