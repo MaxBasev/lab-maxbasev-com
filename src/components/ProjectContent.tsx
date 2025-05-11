@@ -619,7 +619,61 @@ Meant to be dumb-simple and fast to deploy
 🙅 No analytics. No tracking. No pressure.
 
 🔗 Try It Now
-Focus Buddy on Chrome Web Store`
+Focus Buddy on Chrome Web Store`,
+	'crypto-access-bot': `🔐 Level UP — Crypto Access Bot for Telegram
+💸 Subscription Bot for a Private Crypto Community
+
+🚀 About the Project
+A custom Telegram bot built for a private crypto community (under NDA) to automate subscription sales and access management.
+
+Supports multi-chain payments, tracks transaction hashes, and grants gated channel access — all with a sleek admin dashboard.
+
+Designed to replace manual verification and streamline paid membership onboarding.
+
+🔥 The Problem
+Managing crypto community memberships is usually chaotic:
+• Manual transaction checks
+• No unified access control
+• Limited payment options across blockchains
+
+The client needed a way to automate everything — without sacrificing flexibility or control.
+
+🛠️ The Solution
+• Accepts payments in major blockchains (ETH, BSC, etc.)
+• Users submit a transaction hash — bot verifies it via block explorer APIs
+• Successful payment = instant access to the private group
+• Admin dashboard for managing members, plans, and analytics
+• Built-in refund & ban controls
+• Automatic role revocation after expiration
+
+📈 Tech Stack
+• Node.js for backend logic
+• MongoDB for transactional and user data
+• Next.js for admin UI
+• Telegram Bot API for user interaction
+• Multiple block explorer APIs (Etherscan, BscScan, etc.)
+• Firebase Auth for admin dashboard login
+
+✨ Key Features
+🔗 Multi-chain payment support
+🔍 Transaction hash verification
+📊 Admin dashboard with plan management & user control
+📅 Auto-renewal checks & revocation
+🔒 Fully bot-driven, no mods required
+
+📸 Bot Screenshots
+[BOT_SCREENSHOTS]
+
+📊 Admin Dashboard Screenshots
+[ADMIN_SCREENSHOTS]
+
+🧪 Behind the Scenes
+• Built under NDA for a growing crypto community
+• Designed for zero manual work — fully self-service
+• Highly modular: can be adapted to NFT communities, course access, or DAO memberships
+
+🚫 Privacy Note
+This is a private, client-specific tool — not publicly accessible.`
 };
 
 // Additional project information
@@ -635,6 +689,13 @@ const PROJECT_METADATA: Record<string, {
 		duration: '24 months',
 		price: 'Commercial project',
 		client: 'Private medical clinic',
+		status: 'In production'
+	},
+	'crypto-access-bot': {
+		releaseDate: 'March 2024',
+		duration: '6 weeks',
+		price: 'Commercial project',
+		client: 'Procent Team (Level UP Community)',
 		status: 'In production'
 	},
 	'ugh-okay': {
@@ -743,16 +804,18 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 
 		// Check if there is a special marker for images
 		const hasImageGallery = lines.some(line => line.includes('[IMAGE_GALLERY]'));
+		const hasBotScreenshots = lines.some(line => line.includes('[BOT_SCREENSHOTS]'));
+		const hasAdminScreenshots = lines.some(line => line.includes('[ADMIN_SCREENSHOTS]'));
 
 		// Format each line
 		const formattedLines = lines.map((line, index) => {
-			// Skip the line with the image gallery marker
-			if (line.includes('[IMAGE_GALLERY]')) {
+			// Skip the line with the image gallery markers
+			if (line.includes('[IMAGE_GALLERY]') || line.includes('[BOT_SCREENSHOTS]') || line.includes('[ADMIN_SCREENSHOTS]')) {
 				return null;
 			}
 
 			// Process headers with emojis
-			if (line.match(/^🚀|^🔥|^🛠️|^📈|^🧠|^✨|^🔮|^📸|^🧪|^🚀/)) {
+			if (line.match(/^🚀|^🔥|^🛠️|^📈|^��|^✨|^🔮|^📸|^🧪|^🚀|^📊/)) {
 				return <h3 key={index} className="text-xl font-bold mt-6 mb-3 text-lab-cyan portfolio:text-indigo-700">{line}</h3>;
 			}
 
@@ -958,6 +1021,159 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 						)}
 					</div>
 				));
+			}
+		}
+
+		// For the CryptoAccessBot project, add both bot and admin screenshots
+		if (projectId === 'crypto-access-bot') {
+			// Add bot screenshots
+			if (hasBotScreenshots) {
+				// Find the index of the "Bot Screenshots" header
+				const botScreenshotsIndex = formattedLines.findIndex(
+					(el) => React.isValidElement(el) &&
+						el.type === 'h3' &&
+						typeof el.props === 'object' &&
+						el.props !== null &&
+						'children' in el.props &&
+						typeof el.props.children === 'string' &&
+						el.props.children.includes('Bot Screenshots')
+				);
+
+				if (botScreenshotsIndex !== -1) {
+					// Insert the gallery after the header
+					formattedLines.splice(botScreenshotsIndex + 1, 0, (
+						<div key="bot-gallery" className="mt-4 mb-6 grid grid-cols-2 gap-4">
+							{enlargedImage && enlargedImage.includes('bot_screen') ? (
+								<div className="col-span-2 overflow-hidden rounded-lg cursor-pointer transition-all">
+									<img
+										src={enlargedImage}
+										alt="Enlarged Bot Screenshot"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+										onClick={(e) => toggleImageSize(e, enlargedImage)}
+									/>
+								</div>
+							) : (
+								<>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/bot_screen_01.PNG"
+											alt="Bot Screenshot 1"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/bot_screen_01.PNG")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/bot_screen_02.PNG"
+											alt="Bot Screenshot 2"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/bot_screen_02.PNG")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/bot_screen_03.PNG"
+											alt="Bot Screenshot 3"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/bot_screen_03.PNG")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/bot_screen_04.PNG"
+											alt="Bot Screenshot 4"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/bot_screen_04.PNG")}
+										/>
+									</div>
+								</>
+							)}
+						</div>
+					));
+				}
+			}
+
+			// Add admin screenshots
+			if (hasAdminScreenshots) {
+				// Find the index of the "Admin Dashboard Screenshots" header
+				const adminScreenshotsIndex = formattedLines.findIndex(
+					(el) => React.isValidElement(el) &&
+						el.type === 'h3' &&
+						typeof el.props === 'object' &&
+						el.props !== null &&
+						'children' in el.props &&
+						typeof el.props.children === 'string' &&
+						el.props.children.includes('Admin Dashboard Screenshots')
+				);
+
+				if (adminScreenshotsIndex !== -1) {
+					// Insert the gallery after the header
+					formattedLines.splice(adminScreenshotsIndex + 1, 0, (
+						<div key="admin-gallery" className="mt-4 mb-6 grid grid-cols-3 gap-4">
+							{enlargedImage && enlargedImage.includes('admin_screen') ? (
+								<div className="col-span-3 overflow-hidden rounded-lg cursor-pointer transition-all">
+									<img
+										src={enlargedImage}
+										alt="Enlarged Admin Screenshot"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+										onClick={(e) => toggleImageSize(e, enlargedImage)}
+									/>
+								</div>
+							) : (
+								<>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_01.png"
+											alt="Admin Screenshot 1"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_01.png")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_02.png"
+											alt="Admin Screenshot 2"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_02.png")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_03.png"
+											alt="Admin Screenshot 3"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_03.png")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_04.png"
+											alt="Admin Screenshot 4"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_04.png")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_05.png"
+											alt="Admin Screenshot 5"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_05.png")}
+										/>
+									</div>
+									<div className="overflow-hidden rounded-lg cursor-pointer">
+										<img
+											src="/images/projects/CryptoAccessBot/admin_screen_06.png"
+											alt="Admin Screenshot 6"
+											className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+											onClick={(e) => toggleImageSize(e, "/images/projects/CryptoAccessBot/admin_screen_06.png")}
+										/>
+									</div>
+								</>
+							)}
+						</div>
+					));
+				}
 			}
 		}
 

@@ -16,6 +16,17 @@ export const projects: Project[] = [
 		}
 	},
 	{
+		id: 'crypto-access-bot',
+		title: 'Level UP — Crypto Access Bot',
+		description: 'A custom Telegram bot that manages crypto subscriptions for the Level UP community. Supports multi-chain payments, verifies transactions, and handles access control automatically.',
+		icon: '🔐',
+		image: '/images/projects/crypto-subscription.png',
+		tags: ['Freelance Work', 'Telegram Bot', 'Crypto'],
+		links: {
+			blog: 'NDA'
+		}
+	},
+	{
 		id: 'zentava',
 		title: 'Zentava',
 		description: 'An AI-powered mental health assistant. Still in beta, still figuring things out — just like you. Available 24/7, judgment-free.',
