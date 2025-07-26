@@ -135,11 +135,11 @@ export const projects: Project[] = [
 		description: 'A paper-like mobile diary that works on airplane mode with AES-256 encryption and offline AI summaries. 6-digit PIN security, time-warp feature to see entries from previous years.',
 		icon: '🔒',
 		image: '/images/projects/OffgridDiary/Offgrid-Diary-og.png',
-		tags: ['Mobile App', 'Pet Project', 'AI-powered'],
+		tags: ['Mobile App', 'iOS App', 'Pet Project', 'AI-powered'],
 		links: {
 			website: 'https://offgriddiary.app',
 			appStore: 'https://apps.apple.com/kg/app/offgrid-diary/id6748696045',
-			blog: 'https://www.indiehackers.com/post/5-days-to-app-store-my-offline-ai-diary-build-log-8eddf54b29'
+			blog: 'https://en.skazoff.com/saas/offgrid-diary-weekend-build/'
 		}
 	}
 ]; 
