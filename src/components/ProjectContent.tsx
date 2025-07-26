@@ -837,7 +837,7 @@ const PROJECT_METADATA: Record<string, {
 		status: 'Available on Chrome Web Store'
 	},
 	'offgrid-diary': {
-		releaseDate: 'January 2025',
+		releaseDate: 'July 2025',
 		duration: '5 days',
 		price: 'Free (Pro version planned)',
 		status: 'Available on App Store'
