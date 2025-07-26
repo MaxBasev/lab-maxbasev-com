@@ -40,7 +40,7 @@ export default function Home() {
 						<div className="absolute -top-5 left-1/4 w-1 h-20 bg-lab-cyan/20 rounded-full portfolio:hidden"></div>
 						<div className="absolute -top-2 right-1/4 w-1 h-10 bg-lab-purple/20 rounded-full portfolio:hidden"></div>
 
-						<h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold mb-3 sm:mb-4 text-center text-white portfolio:text-indigo-900">
+						<h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold mb-3 sm:mb-4 text-center text-white portfolio:text-indigo-900 portfolio:hidden">
 							<span role="img" aria-label="Lab" className="mr-3 animate-pulse">🧪</span>
 							Max&apos;s <span className="text-lab-cyan portfolio:text-[#1fbd89] neon-text portfolio:no-underline">Lab</span>
 						</h1>
