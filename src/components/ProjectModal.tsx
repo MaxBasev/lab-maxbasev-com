@@ -102,7 +102,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, title, con
 
 	return (
 		<div
-			className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0'
+			className={`fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0'
 				} bg-lab-dark/80 backdrop-blur-sm portfolio:bg-black/60`}
 		>
 			<div
