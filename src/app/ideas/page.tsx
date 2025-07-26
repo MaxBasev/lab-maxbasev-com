@@ -313,16 +313,17 @@ export default function Ideas() {
 
 				const apiVotes = await response.json();
 
-				// Update ideas with API vote data
-				const updatedIdeas = { ...ideasList };
-				Object.keys(apiVotes).forEach(ideaId => {
-					if (updatedIdeas[ideaId]) {
-						updatedIdeas[ideaId].likes = apiVotes[ideaId].likes;
-						updatedIdeas[ideaId].dislikes = apiVotes[ideaId].dislikes;
-					}
+				// Update ideas with API vote data using functional update
+				setIdeasList(currentIdeasList => {
+					const updatedIdeas = { ...currentIdeasList };
+					Object.keys(apiVotes).forEach(ideaId => {
+						if (updatedIdeas[ideaId]) {
+							updatedIdeas[ideaId].likes = apiVotes[ideaId].likes;
+							updatedIdeas[ideaId].dislikes = apiVotes[ideaId].dislikes;
+						}
+					});
+					return updatedIdeas;
 				});
-
-				setIdeasList(updatedIdeas);
 
 				// Load user choices from localStorage
 				const savedUserChoices = localStorage.getItem('ideasUserChoices');

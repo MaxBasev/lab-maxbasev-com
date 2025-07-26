@@ -673,7 +673,94 @@ The client needed a way to automate everything — without sacrificing flexibili
 • Highly modular: can be adapted to NFT communities, course access, or DAO memberships
 
 🚫 Privacy Note
-This is a private, client-specific tool — not publicly accessible.`
+This is a private, client-specific tool — not publicly accessible.`,
+	'offgrid-diary': `🔒 Offgrid Diary — Encrypted Offline Journal with AI
+📱 A Paper-Like Mobile Diary That Works on Airplane Mode
+
+🚀 About the Project
+Offgrid Diary is a mobile journaling app built for complete privacy and offline functionality. No cloud sync, no accounts, no data collection — just you, your thoughts, and military-grade encryption.
+
+Built in 5 days of intense vibe-coding with Cursor AI and Claude, this app proves that sometimes the best solutions come from scratching your own itch.
+
+🔥 The Problem
+Every journaling app I tried wanted an account, pushed my words to the cloud, or felt bloated.
+I wanted a paper-like diary that works on airplane mode and locks itself like a vault.
+
+🛠️ The Solution
+• 6-digit PIN screen with AES-256 encrypted storage
+• "Time-warp" swipe feature to see entries from this date in previous years
+• Subtle ink-ripple animation while typing for a natural writing feel
+• Offline AI summaries using LLaMA-7B model (700MB, but worth it)
+• Σ-button for AI-powered insights and summaries
+• No accounts, no cloud, no tracking
+
+📈 Tech Stack
+• Expo (bare workflow) for React Native development
+• AES-256 encryption for local data security
+• llama.rn for offline AI model integration
+• AsyncStorage for encrypted local persistence
+• TypeScript for type safety
+• Custom animations and UI polish
+
+✨ Key Features
+🔐 Military-grade AES-256 encryption
+✈️ 100% offline functionality
+📅 Time-warp feature for historical entries
+🤖 Offline AI summaries and insights
+✍️ Natural ink-ripple typing animation
+🔢 6-digit PIN security
+📱 Clean, paper-like interface
+
+🔮 The 5-Day Build Log
+
+Day 1 — Vibe-coding sprint (≈ 5h)
+Stack: Expo (bare) + Cursor AI + Claude in "pair-programmer" mode
+✅ 6-digit PIN screen
+✅ AES-256 encrypted storage
+✅ Time-warp swipe feature
+✅ Subtle ink-ripple animation
+✅ Live-tweeted every commit
+
+Day 2 — The AI rabbit hole
+Asked ChatGPT if true offline AI was possible
+✅ Added LLaMA-7B Q4 model (~700 MB)
+✅ Hooked up llama.rn for offline intelligence
+✅ Bought offgriddiary.app domain
+✅ Built Vercel landing page with email collection
+
+Day 3 — App Store review drama
+❌ Reviewer flagged "AI" and thought I was selling upgrades outside IAP
+✅ Explained everything is free for now, future Pro will use Apple IAP
+✅ Got the approval ✓
+
+Day 4 — Production bug facepalm
+✅ TestFlight worked perfectly
+❌ Live build model download failed 🤦‍♂️
+✅ Hot-fixed the loader, resubmitted
+
+Day 5 — Live! (kinda)
+✅ Version 1.0 live on App Store
+🔧 AI summaries work but still quirky
+✅ Core experience (offline, encrypted, minimal) is solid
+
+🧪 Behind the Scenes
+• Cursor + Claude wrote 80% of the code — I just fixed edge cases
+• Ship first, clarify later philosophy
+• Users care more about offline & private than fancy cloud sync
+• Vibe-coding is legit when you have the right AI pair-programmer
+
+🔮 What's Next
+• Tune or replace the 700MB model (TinyLlama maybe)
+• Flip the switch on Pro subscription or one-time purchase
+• Widget support for quick captures
+• More AI insights and writing prompts
+
+📸 Screenshots
+[IMAGE_GALLERY]
+
+🚀 Try It
+Available now on the App Store — download it, test it, maybe it'll fit your workflow.
+Always happy to chat about the bumps along the way!`
 };
 
 // Additional project information
@@ -748,6 +835,12 @@ const PROJECT_METADATA: Record<string, {
 		duration: '1 day',
 		price: 'Free',
 		status: 'Available on Chrome Web Store'
+	},
+	'offgrid-diary': {
+		releaseDate: 'January 2025',
+		duration: '5 days',
+		price: 'Free (Pro version planned)',
+		status: 'Available on App Store'
 	}
 };
 
@@ -1015,6 +1108,89 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 										alt="Cheqly Life Screenshot 5"
 										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
 										onClick={(e) => toggleImageSize(e, "/images/projects/CheqlyLife/Cheqly-Screen-05.png")}
+									/>
+								</div>
+							</>
+						)}
+					</div>
+				));
+			}
+		}
+
+		// For the Offgrid Diary project, add screenshots
+		if (projectId === 'offgrid-diary' && hasImageGallery) {
+			// Find the index of the "Screenshots" header
+			const screenshotsIndex = formattedLines.findIndex(
+				(el) => React.isValidElement(el) &&
+					el.type === 'h3' &&
+					typeof el.props === 'object' &&
+					el.props !== null &&
+					'children' in el.props &&
+					typeof el.props.children === 'string' &&
+					el.props.children.includes('Screenshots')
+			);
+
+			if (screenshotsIndex !== -1) {
+				// Insert the gallery after the header
+				formattedLines.splice(screenshotsIndex + 1, 0, (
+					<div key="offgrid-gallery" className="mt-4 mb-6 grid grid-cols-3 gap-4">
+						{enlargedImage && enlargedImage.includes('offgriddiary') ? (
+							<div className="col-span-3 overflow-hidden rounded-lg cursor-pointer transition-all">
+								<img
+									src={enlargedImage}
+									alt="Enlarged Offgrid Diary Screenshot"
+									className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-out"
+									onClick={(e) => toggleImageSize(e, enlargedImage)}
+								/>
+							</div>
+						) : (
+							<>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-001.PNG"
+										alt="Offgrid Diary Login Screen"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-001.PNG")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-002.PNG"
+										alt="Offgrid Diary Writing Interface"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-002.PNG")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-003.PNG"
+										alt="Offgrid Diary Time-warp Feature"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-003.PNG")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-004.PNG"
+										alt="Offgrid Diary AI Summaries"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-004.PNG")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-005.PNG"
+										alt="Offgrid Diary Settings"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-005.PNG")}
+									/>
+								</div>
+								<div className="overflow-hidden rounded-lg cursor-pointer">
+									<img
+										src="/images/projects/OffgridDiary/offgriddiary-screen-006.PNG"
+										alt="Offgrid Diary Entry History"
+										className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+										onClick={(e) => toggleImageSize(e, "/images/projects/OffgridDiary/offgriddiary-screen-006.PNG")}
 									/>
 								</div>
 							</>
