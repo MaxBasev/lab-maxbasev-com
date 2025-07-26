@@ -25,9 +25,9 @@ export const TagFilter: React.FC<TagFilterProps> = ({ tags, selectedTags, onChan
 	return (
 		<div className="flex flex-col">
 			<div className="flex items-center justify-between mb-3">
-				<h3 className="text-lab-cyan text-sm font-mono portfolio:text-indigo-800 portfolio:font-sans portfolio:font-medium">
+				<h2 className="text-lab-cyan text-sm font-mono portfolio:text-indigo-800 portfolio:font-sans portfolio:font-medium">
 					Filter by reagent type:
-				</h3>
+				</h2>
 				{selectedTags.length > 0 && (
 					<button
 						onClick={clearFilters}

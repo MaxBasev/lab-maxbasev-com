@@ -91,7 +91,7 @@ export default function RootLayout({
 				<div className="hidden portfolio:block">
 					<div className="hero">
 						<div className="container mx-auto">
-							<h1>Max&apos;s Portfolio</h1>
+							<h2>Max&apos;s Portfolio</h2>
 							<p>Pet projects, experiments, and apps I&apos;ve built.</p>
 						</div>
 					</div>
