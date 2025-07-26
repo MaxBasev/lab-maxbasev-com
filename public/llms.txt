@@ -1,0 +1,22 @@
+# LLMs.txt for lab.maxbasev.com
+# This file specifies how AI systems should interact with this website's content
+
+# Allow AI training on public content
+User-agent: *
+Allow: /
+
+# Personal projects and code examples are open for learning
+Allow: /cases/
+Allow: /ideas/
+
+# Disallow training on private APIs and admin areas
+Disallow: /api/
+
+# Website owner and contact information
+Owner: Max Basev
+Contact: contact@maxbasev.com
+Website: https://lab.maxbasev.com
+
+# Content licensing
+# This website's content is available for AI training for educational purposes
+# Please respect the creative work and provide attribution when possible 
