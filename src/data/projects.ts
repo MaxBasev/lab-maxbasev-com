@@ -16,14 +16,16 @@ export const projects: Project[] = [
 		}
 	},
 	{
-		id: 'crypto-access-bot',
-		title: 'Level UP — Crypto Access Bot',
-		description: 'A custom Telegram bot that manages crypto subscriptions for the Level UP community. Supports multi-chain payments, verifies transactions, and handles access control automatically.',
-		icon: '🔐',
-		image: '/images/projects/crypto-subscription.png',
-		tags: ['Freelance Work', 'Crypto'],
+		id: 'offgrid-diary',
+		title: 'Offgrid Diary',
+		description: 'A paper-like mobile diary that works on airplane mode with AES-256 encryption and offline AI summaries. 6-digit PIN security, time-warp feature to see entries from previous years.',
+		icon: '🔒',
+		image: '/images/projects/OffgridDiary/Offgrid-Diary-og.png',
+		tags: ['Mobile App', 'iOS App', 'Pet Project', 'AI-powered'],
 		links: {
-			blog: 'NDA'
+			website: 'https://offgriddiary.app',
+			appStore: 'https://apps.apple.com/kg/app/offgrid-diary/id6748696045',
+			blog: 'https://en.skazoff.com/saas/offgrid-diary-weekend-build/'
 		}
 	},
 	{
@@ -96,6 +98,17 @@ export const projects: Project[] = [
 		}
 	},
 	{
+		id: 'crypto-access-bot',
+		title: 'Level UP — Crypto Access Bot',
+		description: 'A custom Telegram bot that manages crypto subscriptions for the Level UP community. Supports multi-chain payments, verifies transactions, and handles access control automatically.',
+		icon: '🔐',
+		image: '/images/projects/crypto-subscription.png',
+		tags: ['Freelance Work', 'Crypto'],
+		links: {
+			blog: 'NDA'
+		}
+	},
+	{
 		id: 'focus-buddy',
 		title: 'Focus Buddy',
 		description: 'Chrome extension that blocks distracting websites and helps you stay focused.',
@@ -129,17 +142,4 @@ export const projects: Project[] = [
 			website: 'https://chromewebstore.google.com/detail/dhgdhhgndiifpgggdnmaclknboipnjkd?utm_source=item-share-cb'
 		}
 	},
-	{
-		id: 'offgrid-diary',
-		title: 'Offgrid Diary',
-		description: 'A paper-like mobile diary that works on airplane mode with AES-256 encryption and offline AI summaries. 6-digit PIN security, time-warp feature to see entries from previous years.',
-		icon: '🔒',
-		image: '/images/projects/OffgridDiary/Offgrid-Diary-og.png',
-		tags: ['Mobile App', 'iOS App', 'Pet Project', 'AI-powered'],
-		links: {
-			website: 'https://offgriddiary.app',
-			appStore: 'https://apps.apple.com/kg/app/offgrid-diary/id6748696045',
-			blog: 'https://en.skazoff.com/saas/offgrid-diary-weekend-build/'
-		}
-	}
 ]; 
