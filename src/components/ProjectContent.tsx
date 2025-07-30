@@ -709,7 +709,7 @@ I wanted a paper-like diary that works on airplane mode and locks itself like a 
 🤖 Offline AI summaries and insights
 ✍️ Natural ink-ripple typing animation
 🔢 6-digit PIN security
-📱 Clean, paper-like interface
+🎨 Clean, paper-like interface
 
 🔮 The 5-Day Build Log
 
@@ -719,7 +719,7 @@ Stack: Expo (bare) + Cursor AI + Claude in "pair-programmer" mode
 ✅ AES-256 encrypted storage
 ✅ Time-warp swipe feature
 ✅ Subtle ink-ripple animation
-✅ Live-tweeted every commit
+✅ [Live-tweeted every commit](https://x.com/MaxBasev/status/1945062786888794341)
 
 Day 2 — The AI rabbit hole
 Asked ChatGPT if true offline AI was possible
@@ -752,14 +752,13 @@ Day 5 — Live! (kinda)
 🔮 What's Next
 • Tune or replace the 700MB model (TinyLlama maybe)
 • Flip the switch on Pro subscription or one-time purchase
-• Widget support for quick captures
 • More AI insights and writing prompts
 
 📸 Screenshots
 [IMAGE_GALLERY]
 
 🚀 Try It
-Available now on the App Store — download it, test it, maybe it'll fit your workflow.
+[Available now on the App Store](https://apps.apple.com/kg/app/offgrid-diary/id6748696045) — download it, test it, maybe it'll fit your workflow.
 Always happy to chat about the bumps along the way!`
 };
 
@@ -922,8 +921,43 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 				return <div key={index} className="h-2"></div>;
 			}
 
-			// Regular text
-			return <p key={index} className={`mb-2 ${isModal ? 'text-lab-text' : 'text-lab-text'}`}>{line}</p>;
+			// Regular text with link parsing
+			const processLinksInText = (text: string) => {
+				// Parse markdown-style links [text](url)
+				const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+				const parts = [];
+				let lastIndex = 0;
+				
+				text.replace(linkRegex, (match, linkText, url, offset) => {
+					// Add text before the link
+					if (offset > lastIndex) {
+						parts.push(text.substring(lastIndex, offset));
+					}
+					// Add the link
+					parts.push(
+						<a 
+							key={offset}
+							href={url} 
+							target="_blank" 
+							rel="noopener noreferrer"
+							className="text-lab-cyan hover:text-lab-purple underline transition-colors portfolio:text-indigo-600 portfolio:hover:text-indigo-800"
+						>
+							{linkText}
+						</a>
+					);
+					lastIndex = offset + match.length;
+					return match;
+				});
+				
+				// Add remaining text after the last link
+				if (lastIndex < text.length) {
+					parts.push(text.substring(lastIndex));
+				}
+				
+				return parts.length ? parts : text;
+			};
+
+			return <p key={index} className={`mb-2 ${isModal ? 'text-lab-text' : 'text-lab-text'}`}>{processLinksInText(line)}</p>;
 		}).filter(Boolean);
 
 		// For the UghOkay project, add images if there is a marker
