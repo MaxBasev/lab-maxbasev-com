@@ -70,7 +70,7 @@ export const Navbar = () => {
 							Resume
 						</Link>
 						<Link
-							href="https://skazoff.com"
+							href="https://blog.maxbasev.com"
 							className="px-3 py-2 rounded-md text-sm font-mono font-medium text-lab-text hover:text-lab-purple hover:bg-lab-medium/50 transition-colors portfolio:font-sans portfolio:text-indigo-700 portfolio:hover:text-portfolio-accent portfolio:hover:bg-indigo-50 portfolio:rounded-md"
 							target="_blank"
 							rel="noopener noreferrer"
@@ -130,7 +130,7 @@ export const Navbar = () => {
 							Resume
 						</Link>
 						<Link
-							href="https://skazoff.com"
+							href="https://blog.maxbasev.com"
 							className="block px-3 py-2.5 rounded-md text-base font-mono font-medium text-lab-text hover:text-lab-purple hover:bg-lab-medium/50 transition-colors"
 							target="_blank"
 							rel="noopener noreferrer"

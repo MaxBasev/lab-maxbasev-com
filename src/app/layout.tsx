@@ -129,7 +129,7 @@ export default function RootLayout({
 								</a>
 							</div>
 							<div className="mt-3 text-xs text-lab-muted/50 font-mono portfolio:text-indigo-500/80 portfolio:font-sans">
-								© {new Date().getFullYear()} Max Basev Labs
+								© 2026 Max Basev Labs
 							</div>
 						</div>
 					</div>

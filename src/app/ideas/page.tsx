@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import IdeasTransition from '../../components/IdeasTransition';
 
 type IdeaStatus = 'Draft' | 'Early Research' | 'Prototype' | 'On Hold';
 type IdeaDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Nightmare fuel';
@@ -290,6 +291,8 @@ const DifficultyBadge = ({ difficulty }: { difficulty: IdeaDifficulty }) => {
 };
 
 export default function Ideas() {
+	const [showIntro, setShowIntro] = useState(true);
+	const [contentVisible, setContentVisible] = useState(false);
 	const [ideasList, setIdeasList] = useState<IdeasData>(ideasData);
 	const [userChoices, setUserChoices] = useState<UserChoices>({});
 	const [isLoading, setIsLoading] = useState(false);
@@ -354,8 +357,16 @@ export default function Ideas() {
 	const futureIdeas = Object.entries(ideasList).filter(([id]) => id !== 'fast-feelings-diary');
 
 	return (
-		<div className="flex flex-col min-h-screen relative overflow-hidden portfolio:bg-white">
-			<main className="flex-grow pt-10 pb-20 px-4 relative z-10 portfolio:bg-white">
+		<div className="flex flex-col min-h-screen relative overflow-hidden portfolio:bg-white animate-in fade-in duration-1000">
+			{showIntro && (
+				<div className="fixed inset-0 z-50">
+					<IdeasTransition
+						onStartExit={() => setContentVisible(true)}
+						onComplete={() => setShowIntro(false)}
+					/>
+				</div>
+			)}
+			<main className={`flex-grow pt-10 pb-20 px-4 relative z-10 portfolio:bg-white transition-opacity duration-1000 ${contentVisible ? 'opacity-100' : 'opacity-0'}`}>
 				<div className="max-w-4xl mx-auto">
 					<div className="mb-12 relative">
 						{/* Lab decoration elements */}

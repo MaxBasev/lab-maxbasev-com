@@ -1,0 +1,638 @@
+.main {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #000510 0%, #001030 100%);
+  overflow: hidden;
+  position: fixed;
+  /* Changed to fixed to cover everything */
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Ensure it stays on top */
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeOut {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.loginButton {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+  border-radius: 50%;
+}
+
+.loginButton::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  animation: waveEffect 2s linear infinite;
+}
+
+.loginButton::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.03);
+  animation: buttonPulse 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.buttonContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outerRings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  animation: rotate 20s linear infinite;
+}
+
+.ring:nth-child(1) {
+  width: 100%;
+  height: 100%;
+  border-color: rgba(0, 255, 255, 0.2);
+}
+
+.ring:nth-child(2) {
+  width: 85%;
+  height: 85%;
+  left: 7.5%;
+  top: 7.5%;
+  animation-direction: reverse;
+  animation-duration: 15s;
+}
+
+.ring:nth-child(3) {
+  width: 70%;
+  height: 70%;
+  left: 15%;
+  top: 15%;
+  animation-duration: 10s;
+}
+
+.sphere {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.sphereGlow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+      rgba(0, 255, 255, 0.8),
+      rgba(0, 255, 255, 0.4) 30%,
+      transparent 70%);
+  filter: blur(5px);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.core {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.2);
+  border: 2px solid rgba(0, 255, 255, 0.8);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.5),
+    inset 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.hovered .core {
+  box-shadow:
+    0 0 30px rgba(0, 255, 255, 0.7),
+    inset 0 0 30px rgba(0, 255, 255, 0.7);
+  animation: pulseCore 1.5s ease-in-out infinite;
+}
+
+.hovered {
+  transform: scale(1.05);
+}
+
+.levelText {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-inter);
+  /* Changed from geist-sans */
+  font-size: 52px;
+  font-weight: 700;
+  color: rgb(0, 255, 255);
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  /* Slightly reduced for longer text */
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  text-shadow:
+    0 0 7px rgba(0, 255, 255, 0.7),
+    0 0 10px rgba(0, 255, 255, 0.7);
+  z-index: 10;
+}
+
+.levelTextVisible {
+  opacity: 1;
+}
+
+.textParticles {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+}
+
+.levelTextVisible .textParticles {
+  animation: particleText 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.levelTextVisible .textParticles:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.levelTextVisible .textParticles:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.levelTextVisible .textParticles:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.levelTextVisible .textParticles:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.levelTextVisible .textParticles:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.levelTextVisible .textParticles:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+.levelTextVisible .textParticles:nth-child(7) {
+  animation-delay: 0.6s;
+}
+
+.levelTextVisible .textParticles:nth-child(8) {
+  animation-delay: 0.7s;
+}
+
+@keyframes particleText {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.levelTextVisible::before,
+.levelTextVisible::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 150%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.levelTextVisible::before {
+  background-image: radial-gradient(circle at 30% 50%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 70% 50%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 50% 30%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 50% 70%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%);
+  animation: particleFloat1 4s ease-in-out infinite;
+}
+
+.levelTextVisible::after {
+  background-image: radial-gradient(circle at 40% 40%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 60% 60%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 40% 60%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%),
+    radial-gradient(circle at 60% 40%,
+      rgba(0, 255, 255, 0.1) 0%,
+      transparent 2%);
+  animation: particleFloat2 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes particleFloat1 {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: translate(-50%, -50%) rotate(90deg) scale(1.1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+  }
+
+  75% {
+    transform: translate(-50%, -50%) rotate(270deg) scale(0.9);
+  }
+}
+
+@keyframes particleFloat2 {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+  }
+
+  25% {
+    transform: translate(-50%, -50%) rotate(270deg) scale(0.9);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1.1);
+  }
+
+  75% {
+    transform: translate(-50%, -50%) rotate(90deg) scale(1);
+  }
+}
+
+.hovered .ring {
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+@keyframes pulseCore {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 30px rgba(0, 255, 255, 0.7),
+      inset 0 0 30px rgba(0, 255, 255, 0.7);
+  }
+
+  50% {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 50px rgba(0, 255, 255, 0.9),
+      inset 0 0 50px rgba(0, 255, 255, 0.9);
+  }
+}
+
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+.hovered::before,
+.hovered::after {
+  animation-duration: 1.5s;
+  background: rgba(0, 255, 255, 0.15);
+}
+
+.hovered .core {
+  animation: corePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes corePulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 30px rgba(0, 255, 255, 0.7),
+      inset 0 0 30px rgba(0, 255, 255, 0.7);
+  }
+
+  50% {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 50px rgba(0, 255, 255, 0.9),
+      inset 0 0 50px rgba(0, 255, 255, 0.9);
+  }
+}
+
+.clicked {
+  animation:
+    buttonVanish 0.5s ease-in-out forwards,
+    glowBurst 0.5s ease-in-out forwards;
+}
+
+.clicked .buttonContent,
+.clicked .levelText {
+  animation: contentVanish 0.5s ease-in-out forwards;
+}
+
+@keyframes buttonVanish {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes contentVanish {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.levelTextHidden {
+  animation: buttonVanish 0.5s ease-in-out forwards;
+}
+
+.clicked * {
+  animation-fill-mode: forwards;
+}
+
+@keyframes particleExplosion {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+.clicked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  /* Ensure explosion is circular */
+  animation: particleExplosion 0.8s ease-out forwards;
+}
+
+@keyframes letterPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes glowBurst {
+  0% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 100px rgba(0, 255, 255, 0.8);
+  }
+
+  100% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0);
+  }
+}
+
+@keyframes waveEffect {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.comingSoonContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.comingSoonVisible {
+  animation: containerAppear 0.5s ease-out forwards;
+  visibility: visible;
+}
+
+.textLine {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.comingLetter {
+  display: inline-block;
+  font-family: var(--font-inter);
+  font-size: 48px;
+  font-weight: 800;
+  color: rgb(0, 255, 255);
+  opacity: 0;
+  margin: 0 3px;
+  text-shadow:
+    0 0 10px rgba(0, 255, 255, 1),
+    0 0 20px rgba(0, 255, 255, 1),
+    0 0 30px rgba(0, 255, 255, 0.8),
+    0 0 40px rgba(0, 255, 255, 0.6),
+    0 0 70px rgba(0, 255, 255, 0.4);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Underline effect */
+.underline {
+  height: 4px;
+  width: 0%;
+  background: rgb(0, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+  margin-top: 10px;
+  border-radius: 2px;
+}
+
+.comingSoonVisible .underline {
+  animation: expandUnderline 1s ease-out forwards 1s;
+}
+
+@keyframes expandUnderline {
+  to {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .comingLetter {
+    font-size: 32px;
+    margin: 0 2px;
+    text-shadow:
+      0 0 5px rgba(0, 255, 255, 1),
+      0 0 10px rgba(0, 255, 255, 1),
+      0 0 15px rgba(0, 255, 255, 0.8);
+  }
+}
+
+.comingSoonVisible .comingLetter {
+  animation: letterAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Delays are handled inline in JS now for dynamic text length support */
+
+@keyframes containerAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes letterAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+    filter: blur(15px);
+  }
+
+  60% {
+    transform: translateY(-10px) scale(1.1);
+    filter: blur(5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}

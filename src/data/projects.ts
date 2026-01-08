@@ -12,7 +12,7 @@ export const projects: Project[] = [
 			website: 'https://ughokay.maxbasev.com',
 			appStore: 'https://apps.apple.com/kg/app/ugh-okay/id6744969077',
 			googlePlay: 'https://play.google.com/store/apps/details?id=com.ughokay.app',
-			blog: 'https://en.skazoff.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
+			blog: 'https://blog.maxbasev.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
 		}
 	},
 	{
@@ -25,7 +25,7 @@ export const projects: Project[] = [
 		links: {
 			website: 'https://offgriddiary.app',
 			appStore: 'https://apps.apple.com/kg/app/offgrid-diary/id6748696045',
-			blog: 'https://en.skazoff.com/saas/offgrid-diary-weekend-build/'
+			blog: 'https://blog.maxbasev.com/saas/offgrid-diary-weekend-build/'
 		}
 	},
 	{
@@ -70,7 +70,7 @@ export const projects: Project[] = [
 		tags: ['Chrome Extension', 'Tool', 'Pet Project'],
 		links: {
 			website: 'https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb',
-			blog: 'https://en.skazoff.com/the-journey-of-creating-extenswitch/'
+			blog: 'https://blog.maxbasev.com/the-journey-of-creating-extenswitch/'
 		}
 	},
 	{
@@ -94,7 +94,7 @@ export const projects: Project[] = [
 		tags: ['Chrome Extension', 'Pet Project', 'Tool'],
 		links: {
 			website: 'https://bareminimumhero.com',
-			blog: 'https://en.skazoff.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
+			blog: 'https://blog.maxbasev.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
 		}
 	},
 	{
