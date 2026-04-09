@@ -917,6 +917,11 @@ const PROJECT_METADATA: Record<string, {
 		duration: '5 days',
 		price: 'Free (Pro version planned)',
 		status: 'Available on App Store'
+	},
+	'critical-mass': {
+		releaseDate: 'April 2026',
+		duration: 'Built during Vibe Jam 2026',
+		status: 'Live browser build'
 	}
 };
 
