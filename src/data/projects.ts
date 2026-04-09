@@ -67,7 +67,7 @@ export const projects: Project[] = [
 		image: '/images/projects/ExtenSwitch.png',
 		tags: ['Chrome Extension', 'Tool', 'Pet Project'],
 		links: {
-			website: 'https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb',
+			website: 'https://extenswitch.m-b.app/',
 			blog: 'https://blog.maxbasev.com/the-journey-of-creating-extenswitch/'
 		}
 	},
@@ -91,7 +91,7 @@ export const projects: Project[] = [
 		image: '/images/projects/BMH_promo.png',
 		tags: ['Chrome Extension', 'Pet Project', 'Tool'],
 		links: {
-			website: 'https://bareminimumhero.com',
+			website: 'https://bareminimumhero.m-b.app/',
 			blog: 'https://blog.maxbasev.com/i-made-a-chrome-extension-that-rewards-you-for-doing-literally-anything/'
 		}
 	},
