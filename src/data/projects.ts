@@ -2,6 +2,17 @@ import { Project } from '../types';
 
 export const projects: Project[] = [
 	{
+		id: 'critical-mass',
+		title: 'Critical Mass',
+		description: 'A browser horde survival game where momentum powers your weapons. Stop moving, lose pressure, and get swallowed by the swarm. Built for Vibe Jam 2026 with AI-assisted design, code, and art production.',
+		icon: '⚠️',
+		image: '/images/projects/CriticalMass/og-CriticalMass.png',
+		tags: ['Browser Game', 'Pet Project', 'AI-powered', 'Game Jam'],
+		links: {
+			website: 'https://jam2026.maxbasev.com'
+		}
+	},
+	{
 		id: 'ugh-okay',
 		title: 'Ugh Okay',
 		description: 'A tiny offline app that helps you fight indecision and doomscrolling. Add things you actually want to do - then tap the button when your brain freezes. It picks one for you. That\'s it. No sync, no pressure, no pushy owl.',

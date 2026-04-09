@@ -11,7 +11,9 @@ export type ProjectTag =
 	| 'AI-powered'
 	| 'Crypto'
 	| 'iOS App'
-	| 'Telegram Bot';
+	| 'Telegram Bot'
+	| 'Browser Game'
+	| 'Game Jam';
 
 export type ProjectLinks = {
 	github?: string;
@@ -47,6 +49,8 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'Crypto': { bg: 'bg-amber-900/30', text: 'text-amber-200' },
 		'iOS App': { bg: 'bg-purple-900/30', text: 'text-purple-200' },
 		'Telegram Bot': { bg: 'bg-blue-900/30', text: 'text-blue-200' },
+		'Browser Game': { bg: 'bg-orange-900/30', text: 'text-orange-200' },
+		'Game Jam': { bg: 'bg-rose-900/30', text: 'text-rose-200' },
 		// 'Healthcare': { bg: 'bg-emerald-900/30', text: 'text-emerald-200' },
 	};
 
@@ -65,6 +69,8 @@ export const getTagColor = (tag: ProjectTag): { bg: string; text: string } => {
 		'Crypto': { bg: 'portfolio:bg-amber-100', text: 'portfolio:text-amber-800' },
 		'iOS App': { bg: 'portfolio:bg-purple-100', text: 'portfolio:text-purple-800' },
 		'Telegram Bot': { bg: 'portfolio:bg-blue-100', text: 'portfolio:text-blue-800' },
+		'Browser Game': { bg: 'portfolio:bg-orange-100', text: 'portfolio:text-orange-800' },
+		'Game Jam': { bg: 'portfolio:bg-rose-100', text: 'portfolio:text-rose-800' },
 		// 'Healthcare': { bg: 'portfolio:bg-emerald-100', text: 'portfolio:text-emerald-800' },
 	};
 

@@ -27,7 +27,7 @@ Portfolio mode is activated by adding the `portfolio` class to `<body>`. All com
 - `/cases/[id]` — Individual project case study page
 
 ### Data layer
-- **Projects**: All project data lives in `src/data/projects.ts` as a static array of `Project` objects (type defined in `src/types.ts`). To add a project, add an entry to that array.
+- **Projects**: All project data lives in `src/data/projects.ts` as a static array of `Project` objects (type defined in `src/types.ts`). To add a project, add an entry to that array. To add a new tag, update the `ProjectTag` union type **and** both `labModeColors` and `portfolioModeColors` maps in `getTagColor` — all three are in `src/types.ts`.
 - **Project content/case studies**: Long-form markdown-style content for each project is stored inline in `src/components/ProjectContent.tsx` in a `PROJECT_CONTENTS` record keyed by project `id`.
 - **Ideas voting**: Votes are stored in Redis via `REDIS_URL` env var. The API is at `src/app/api/votes/route.ts`. The ideas data itself is hardcoded in `src/app/ideas/page.tsx`.
 

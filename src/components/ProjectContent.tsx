@@ -758,7 +758,85 @@ Day 5 — Live! (kinda)
 
 🚀 Try It
 [Available now on the App Store](https://apps.apple.com/kg/app/offgrid-diary/id6748696045) — download it, test it, maybe it'll fit your workflow.
-Always happy to chat about the bumps along the way!`
+Always happy to chat about the bumps along the way!`,
+	'critical-mass': `⚠️ Critical Mass — Keep Moving or Your Guns Go Quiet
+
+🚀 About the Project
+A fast browser horde survival game built for Vibe Jam 2026.
+
+Your weapon runs on momentum.
+Keep moving, keep pressure up, and try not to get swallowed by the swarm.
+
+Built as an AI-assisted game project with Phaser, procedural systems, generated assets, and a slightly unhealthy amount of iteration.
+
+🔥 The Problem
+A lot of horde survival games treat movement as positioning only.
+
+You kite, circle, optimize routes, and slowly become a lawn mower with legs.
+
+I wanted something more aggressive: a game where movement itself is the weapon system.
+If you slow down, your fire rate drops. If you stop, pressure bleeds off and the horde catches up.
+
+🛠️ The Solution
+Critical Mass turns momentum into a core combat mechanic.
+
+- Move to build pressure
+- Pressure increases fire rate
+- Slow down and your weapon goes quiet
+- Survive long enough to stack upgrades and hold the zone
+
+The result is a browser survival game that feels familiar at first, but quickly becomes more about controlled aggression than passive kiting.
+
+✨ Key Features
+⚡ Pressure-based combat system
+👾 Multiple enemy archetypes, including runners and ranged suppressors
+☢️ CASCADE EVENT boss encounter
+🔫 Combat modifiers like Lance Round and Twin Emitter
+🎵 Dynamic music with smooth transitions
+🌐 Instant-play browser build with no login or install
+🤖 AI-assisted production workflow
+
+📈 Tech Stack
+Built with Phaser 3 + TypeScript + Vite
+
+- Phaser 3 for gameplay, animation, camera, and combat systems
+- TypeScript in strict mode
+- Vite for fast iteration and static deployment
+- Web Audio + generated / curated assets
+- Sprite, effect, and UI pipeline assembled with AI-assisted workflow
+
+🧠 Production Workflow
+This project was built with heavy AI collaboration:
+
+- ChatGPT — design direction, gameplay planning, naming, iteration guidance
+- Claude — implementation and code generation
+- Gemini — sprite and visual asset generation
+
+The jam rule was 90%+ AI-written code, so instead of hiding that, I leaned into it and treated the whole game as an experiment in directed AI-assisted game production.
+
+🎮 Design Philosophy
+Movement should matter more than comfort
+Pressure should be a mechanic, not a flavor word
+Short runs, fast feedback, no dead air
+Readable chaos > fake complexity
+A strong vertical slice beats a bloated feature list
+
+🔮 What's Next
+More enemy/event variety
+Extra combat modifier branches
+More environmental identity in the arena
+Further polish for feel, UI, and presentation
+Possible post-jam expansion as a portfolio-quality vertical slice
+
+📸 Screenshots
+[IMAGE_GALLERY]
+
+🚀 Try It
+Play Critical Mass in the browser:
+
+[jam2026.maxbasev.com](https://jam2026.maxbasev.com)
+
+Or open the portal after the boss fight and let the internet throw you into another game. Very stable civilization we've built.`
 };
 
 // Additional project information
