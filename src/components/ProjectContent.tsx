@@ -1464,6 +1464,34 @@ const ProjectContent: React.FC<ProjectContentProps> = ({ projectId, isModal = fa
 			}
 		}
 
+		// For the Critical Mass project, add screenshot
+		if (projectId === 'critical-mass' && hasImageGallery) {
+			const screenshotsIndex = formattedLines.findIndex(
+				(el) => React.isValidElement(el) &&
+					el.type === 'h3' &&
+					typeof el.props === 'object' &&
+					el.props !== null &&
+					'children' in el.props &&
+					typeof el.props.children === 'string' &&
+					el.props.children.includes('Screenshots')
+			);
+
+			if (screenshotsIndex !== -1) {
+				formattedLines.splice(screenshotsIndex + 1, 0, (
+					<div key="critical-mass-gallery" className="mt-4 mb-6">
+						<div className="overflow-hidden rounded-lg cursor-pointer">
+							<img
+								src="/images/projects/CriticalMass/CM-Screen.png"
+								alt="Critical Mass Screenshot"
+								className="w-full h-auto rounded-lg shadow-md hover:opacity-90 transition-opacity cursor-zoom-in"
+								onClick={(e) => toggleImageSize(e, "/images/projects/CriticalMass/CM-Screen.png")}
+							/>
+						</div>
+					</div>
+				));
+			}
+		}
+
 		return formattedLines;
 	};
 
