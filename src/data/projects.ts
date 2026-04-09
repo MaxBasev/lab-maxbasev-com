@@ -36,7 +36,6 @@ export const projects: Project[] = [
 		image: '/images/projects/zentava-life-logo-transp.png',
 		tags: ['SaaS', 'Web App', 'Beta', 'AI-powered'],
 		links: {
-			website: 'https://zentava.life'
 		}
 	},
 	{
@@ -47,7 +46,6 @@ export const projects: Project[] = [
 		image: '/images/projects/Cheqly_Promo.png',
 		tags: ['SaaS', 'Web App', 'Beta'],
 		links: {
-			website: 'https://cheqly.life'
 		}
 	},
 	{

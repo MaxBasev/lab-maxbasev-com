@@ -117,7 +117,7 @@ Tested with early users through invite-only beta.
 Feedback loop driven by real conversations and actual user struggles.
 
 🚀 Try It
-Sign up for the waitlist at Zentava.life and be among the first to meet your AI mentor.`,
+Coming soon.`,
 	'santa-maria-dashboard': `🏥 Santa Maria — Health Management Platform
 🚀 About the Project
 A full-featured web system for clinics to manage patient bookings, treatment schedules, medical records, and financial operations — all in one place.
@@ -494,7 +494,7 @@ Published on the App Store
 🚀 Try It
 🔗 Santa Maria Mobile on App Store
 (Note: access requires authorized clinic login)`,
-	'cheqly-life': `✅ Cheqly.life — Project Details
+	'cheqly-life': `✅ Cheqly Life — Project Details
 📊 Visual Goal Tracker for Normal People™
 Web App · Beta Mode · Built for personal use, open to the world
 
@@ -565,8 +565,7 @@ Still in beta (invite-only, for now)
 UI/UX inspired by old-school Excel with modern brain energy
 
 🌐 Try It (soon)
-Website: cheqly.life
-(Currently in closed beta — but you can ask nicely)`,
+Currently in closed beta.`,
 	'focus-buddy': `🧠 Focus Buddy — Project Details
 🚫 Block Distractions. ✅ Do Literally Anything Else.
 Chrome Extension · Productivity Tool · Built on impulse (as usual)
