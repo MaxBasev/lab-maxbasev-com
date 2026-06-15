@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Max's Lab — Experiments, shipped products, tools</title>
+  <meta name="description" content="Experiments, shipped products, tools, and half-finished ideas by Maxim Basev." />
+
+  <style>
+    :root {
+      --bg: #fbf6ee;
+      --bg-soft: #f5eee3;
+      --panel: #fffaf2;
+      --panel-2: #f2eadf;
+      --ink: #171510;
+      --muted: #6d665d;
+      --muted-2: #92887c;
+      --line: rgba(23, 21, 16, 0.12);
+      --line-strong: rgba(23, 21, 16, 0.2);
+      --accent: #9b7446;
+      --green: #48b469;
+      --shadow: 0 24px 80px rgba(67, 49, 26, 0.09);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 999px;
+      --container: 1180px;
+      --serif: Georgia, "Times New Roman", Times, serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.86), transparent 34rem),
+        radial-gradient(circle at 80% 20%, rgba(219, 195, 154, 0.18), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(251, 246, 238, 0.76);
+      border-bottom: 1px solid rgba(23, 21, 16, 0.06);
+    }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-size: 13px;
+      color: #252017;
+    }
+
+    .nav-links a {
+      opacity: 0.82;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(43, 34, 22, 0.08);
+    }
+
+    .button.dark {
+      background: var(--ink);
+      color: #fff8ee;
+      border-color: var(--ink);
+    }
+
+    .button.light {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .hero {
+      padding: 104px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 80px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(72, 180, 105, 0.12);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero h1 {
+      max-width: 780px;
+      font-family: var(--serif);
+      font-size: clamp(68px, 9vw, 122px);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 em {
+      color: var(--accent);
+      font-style: italic;
+      letter-spacing: -0.08em;
+    }
+
+    .hero-lede {
+      max-width: 640px;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+      color: #201b14;
+      margin-bottom: 24px;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stats-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.48);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 34px 38px;
+      min-height: 128px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat:nth-child(odd) {
+      border-right: 1px solid var(--line);
+    }
+
+    .stat:nth-child(3),
+    .stat:nth-child(4) {
+      border-bottom: 0;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 44px;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      margin-bottom: 10px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 0 36px;
+    }
+
+    .filter-pill {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #4c443b;
+      background: rgba(255, 255, 255, 0.22);
+      transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .filter-pill:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.56);
+      border-color: var(--line-strong);
+    }
+
+    .filter-pill.active {
+      color: #fff8ee;
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .featured {
+      padding: 14px 0 76px;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .project-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.52);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 18px 70px rgba(67, 49, 26, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 90px rgba(67, 49, 26, 0.12);
+      border-color: rgba(23, 21, 16, 0.2);
+    }
+
+    .project-visual {
+      height: 226px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .visual-critical {
+      background:
+        radial-gradient(circle at 50% 48%, rgba(227, 54, 51, 0.95) 0 3px, transparent 4px),
+        radial-gradient(circle at 50% 48%, rgba(227, 54, 51, 0.4), transparent 9%),
+        radial-gradient(circle at center, rgba(142, 36, 44, 0.26), transparent 38%),
+        linear-gradient(145deg, #080b13, #15192b 58%, #090b13);
+    }
+
+    .visual-critical::before {
+      content: "";
+      position: absolute;
+      inset: 38% 0 auto;
+      height: 80px;
+      background:
+        linear-gradient(90deg, transparent, rgba(159, 32, 34, 0.7), transparent),
+        repeating-linear-gradient(90deg, transparent 0 16px, rgba(255, 72, 72, 0.35) 17px 18px);
+      transform: perspective(520px) rotateX(58deg);
+      opacity: 0.75;
+    }
+
+    .visual-critical::after {
+      content: "CRITICAL MASS\A Keep Moving or Your Guns Go Quiet";
+      white-space: pre;
+      position: absolute;
+      inset: 68px 26px auto;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .visual-ugh {
+      background:
+        radial-gradient(circle at 31% 44%, #ff6cc6 0 36px, transparent 38px),
+        radial-gradient(circle at 31% 29%, #7057ff 0 44px, transparent 45px),
+        linear-gradient(135deg, #f5f7ff, #e6eef7);
+    }
+
+    .visual-ugh::before {
+      content: "";
+      position: absolute;
+      left: 78px;
+      top: 54px;
+      width: 94px;
+      height: 74px;
+      border-radius: 46% 54% 50% 50%;
+      background: #ff75c9;
+      border: 6px solid #4635bd;
+      box-shadow: inset 0 -16px 0 rgba(77, 45, 182, 0.15);
+    }
+
+    .visual-ugh::after {
+      content: "Scroll less.\A Do more.";
+      white-space: pre;
+      position: absolute;
+      left: 205px;
+      top: 73px;
+      color: #2b2656;
+      font-size: 32px;
+      line-height: 1.06;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .visual-offgrid {
+      background:
+        linear-gradient(180deg, rgba(10, 13, 14, 0.08), rgba(10, 13, 14, 0.18)),
+        radial-gradient(circle at 50% 70%, rgba(240, 166, 72, 0.9) 0 42px, transparent 44px),
+        linear-gradient(145deg, #394a3a 0 35%, #c49a57 36% 50%, #172017 51% 100%);
+    }
+
+    .visual-offgrid::before {
+      content: "";
+      position: absolute;
+      left: 92px;
+      bottom: 48px;
+      width: 120px;
+      height: 84px;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: linear-gradient(135deg, #f4c36e, #8c5e25);
+      border: 1px solid rgba(255,255,255,0.3);
+      filter: drop-shadow(0 20px 26px rgba(0,0,0,0.22));
+    }
+
+    .visual-offgrid::after {
+      content: "Offgrid Diary";
+      position: absolute;
+      right: 30px;
+      top: 74px;
+      font-family: var(--serif);
+      color: #fff8ee;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.28);
+    }
+
+    .project-body {
+      padding: 28px 30px 30px;
+    }
+
+    .project-body h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .project-body p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 27px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: #5c544b;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .archive-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 48px;
+      align-items: start;
+      padding: 0 0 86px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .section-heading h2 {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.045em;
+    }
+
+    .section-heading span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .project-table {
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .table-head,
+    .project-row {
+      display: grid;
+      grid-template-columns: 42px minmax(140px, 0.78fr) minmax(220px, 1.15fr) minmax(170px, 0.95fr) 110px 28px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .table-head {
+      color: var(--muted-2);
+      font-size: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .project-row {
+      padding: 21px 0;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.18s ease;
+    }
+
+    .project-row:hover {
+      background: rgba(255, 255, 255, 0.26);
+    }
+
+    .num,
+    .year,
+    .desc,
+    .tagline {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .project-name {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.035em;
+    }
+
+    .arrow {
+      font-size: 18px;
+      line-height: 1;
+      color: #2a241c;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 22px;
+    }
+
+    .side-card {
+      padding: 27px;
+      background: rgba(255, 250, 242, 0.6);
+      border: 1px solid rgba(23, 21, 16, 0.08);
+      border-radius: var(--radius-md);
+      box-shadow: 0 18px 60px rgba(67, 49, 26, 0.045);
+    }
+
+    .side-card h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      margin-bottom: 8px;
+    }
+
+    .side-card .small {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 18px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 16px;
+    }
+
+    .note strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 16px;
+      letter-spacing: -0.025em;
+      margin-bottom: 2px;
+    }
+
+    .note span {
+      color: var(--muted-2);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .build-list {
+      list-style: none;
+      padding: 8px 0 0;
+      margin: 0 0 18px;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .build-list li::before {
+      content: "✓";
+      color: #4b8f59;
+      margin-right: 8px;
+      font-weight: 800;
+    }
+
+    .sketch {
+      height: 120px;
+      margin-top: 22px;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0)),
+        repeating-linear-gradient(-12deg, transparent 0 18px, rgba(23, 21, 16, 0.035) 19px 20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flask {
+      position: absolute;
+      bottom: 18px;
+      width: 40px;
+      height: 58px;
+      border: 2px solid rgba(23,21,16,0.26);
+      border-radius: 8px 8px 18px 18px;
+      transform: rotate(-5deg);
+    }
+
+    .flask::before {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 22px;
+      border: 2px solid rgba(23,21,16,0.24);
+      border-bottom: 0;
+      left: 11px;
+      top: -20px;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .flask.one {
+      left: 58px;
+    }
+
+    .flask.two {
+      left: 124px;
+      transform: rotate(6deg) scale(0.86);
+    }
+
+    .flask.three {
+      left: 184px;
+      transform: rotate(-2deg) scale(1.12);
+    }
+
+    .cta {
+      margin: 0 0 80px;
+    }
+
+    .cta-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 42px 36px;
+      border: 1px solid rgba(23, 21, 16, 0.08);
+      background: rgba(255, 250, 242, 0.6);
+      border-radius: var(--radius-md);
+      box-shadow: 0 18px 70px rgba(67, 49, 26, 0.055);
+    }
+
+    .cta-card h2 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 3.2vw, 44px);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      margin-bottom: 8px;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .footer {
+      padding: 0 0 34px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 60px;
+      align-items: center;
+      padding: 32px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer-brand strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 10px;
+    }
+
+    .socials a {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.24);
+      transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .socials a:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+
+    .copyright {
+      text-align: center;
+      color: var(--muted-2);
+      font-size: 13px;
+      padding: 28px 0 0;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 70px;
+      }
+
+      .hero-grid,
+      .archive-wrap {
+        grid-template-columns: 1fr;
+        gap: 42px;
+      }
+
+      .featured-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-visual {
+        height: 260px;
+      }
+
+      .sidebar {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .table-head {
+        display: none;
+      }
+
+      .project-row {
+        grid-template-columns: 36px 1fr 34px;
+        gap: 12px;
+      }
+
+      .project-row .desc,
+      .project-row .tagline,
+      .project-row .year {
+        grid-column: 2 / -1;
+      }
+
+      .project-row .arrow {
+        grid-column: 3;
+        grid-row: 1;
+        text-align: right;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(calc(100% - 28px), var(--container));
+      }
+
+      .hero h1 {
+        font-size: clamp(58px, 16vw, 84px);
+      }
+
+      .hero-lede {
+        font-size: 28px;
+      }
+
+      .stats-card {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat {
+        padding: 24px;
+      }
+
+      .stat strong {
+        font-size: 34px;
+      }
+
+      .filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 30px;
+        scrollbar-width: none;
+      }
+
+      .filters::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-pill {
+        white-space: nowrap;
+      }
+
+      .visual-ugh::after {
+        left: 160px;
+        font-size: 26px;
+      }
+
+      .sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-card,
+      .footer-top {
+        grid-template-columns: 1fr;
+        display: grid;
+        gap: 24px;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions {
+        display: grid;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .stats-card {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        border-right: 0 !important;
+      }
+
+      .stat:nth-child(3) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .project-visual {
+        height: 210px;
+      }
+
+      .visual-ugh::after {
+        left: 136px;
+        top: 72px;
+        font-size: 22px;
+      }
+
+      .visual-ugh::before {
+        left: 46px;
+      }
+
+      .project-body {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="container nav">
+        <a class="brand" href="#">Maxim Basev.</a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#about">About</a>
+          <a href="#stack">Stack</a>
+          <a href="#experience">Experience</a>
+          <a href="#archive">Archive</a>
+          <a href="#podcast">Podcast</a>
+          <a href="#writing">Writing</a>
+          <a class="button dark" href="#contact">Get in touch →</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">The Lab</div>
+            <h1>Max’s <em>Lab</em></h1>
+            <p class="hero-lede">Experiments, shipped products, tools, and half-finished ideas.</p>
+            <p class="hero-copy">
+              A decade of building products, experiments, SaaS, tools, Chrome extensions, mobile apps, and client work.
+            </p>
+            <div class="hero-actions">
+              <a class="button dark" href="#projects">Explore the lab</a>
+              <a class="button light" href="#notes">Read the notes →</a>
+            </div>
+          </div>
+
+          <div class="stats-card" aria-label="Lab stats">
+            <div class="stat">
+              <strong>15+</strong>
+              <span>years shipping</span>
+            </div>
+            <div class="stat">
+              <strong>40+</strong>
+              <span>projects</span>
+            </div>
+            <div class="stat">
+              <strong>12</strong>
+              <span>shipped products</span>
+            </div>
+            <div class="stat">
+              <strong>∞</strong>
+              <span>ideas in progress</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container" aria-label="Project filters">
+        <div class="filters">
+          <a class="filter-pill active" href="#">All</a>
+          <a class="filter-pill" href="#">Products</a>
+          <a class="filter-pill" href="#">Experiments</a>
+          <a class="filter-pill" href="#">Client Work</a>
+          <a class="filter-pill" href="#">SaaS</a>
+          <a class="filter-pill" href="#">Web Apps</a>
+          <a class="filter-pill" href="#">Mobile Apps</a>
+          <a class="filter-pill" href="#">Chrome Extensions</a>
+          <a class="filter-pill" href="#">AI-powered</a>
+          <a class="filter-pill" href="#">Crypto</a>
+          <a class="filter-pill" href="#">Tools</a>
+          <a class="filter-pill" href="#">Beta</a>
+          <a class="filter-pill" href="#">Shipped</a>
+        </div>
+      </section>
+
+      <section class="featured" id="projects">
+        <div class="container featured-grid">
+          <article class="project-card">
+            <div class="project-visual visual-critical" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>Critical Mass</h3>
+              <p>A browser-based survival game where momentum powers your weapons. Stop moving, lose pressure, and get swarmed.</p>
+              <div class="tags">
+                <span class="tag">Browser Game</span>
+                <span class="tag">Pet Project</span>
+                <span class="tag">AI-powered</span>
+              </div>
+              <a class="text-link" href="#">View project →</a>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-visual visual-ugh" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>Ugh Okay</h3>
+              <p>An offline app that helps you fight indecision and doomscrolling. Add things you actually want to do, then tap the button.</p>
+              <div class="tags">
+                <span class="tag">Mobile App</span>
+                <span class="tag">Pet Project</span>
+                <span class="tag">iOS</span>
+              </div>
+              <a class="text-link" href="#">View project →</a>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-visual visual-offgrid" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>Offgrid Diary</h3>
+              <p>A paper-like mobile diary that works anywhere. AES-256 encryption and offline AI summaries keep your entries private.</p>
+              <div class="tags">
+                <span class="tag">Mobile App</span>
+                <span class="tag">iOS App</span>
+                <span class="tag">Pet Project</span>
+              </div>
+              <a class="text-link" href="#">View project →</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container archive-wrap" id="archive">
+        <div>
+          <div class="section-heading">
+            <h2>All projects</h2>
+            <span>13 entries</span>
+          </div>
+
+          <div class="project-table">
+            <div class="table-head">
+              <span></span>
+              <span>Project</span>
+              <span>Description</span>
+              <span>Tags</span>
+              <span>Year / Status</span>
+              <span></span>
+            </div>
+
+            <a class="project-row" href="#">
+              <span class="num">01</span>
+              <span class="project-name">Critical Mass</span>
+              <span class="desc">Browser survival game where momentum powers your weapons.</span>
+              <span class="tagline">Browser Game, Pet Project</span>
+              <span class="year">2024 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">02</span>
+              <span class="project-name">Ugh Okay</span>
+              <span class="desc">Offline app to fight indecision and doomscrolling.</span>
+              <span class="tagline">Mobile App, iOS, Pet Project</span>
+              <span class="year">2024 · Beta</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">03</span>
+              <span class="project-name">Offgrid Diary</span>
+              <span class="desc">Encrypted offline diary with AI summaries that respects your privacy.</span>
+              <span class="tagline">Mobile App, iOS App, Pet Project</span>
+              <span class="year">2024 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">04</span>
+              <span class="project-name">Zentava</span>
+              <span class="desc">AI-powered mental health assistant. Talk, journal, and improve.</span>
+              <span class="tagline">SaaS, Web App, Beta, AI-powered</span>
+              <span class="year">2024 · Beta</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">05</span>
+              <span class="project-name">Cheqly Life</span>
+              <span class="desc">Goal tracker and habit builder that actually sticks.</span>
+              <span class="tagline">SaaS, Web App, Beta</span>
+              <span class="year">2024 · Beta</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">06</span>
+              <span class="project-name">Crypto News Bot</span>
+              <span class="desc">Telegram bot that aggregates and translates crypto news.</span>
+              <span class="tagline">AI-powered, Telegram Bot, Crypto</span>
+              <span class="year">2024 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">07</span>
+              <span class="project-name">ExtenSwitch</span>
+              <span class="desc">One-click Chrome extension manager and profile switcher.</span>
+              <span class="tagline">Chrome Extension, Tool, Productivity</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">08</span>
+              <span class="project-name">Santa Maria Health Dashboard</span>
+              <span class="desc">Clinic dashboard for bookings, schedules, records, and admin.</span>
+              <span class="tagline">Web App, Client Work, Healthcare</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">09</span>
+              <span class="project-name">Bare Minimum Hero</span>
+              <span class="desc">A Chrome extension that rewards you for doing the minimum.</span>
+              <span class="tagline">Chrome Extension, Pet Project, Wellness</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">10</span>
+              <span class="project-name">Level UP — Crypto Access Bot</span>
+              <span class="desc">Bot that manages crypto subscriptions for communities.</span>
+              <span class="tagline">Telegram Bot, Crypto, AI-powered</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">11</span>
+              <span class="project-name">Focus Buddy</span>
+              <span class="desc">Blocks distracting websites and keeps you focused.</span>
+              <span class="tagline">Chrome Extension, Tool, Productivity</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">12</span>
+              <span class="project-name">Santa Maria — iOS Client App</span>
+              <span class="desc">Mobile companion app for clinic patients. View treatments and appointments.</span>
+              <span class="tagline">iOS App, Client Work, Healthcare</span>
+              <span class="year">2023 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+
+            <a class="project-row" href="#">
+              <span class="num">13</span>
+              <span class="project-name">Tagoshi</span>
+              <span class="desc">Convert prices on Amazon, eBay, and AliExpress to crypto.</span>
+              <span class="tagline">Chrome Extension, Tool, Crypto</span>
+              <span class="year">2022 · Shipped</span>
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="side-card" id="notes">
+            <h3>Lab notes</h3>
+            <p class="small">Latest experiments & thoughts.</p>
+            <div class="note-list">
+              <a class="note" href="#">
+                <strong>How I prioritize experiments</strong>
+                <span>May 12, 2024</span>
+              </a>
+              <a class="note" href="#">
+                <strong>Building in public again</strong>
+                <span>Apr 28, 2024</span>
+              </a>
+              <a class="note" href="#">
+                <strong>Why offlining matters</strong>
+                <span>Apr 10, 2024</span>
+              </a>
+              <a class="note" href="#">
+                <strong>The perfect to-do app doesn’t exist</strong>
+                <span>Mar 22, 2024</span>
+              </a>
+            </div>
+            <a class="text-link" href="#">View all notes →</a>
+          </div>
+
+          <div class="side-card" id="stack">
+            <h3>What I build</h3>
+            <ul class="build-list">
+              <li>SaaS & web applications</li>
+              <li>Mobile apps (iOS)</li>
+              <li>Browser extensions</li>
+              <li>AI-powered tools</li>
+              <li>Telegram bots</li>
+              <li>Design systems</li>
+            </ul>
+            <a class="text-link" href="#">See my stack →</a>
+          </div>
+
+          <div class="side-card">
+            <h3>Always shipping</h3>
+            <p class="small">Small ideas. Fast iterations. Useful things.</p>
+            <div class="sketch" aria-hidden="true">
+              <span class="flask one"></span>
+              <span class="flask two"></span>
+              <span class="flask three"></span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="container cta" id="contact">
+        <div class="cta-card">
+          <div>
+            <h2>Have an idea worth building?</h2>
+            <p>I’m open to interesting projects and collaborations.</p>
+          </div>
+          <a class="button dark" href="mailto:hello@example.com">Let’s build something →</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <strong>Maxim Basev.</strong>
+            <span>Independent developer and builder.</span>
+          </div>
+
+          <nav class="footer-links" aria-label="Footer navigation">
+            <a href="#">About</a>
+            <a href="#">Stack</a>
+            <a href="#">Experience</a>
+            <a href="#">Archive</a>
+            <a href="#">Podcast</a>
+            <a href="#">Writing</a>
+          </nav>
+
+          <div class="socials" aria-label="Social links">
+            <a href="#" aria-label="GitHub">GH</a>
+            <a href="#" aria-label="Twitter / X">𝕏</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="mailto:hello@example.com" aria-label="Email">✉</a>
+          </div>
+        </div>
+
+        <div class="copyright">
+          © 2024 Maxim Basev. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
